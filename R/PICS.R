@@ -4,19 +4,14 @@ PICS<-function(segReadsList,dataType="TF")
   cst<-gamma(3.5)/gamma(3)/sqrt(pi)
   minReads<-list(perPeak=3,perRegion=4)
 
-  if(dataType!="TF" & dataType!="H")
+  if(dataType!="TF")
   {
-    stop("Object 'dataType' must be either 'TF' or 'H'")
+    stop("Object 'dataType' must be either 'TF'")
   }
-  else if(dataType=="TF")
+  else
   {
     paraPrior<-paraPriorTF
     paraEM<-paraEMTF
-  }
-  else if(dataType=="H")
-  {
-    paraPrior<-paraPriorH
-    paraEM<-paraEMH
   }
   
   if(length(grep("snowfall",loadedNamespaces()))==0 || !sfParallel())
