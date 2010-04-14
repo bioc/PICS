@@ -227,7 +227,7 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
     UNPROTECT(nProtected);
     return(myPics);
   }
-  else
+  else if((flag!=0) & (REAL(VECTOR_ELT(paraPrior, 5))[0]!=0))
   {
       // If we could not invert the information matrix, I reset it to zero so that all se's will be zero
       // Another possibility would be to stabilize the information matrix to make it invertible
@@ -246,9 +246,23 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
     }
     else //TF case
     {
-        mergePeak(Para, infMat, se, seF, seR, &K, INTEGER(nu)[0], 3, 0);
+        flag=mergePeak(Para, infMat, se, seF, seR, &K, INTEGER(nu)[0], 3, 0);
+    }
+    //We encountered an error when merging
+    if(flag!=0)
+    {
+      classDef=MAKE_CLASS("picsError");
+      PROTECT(myPics=NEW_OBJECT(classDef));
+      nProtected++;
+      PROTECT(code=NEW_CHARACTER(1));
+      nProtected++;
+      STRING_PTR(code)[0]=mkChar("Singular information matrix");
+      SET_SLOT(myPics,mkChar("errorCode"),code);
+      UNPROTECT(nProtected);
+      return(myPics);
     }
   }
+  
   
   /** Enrichment score **/
   PROTECT(score=NEW_NUMERIC(K));
@@ -1584,7 +1598,7 @@ int getInfMat(SEXP R, SEXP F, SEXP para, SEXP a, SEXP b, double rho, double xi, 
   {
     gsl_matrix_set(infMatPri,2*K-1+j,2*K-1+j,rho*(1./sigmaSqF[j]+1./sigmaSqR[j]));
     gsl_matrix_set(infMatPri,3*K-1+j,3*K-1+j,(alpha-1./2.)*sigmaSqF[j]*sigmaSqF[j]);
-    gsl_matrix_set(infMatPri,4*K-1+j,4*K-1+j,(alpha-1./2.)*sigmaSqR[j]*sigmaSqR[j]);    
+    gsl_matrix_set(infMatPri,4*K-1+j,4*K-1+j,(alpha-1./2.)*sigmaSqR[j]*sigmaSqR[j]);
   }
 
   for(j=0;j<K;j++)
@@ -1801,9 +1815,9 @@ int getInfMat(SEXP R, SEXP F, SEXP para, SEXP a, SEXP b, double rho, double xi, 
   {
     /* Compute the inverse of I^{-1/2} */
     /* Compute L'^{-1} */
-    gsl_matrix_set_identity (DiagOne);
+    gsl_matrix_set_identity(DiagOne);
     flag=gsl_blas_dtrsm(CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, 1.0, infMat, DiagOne);
-      //There is an error so we simply return the flag
+    //There is an error so we simply return the flag
     if(flag!=0)
     {      
         //printf("Cannot solve with the cholesky decomposition\n");
@@ -1817,22 +1831,48 @@ int getInfMat(SEXP R, SEXP F, SEXP para, SEXP a, SEXP b, double rho, double xi, 
         gsl_vector_set_zero(A);
         gsl_vector_set(A,K-1+k,1);
         /* Compute L'^{-1} A */
-        gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, DiagOne, A);
+        flag=gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, DiagOne, A);
+        if(flag!=0)
+          return(flag);
         /* Compute the norm of that vector */
         gsl_vector_set(se,k,gsl_blas_dnrm2(A));
+        // Make sure it's a number
+        if(gsl_finite(gsl_vector_get(se,k))==0)
+        {
+          flag=1;
+          return(flag);
+        }
         gsl_vector_set_zero(A);
         gsl_vector_set(A,K-1+k,1);
         gsl_vector_set(A,K-1+K+k,-0.5);
-        gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, DiagOne, A);
+        flag=gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, DiagOne, A);
+        if(flag!=0)
+          return(flag);
         gsl_vector_set(seF,k,gsl_blas_dnrm2(A));
+        if(gsl_finite(gsl_vector_get(seF,k))==0)
+        {
+          flag=1;
+          return(flag);
+        }
         gsl_vector_set_zero(A);
         gsl_vector_set(A,K-1+k,1);
         gsl_vector_set(A,K-1+K+k,0.5);
-        gsl_blas_dtrmv (CblasUpper, CblasNoTrans, CblasNonUnit, DiagOne, A);
+        flag=gsl_blas_dtrmv (CblasUpper, CblasNoTrans, CblasNonUnit, DiagOne, A);
+        if(flag!=0)
+          return(flag);
         gsl_vector_set(seR,k,gsl_blas_dnrm2(A));
+        if(gsl_finite(gsl_vector_get(seR,k))==0)
+        {
+          flag=1;
+          return(flag);
+        }
       }
     }    
   }
+  
+  // Copy infMat in DiagOne
+  // So that I don't have to recompute the inverse of L'
+  gsl_matrix_memcpy(infMat, DiagOne);
   
   gsl_vector_free(sumF), gsl_vector_free(sumR), gsl_vector_free(muF),gsl_vector_free(muR);
   gsl_matrix_free(rF), gsl_matrix_free(rR);
@@ -1853,7 +1893,7 @@ int getInfMat(SEXP R, SEXP F, SEXP para, SEXP a, SEXP b, double rho, double xi, 
 
 int mergePeak(SEXP para, gsl_matrix* infMat, gsl_vector* se, gsl_vector* seF, gsl_vector* seR, int *K, double nu, double nSe, double minSpacingPeaks)
 {
-  int i=0,j=0,k=0,l=0,kMerge=0;
+  int i=0,j=0,k=0,l=0,kMerge=0,flag=0;
   int K0=*K;
   gsl_matrix *Index=gsl_matrix_calloc(*K,*K);
   gsl_vector *A=gsl_vector_calloc(5**K-1),*B=gsl_vector_calloc(5**K-1),*C=gsl_vector_calloc(5**K-1);
@@ -1923,21 +1963,34 @@ int mergePeak(SEXP para, gsl_matrix* infMat, gsl_vector* se, gsl_vector* seF, gs
       }
     }
     
-    
-    /* Computer T^-0.5 A */
-    gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, infMat, A);    
+
+    flag=gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, infMat, A);
+    if(flag!=0)
+    {
+      return(flag);
+    }
     /* Compute the norm of that vector */
     gsl_vector_set(se,kMerge,gsl_blas_dnrm2(A));
     
     /* Reset the vector B */
     /* Computer T^-0.5 B */
-    gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, infMat, B);    
+    flag=gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, infMat, B);
+    if(flag!=0)
+    {
+      return(flag);
+    }
+    
     /* Compute the norm of that vector */
     gsl_vector_set(seF,kMerge,gsl_blas_dnrm2(B));
     
     /* Reset the vector B */
     /* Computer T^-0.5 B */
-    gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, infMat, C);
+    flag=gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, infMat, C);
+    if(flag!=0)
+    {
+      return(flag);
+    }
+    
     /* Compute the norm of that vector */
     gsl_vector_set(seR,kMerge,gsl_blas_dnrm2(C));
 
@@ -1986,6 +2039,6 @@ int mergePeak(SEXP para, gsl_matrix* infMat, gsl_vector* se, gsl_vector* seF, gs
   gsl_vector_free(C);
   gsl_vector_free(OriginalW);
     //Here i return 0, in the future we might want to use a flag to check errors
-  return(0);
+  return(flag);
 }
 
