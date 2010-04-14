@@ -19,15 +19,15 @@ setParaEM(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,mapCorrect
   \item{mSelect}{A character string specifying the information criteria to be used when selecting the number of binding events.}
   \item{mergePeaks}{A logical value stating whether overlapping binding events should be picked.}
   \item{mapCorrect}{Should mappability profiles be incorporated in the estimation, that is missing reads estimated.}
-  \item{dataType}{A character string equal to either 'H' or 'TF', 'H' for histone and 'TF' for transcription factors.}
+  \item{dataType}{A character string equal to either `H' or `TF', `H' for histone and `TF' for transcription factors.}
 }
 
 
 \value{
-No value returned. The function simply modifies the internal variables 'paraEMTF' if dataType='TF' and 'paraEMH' if dataType='H'.
+No value returned. The function simply modifies the internal variables `paraEMTF' if dataType='TF' and `paraEMH' if dataType='H'.
 }
 \references{
-X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, "PICS: Probabilistic Inference for ChIP-seq," arXiv, 0903.3206, 2009.
+X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009. To appear in Biometrics.
 }
 \author{Xuekui Zhang and Raphael Gottardo <\email{raphael.gottardo@ircm.qc.ca}>}
 

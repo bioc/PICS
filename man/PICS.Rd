@@ -73,17 +73,17 @@ PICS<-pics(segReadsList,dataType="TF")
 
 \section{Methods}{
   \describe{
- \item{code}{\code{signature(x = "pics")}: return the error code for each list element (i.e. candidate region) of a PICS object. If the string is empty, there were no errors.}
- \item{plot}{\code{signature(x = "pics")}: Plot all regions in the PICS object. This might be long, and should only be used to plot a few regions, so subset the object before plotting.}
- \item{sigmaSqR}{\code{signature(x = "pics")}: return the variance parameter of the reverse (R) distribution for each binding event.}
- \item{sigmaSqF}{\code{signature(x = "pics")}: return the variance parameter of the forward (F) distribution for each binding event.}
- \item{score}{\code{signature(x = "pics")}: return the score for each binding event.} 
- \item{scoreF}{\code{signature(x = "pics")}: return the score  of the forward (F)  for each binding event.}
- \item{scoreR}{\code{signature(x = "pics")}: return the score  of the forward (R)  for each binding event.}
-\item{maxRange}{\code{signature(x = "pics")}: return the range maximum.}
-\item{minRange}{\code{signature(x = "pics")}: return the range minimal.}
- \item{K}{\code{signature(x = "pics")}: subset PICS object.}
- \item{density}{\code{signature(x = "pics")}: return the density for each binding event.}
+ \item{code}{\code{signature(x = ``pics'')}: return the error code for each list element (i.e. candidate region) of a PICS object. If the string is empty, there were no errors.}
+ \item{plot}{\code{signature(x = ``pics'')}: Plot all regions in the PICS object. This might be long, and should only be used to plot a few regions, so subset the object before plotting.}
+ \item{sigmaSqR}{\code{signature(x = ``pics'')}: return the variance parameter of the reverse (R) distribution for each binding event.}
+ \item{sigmaSqF}{\code{signature(x = ``pics'')}: return the variance parameter of the forward (F) distribution for each binding event.}
+ \item{score}{\code{signature(x = ``pics'')}: return the score for each binding event.} 
+ \item{scoreF}{\code{signature(x = ``pics'')}: return the score  of the forward (F)  for each binding event.}
+ \item{scoreR}{\code{signature(x = ``pics'')}: return the score  of the forward (R)  for each binding event.}
+\item{maxRange}{\code{signature(x = ``pics'')}: return the range maximum.}
+\item{minRange}{\code{signature(x = ``pics'')}: return the range minimal.}
+ \item{K}{\code{signature(x = ``pics'')}: subset PICS object.}
+ \item{density}{\code{signature(x = ``pics'')}: return the density for each binding event.}
 }
 }
 
@@ -92,7 +92,9 @@ PICS<-pics(segReadsList,dataType="TF")
   Raphael Gottardo, \email{raphael.gottardo@ircm.qc.ca}
   Arnaud Droit, \email{arnaud.droit@ircm.qc.ca}
 }
-
+\references{
+X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009. To appear in Biometrics.
+}
 \seealso{
 \code{\link{pics}}
 }

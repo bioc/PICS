@@ -102,7 +102,7 @@ setMethod("score", "picsError",
 setMethod("score", "picsList",
           function(x)
           {
-            ans<-.Call("getScore", x@List, PACKAGE="PICS");
+            ans<-.Call("getScore", x@List, package="PICS");
             return(ans)
             
           })
@@ -124,7 +124,7 @@ setMethod("minRange", "picsError",
 setMethod("minRange", "picsList",
           function(x)
           {
-            ans<-.Call("getMin", x@List, PACKAGE="PICS");
+            ans<-.Call("getMin", x@List, package="PICS");
             return(ans)
           })
 
@@ -144,7 +144,7 @@ setMethod("maxRange", "picsError",
 setMethod("maxRange", "picsList",
           function(x)
           {
-            ans<-.Call("getMax", x@List, PACKAGE="PICS");
+            ans<-.Call("getMax", x@List, package="PICS");
             return(ans)
           })
 
@@ -165,7 +165,7 @@ setMethod("scoreReverse", "picsError",
 setMethod("scoreReverse", "picsList",
           function(x)
           {
-            ans<-.Call("getScoreR", x@List, PACKAGE="PICS");
+            ans<-.Call("getScoreR", x@List, package="PICS");
             return(ans)
             
           })
@@ -186,7 +186,7 @@ setMethod("scoreForward", "picsError",
 setMethod("scoreForward", "picsList",
           function(x)
           {
-            ans<-.Call("getScoreF", x@List, PACKAGE="PICS");
+            ans<-.Call("getScoreF", x@List, package="PICS");
             return(ans)
             
           })
@@ -206,7 +206,7 @@ setMethod("chromosome", "picsError",
 setMethod("chromosome", "picsList",
           function(x)
           {
-            ans<-.Call("getChr", x@List, PACKAGE="PICS");
+            ans<-.Call("getChr", x@List, package="PICS");
             return(ans)
           }
 )
@@ -230,7 +230,7 @@ setMethod("map", "segReads",
 setMethod("map", "segReadsList",
           function(x)
           {
-            ans<-.Call("getMap", x@List, PACKAGE="PICS");
+            ans<-.Call("getMap", x@List, package="PICS");
             return(ans)
           }
 )
@@ -252,7 +252,7 @@ setMethod("se", "picsError",
 setMethod("se", "picsList",
           function(x)
           {
-              ans<-.Call("getVector", x@List, as.integer(5), PACKAGE="PICS");
+              ans<-.Call("getVector", x@List, as.integer(5), package="PICS");
               return(ans)
           }
 )
@@ -273,7 +273,7 @@ setMethod("seF", "picsError",
 setMethod("seF", "picsList",
           function(x)
           {
-              ans<-.Call("getVector", x@List, as.integer(6), PACKAGE="PICS");
+              ans<-.Call("getVector", x@List, as.integer(6), package="PICS");
               return(ans)
           }
 )
@@ -295,7 +295,7 @@ setMethod("seR", "picsError",
 setMethod("seR", "picsList",
           function(x)
           {
-              ans<-.Call("getVector", x@List, as.integer(7), PACKAGE="PICS");
+              ans<-.Call("getVector", x@List, as.integer(7), package="PICS");
               return(ans)
           }
 )
@@ -319,7 +319,7 @@ setMethod("sigmaSqF", "picsList",
           {
               # temp<-lapply(x@List,"mu")
               # return(unlist(temp))
-              ans<-.Call("getVector", x@List, as.integer(3), PACKAGE="PICS");
+              ans<-.Call("getVector", x@List, as.integer(3), package="PICS");
               return(ans)
           }
 )
@@ -342,7 +342,7 @@ setMethod("sigmaSqR", "picsList",
           {
               # temp<-lapply(x@List,"mu")
               # return(unlist(temp))
-              ans<-.Call("getVector", x@List, as.integer(4), PACKAGE="PICS");
+              ans<-.Call("getVector", x@List, as.integer(4), package="PICS");
               return(ans)
           }
 )
@@ -365,7 +365,7 @@ setMethod("delta", "picsList",
           {
               # temp<-lapply(x@List,"mu")
               # return(unlist(temp))
-              ans<-.Call("getVector", x@List, as.integer(2), PACKAGE="PICS");
+              ans<-.Call("getVector", x@List, as.integer(2), package="PICS");
               return(ans)
           }
 )
@@ -389,7 +389,7 @@ setMethod("mu", "picsList",
           {
               # temp<-lapply(x@List,"mu")
               # return(unlist(temp))
-              ans<-.Call("getVector", x@List, as.integer(1), PACKAGE="PICS");
+              ans<-.Call("getVector", x@List, as.integer(1), package="PICS");
               return(ans)
           }
 )
@@ -410,7 +410,7 @@ setMethod("w", "picsError",
 setMethod("w", "picsList",
           function(x)
           {
-              ans<-.Call("getVector", x@List, as.integer(0), PACKAGE="PICS");
+              ans<-.Call("getVector", x@List, as.integer(0), package="PICS");
               return(ans)
           }
 )
@@ -431,7 +431,7 @@ setMethod("K", "picsError",
 setMethod("K", "picsList",
           function(x)
           {
-              ans<-.Call("getK", x@List, PACKAGE="PICS");
+              ans<-.Call("getK", x@List, package="PICS");
               return(ans)
           }
 )
@@ -471,75 +471,64 @@ setMethod("length", "segReadsList",
 
 # setGeneric("density", function(x, ...) standardGeneric("density"))
 setMethod("density", "pics",
-          function(x,strand,step=10,filter=NULL)
+          function(x,strand="+",step=10,sum=FALSE,filter=NULL,scale=TRUE)
           {
-            mu<-mu(x)
-            sigmaSqF<-sigmaSqF(x)
-            sigmaSqR<-sigmaSqR(x)
-            score<-score(x)
-            delta<-delta(x)
-            se<-se(x)            
-            K<-length(mu)
-            ## Apply some filterings
-            if(!is.null(filter))
-            {
-              ind1<-delta>filter$delta[1] & delta<filter$delta[2]
-              ind2<-sigmaSqF>filter$sigmaSqF[1] & sigmaSqF<filter$sigmaSqF[2]
-              ind3<-sigmaSqR>filter$sigmaSqR[1] & sigmaSqR<filter$sigmaSqR[2]
-              ind4<-se>filter$se[1] & se<filter$se[2]
-              ind5<-score>filter$score[1] & score<filter$score[2]
-
-              ind<-ind1&ind2&ind3&ind4&ind5              
-              K<-sum(ind)
-              if(K==0)
-              {
-                return(NULL)
-              }
-              mu<-mu[ind]
-              sigmaSqF<-sigmaSqF[ind]
-              sigmaSqR<-sigmaSqR[ind]
-              score<-score[ind]
-              delta<-delta[ind]
-            }
+            
+            # Check that all filters are passed
+            missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","score")%in%names(filter)
+            filter[c("delta","sigmaSqF","sigmaSqR","se","score")[missingNames]]<-list(c(0,Inf))
             if(strand=="+")
             {
-              m<-max(as.integer(mu[1]-delta[1]/2-3*sqrt(sigmaSqF[1])),x@range[1])
-              M<-min(as.integer(mu[K]-delta[K]/2+3*sqrt(sigmaSqF[K])),x@range[2])
-              
-              xx<-seq(m,M,step)
-              yy<-rep(0,length(xx))
-              n<-length(xx)
-              dF<-matrix(0,n,K)
-              
-              for(k in 1:K)
-              {
-                  dF[,k]<-dt((xx-mu[k]+delta[k]/2)/sqrt(sigmaSqF[k]),4)/sqrt(sigmaSqF[k])*score[k]
-              }
-              d<-sapply(1:n,function(i,dF){max(dF[i,])},dF)
-              return(list(x=xx,y=d))
+              strand<-1
             }
             else if(strand=="-")
             {
-              m<-max(as.integer(mu[1]+delta[1]/2-3*sqrt(sigmaSqR[1])),x@range[1])
-              M<-min(as.integer(mu[K]+delta[K]/2+3*sqrt(sigmaSqR[K])),x@range[2])
-              
-              xx<-seq(m,M,step)
-              yy<-rep(0,length(xx))
-              n<-length(xx)
-              dR<-matrix(0,n,K)
-
-              for(k in 1:K)
-              {
-                  dR[,k]<-dt((xx-mu[k]-delta[k]/2)/sqrt(sigmaSqR[k]),4)/sqrt(sigmaSqR[k])*score[k]
-              }
-              d<-sapply(1:n,function(i,dR){max(dR[i,])},dR)
-              return(list(x=xx,y=d))
+              strand<--1
             }
+            else if(strand=="*")
+            {
+              strand<-0
+            }
+            else
+            {
+              stop("Strand must be either '+', '-' or '*'")
+            }            
+            strand<-as.double(paste(strand,"1",sep=""))
+            ans<-.Call("getDensity", x, strand, step, filter, sum, scale, PACKAGE="PICS")
+            return(ans);
+          }
+)
+
+setMethod("density", "picsList",
+          function(x,strand="+",step=10,sum=FALSE,filter=NULL,scale=TRUE)
+          {
+            # Check that all filters are passed
+            missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","score")%in%names(filter)
+            filter[c("delta","sigmaSqF","sigmaSqR","se","score")[missingNames]]<-list(c(0,Inf))
+
+            if(strand=="+")
+            {
+              strand<-1
+            }
+            else if(strand=="-")
+            {
+              strand<--1
+            }
+            else if(strand=="*")
+            {
+              strand<-0
+            }
+            else
+            {
+              stop("Strand must be either '+', '-' or '*'")
+            }
+            ans<-.Call("getDensityList", x, strand, step, filter, sum, scale, PACKAGE="PICS")
+            return(ans);
           }
 )
 
 setMethod("density", "picsError",
-          function(x,strand=NULL,step=NULL,filter=NULL)
+          function(x,strand=NULL,step=NULL,sum=NULL,filter=NULL)
           {
             return(NULL)
           }
@@ -910,4 +899,3 @@ setMethod("plot", signature("picsList", "picsList"),
   lines(FDRex[notDup,2],FDRex[notDup,1],col=2,lty=2,lwd=1.5)
   abline(h=h,lw=1.5,col="grey")
 })
-

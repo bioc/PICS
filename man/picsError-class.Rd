@@ -20,12 +20,12 @@ This object is used to return an error code when the PICS function failed to ret
 }
 
 \section{Accessors}{
-All of the accessors defined for a 'pics' object still work for a 'picsError' object but will simply return a NULL pointer.
+All of the accessors defined for a `pics' object still work for a `picsError' object but will simply return a NULL pointer.
 }
 
 \section{Constructor}{
 \describe{
-newPicsError(string) where 'string' is the error code.
+newPicsError(string) where `string' is the error code.
 }
 }
 
@@ -41,7 +41,7 @@ newPicsError<-function(string)
 }
 
 \references{
-X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, "PICS: Probabilistic Inference for ChIP-seq," arXiv, 0903.3206, 2009.
+X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009. To appear in Biometrics.
 }
 
 \seealso{

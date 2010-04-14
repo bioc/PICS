@@ -20,7 +20,8 @@ picsFDR(picsIP,picsCont,filter=list(delta=c(0,Inf),se=c(0,Inf),sigmaSqF=c(0,Inf)
 \value{
 A dataframe with three columns corresponding to the estimated FDR, the score, and the number of regions. 
 }
-\references{X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, "PICS: Probabilistic Inference for ChIP-seq," arXiv, 0903.3206, 2009.
+\references{
+X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009. To appear in Biometrics.
 }
 \author{ Xuekui Zhang and Raphael Gottardo <\email{raphael.gottardo@ircm.qc.ca}>}
 \seealso{

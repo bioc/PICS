@@ -11,9 +11,9 @@ segmentReads(data, dataC=NULL, map=NULL,minReads=2, minReadsInRegion=3,jitter=FA
 
 
 \arguments{
-  \item{data}{A 'GenomeData' object containing the IP reads. See details for more information on how to set up the data.}
-  \item{dataC}{A 'GenomeData' object containing the control reads. Set to NULL by default, i.e. no control.}
-  \item{map}{A 'RangedData' object containing the mappability profiles. Set to NULL by default, i.e. no profiles.}
+  \item{data}{A `GenomeData' object containing the IP reads. See details for more information on how to set up the data.}
+  \item{dataC}{A `GenomeData' object containing the control reads. Set to NULL by default, i.e. no control.}
+  \item{map}{A `RangedData' object containing the mappability profiles. Set to NULL by default, i.e. no profiles.}
   \item{minReads}{The minimum number of F/R reads to be present in the sliding window.}
   \item{minReadsInRegion}{The minimum number of F/R reads to be present in the region.}
   \item{jitter}{A logical value stating whether some noise should be added to the read locations. This is recommended if the read positions have lots of duplicates.}
@@ -23,7 +23,7 @@ segmentReads(data, dataC=NULL, map=NULL,minReads=2, minReadsInRegion=3,jitter=FA
 }
 
 \value{
-An object of class 'segmentReadsList' containing the results for all regions pre-processed. 
+An object of class `segmentReadsList' containing the results for all regions pre-processed. 
 }
 \references{
 X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq" arXiv, 0903.3206, 2009.

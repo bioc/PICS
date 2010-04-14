@@ -347,10 +347,10 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
   {
     REAL(wOut)[k]=w[k];
     REAL(muOut)[k]=mu[k];
-    REAL(deltaOut)[k]=delta[k];      
-    REAL(sfOut)[k]=sF[k]; 
-    REAL(srOut)[k]=sR[k];      
-    REAL(seOut)[k]=gsl_vector_get(se,k);      
+    REAL(deltaOut)[k]=delta[k];
+    REAL(sfOut)[k]=sF[k];
+    REAL(srOut)[k]=sR[k];
+    REAL(seOut)[k]=gsl_vector_get(se,k);
     REAL(seOutF)[k]=gsl_vector_get(seF,k);
     REAL(seOutR)[k]=gsl_vector_get(seR,k);
   }
@@ -479,7 +479,7 @@ SEXP fitModelK(SEXP kk, SEXP iMax, SEXP tol, SEXP mselect, SEXP yR, SEXP yF, SEX
 	}else {
 		ans=firstFit;
 		if (okFit) { // "no finite BIC"
-			SET_STRING_ELT(VECTOR_ELT(ans, 3), 0, mkChar("No finite BIC values"));  ; 
+			SET_STRING_ELT(VECTOR_ELT(ans, 3), 0, mkChar("No finite BIC values"));
 		}
 		UNPROTECT(nProtected);
 		//Rprintf("return with no finite BIC \n\n\n");
@@ -1622,7 +1622,171 @@ int getInfMat(SEXP R, SEXP F, SEXP para, SEXP a, SEXP b, double rho, double xi, 
   
   if(length(a)>0) // test if there is any missing reads
   {
-      //this part is to be done by Xuekui
+	  int J=length(a);
+	  double aNormF, aNormR, bNormF, bNormR, P0F=1, P0R=1, PhiF, PhiR, PhiFw, PhiRw, wPjF, wPjR; 
+	  gsl_matrix *cdfAF=gsl_matrix_calloc(K,J), *cdfBF=gsl_matrix_calloc(K,J), *cdfAR=gsl_matrix_calloc(K,J),*cdfBR=gsl_matrix_calloc(K,J);
+	  gsl_matrix *aSinF=gsl_matrix_calloc(K,J), *bSinF=gsl_matrix_calloc(K,J), *aSinR=gsl_matrix_calloc(K,J),*bSinR=gsl_matrix_calloc(K,J);
+	  gsl_matrix *H3F=gsl_matrix_calloc(K,J), *H1F=gsl_matrix_calloc(K,J), *H2F=gsl_matrix_calloc(K,J),  *H0F=gsl_matrix_calloc(K,J);
+	  gsl_matrix *H3R=gsl_matrix_calloc(K,J), *H1R=gsl_matrix_calloc(K,J), *H2R=gsl_matrix_calloc(K,J),  *H0R=gsl_matrix_calloc(K,J);
+	  gsl_vector *PjF=gsl_vector_calloc(J), *PjR=gsl_vector_calloc(J);
+	  //gsl_vector *OneJ=gsl_vector_calloc(J);
+	  gsl_vector *NjF=gsl_vector_calloc(J), *NjR=gsl_vector_calloc(J);
+	  gsl_matrix *qWmF=gsl_matrix_calloc(K,J),*qMumF=gsl_matrix_calloc(K,J),*qSigmamF=gsl_matrix_calloc(K,J) ;
+	  gsl_matrix *qWmR=gsl_matrix_calloc(K,J),*qMumR=gsl_matrix_calloc(K,J),*qSigmamR=gsl_matrix_calloc(K,J) ;
+	  gsl_matrix *scoreMissF=gsl_matrix_calloc(5*K-1,J),*scoreMissR=gsl_matrix_calloc(5*K-1,J);
+	  gsl_vector *scoreMissBarF=gsl_vector_calloc(5*K-1), *scoreMissBarR=gsl_vector_calloc(5*K-1);
+	  gsl_matrix *infMatMissF=gsl_matrix_calloc(5*K-1,5*K-1), *infMatMissR=gsl_matrix_calloc(5*K-1,5*K-1);
+	  gsl_vector_view scoreMissF_col, scoreMissR_col;
+
+	  //gsl_vector *rowSumH0F=gsl_vector_calloc(K), *rowSumH0R=gsl_vector_calloc(K);
+	  //gsl_vector *rowSumH1F=gsl_vector_calloc(K), *rowSumH1R=gsl_vector_calloc(K);
+  	  //gsl_vector *rowSumH2F=gsl_vector_calloc(K), *rowSumH2R=gsl_vector_calloc(K);
+	  //gsl_vector *rowSumH3F=gsl_vector_calloc(K), *rowSumH3R=gsl_vector_calloc(K);
+	  int *aP=INTEGER(a), *bP=INTEGER(b);
+	  
+	  /** Initialize the vector of Ones **/
+	  //gsl_vector_set_all(OneJ, 1.0);
+	  	  
+	  
+	  for(i=0;i<J;i++)
+	  {
+		  for(j=0;j<K;j++)
+		  {
+			  aNormF=(aP[i]-gsl_vector_get(muF,j))/sqrt(sigmaSqF[j]);
+			  aNormR=(aP[i]-gsl_vector_get(muR,j))/sqrt(sigmaSqR[j]);
+			  bNormF=(bP[i]-gsl_vector_get(muF,j))/sqrt(sigmaSqF[j]);
+			  bNormR=(bP[i]-gsl_vector_get(muR,j))/sqrt(sigmaSqR[j]);
+			  
+			  gsl_matrix_set(cdfAF,j,i,gsl_cdf_tdist_P(aNormF,nu));
+			  gsl_matrix_set(cdfAR,j,i,gsl_cdf_tdist_P(aNormR,nu));
+			  gsl_matrix_set(cdfBF,j,i,gsl_cdf_tdist_P(bNormF,nu));
+			  gsl_matrix_set(cdfBR,j,i,gsl_cdf_tdist_P(bNormR,nu));			  
+			  
+			  
+			  gsl_matrix_set(aSinF,j,i,sin(atan(aNormF/2)));
+			  gsl_matrix_set(aSinR,j,i,sin(atan(aNormR/2)));
+			  gsl_matrix_set(bSinF,j,i,sin(atan(bNormF/2)));
+			  gsl_matrix_set(bSinR,j,i,sin(atan(bNormR/2)));	
+			  
+			  
+			  gsl_matrix_set(H3F,j,i,gsl_matrix_get(cdfBF,j,i)-gsl_matrix_get(cdfAF,j,i));
+			  gsl_matrix_set(H3R,j,i,gsl_matrix_get(cdfBR,j,i)-gsl_matrix_get(cdfAR,j,i));
+		  
+			  gsl_matrix_set(H2F,j,i,cst*(fun2(gsl_matrix_get(bSinF,j,i)) - fun2(gsl_matrix_get(aSinF,j,i))));
+			  gsl_matrix_set(H2R,j,i,cst*(fun2(gsl_matrix_get(bSinR,j,i)) - fun2(gsl_matrix_get(aSinR,j,i))));
+
+			  gsl_matrix_set(H0F,j,i,cst*(fun0(gsl_matrix_get(bSinF,j,i)) - fun0(gsl_matrix_get(aSinF,j,i))));
+			  gsl_matrix_set(H0R,j,i,cst*(fun0(gsl_matrix_get(bSinR,j,i)) - fun0(gsl_matrix_get(aSinR,j,i))));
+ 
+			  gsl_matrix_set(H1F,j,i, (fun1(aNormF,4) - fun1(bNormF,4)) * cst/(nu+1));
+			  gsl_matrix_set(H1R,j,i, (fun1(aNormR,4) - fun1(bNormR,4)) * cst/(nu+1));
+			   
+			  gsl_vector_set(PjF,i, gsl_vector_get(PjF,i)+w[j]*gsl_matrix_get(H3F,j,i));
+			  gsl_vector_set(PjR,i, gsl_vector_get(PjR,i)+w[j]*gsl_matrix_get(H3R,j,i));
+			  
+		  }
+	  }
+	  			  
+	  for(i=0;i<J;i++)
+	  {
+		  P0F -= gsl_vector_get(PjF,i);
+		  P0R -= gsl_vector_get(PjR,i);
+	  }
+	  PhiF = NF/P0F;
+	  PhiR = NR/P0R;
+	  
+	  for(i=0;i<J;i++)
+	  {
+		  gsl_vector_set(NjF,i, gsl_vector_get(PjF,i)*PhiF);
+		  gsl_vector_set(NjR,i, gsl_vector_get(PjR,i)*PhiR);
+	  }
+	  
+	  
+	  //calculate the score matrix for missing data
+	  for(i=0;i<J;i++)
+	  {
+		  for(j=0;j<K;j++)
+		  {
+			  wPjF = w[j] / gsl_vector_get(PjF,i);		  
+			  //'q.w.m[k,j]=dQ_{k,mis}(y_n,theta)/d w_k', a matrix of 'K' by 'J'
+			  gsl_matrix_set(qWmF,j,i, gsl_matrix_get(H3F,j,i)/gsl_vector_get(PjF,i));
+			  //'qMu.m[k,j]=dQ_{k,mis}(y_n,theta)/d mu_k', a matrix of 'K' by 'J'
+			  gsl_matrix_set(qMumF,j,i, wPjF*gsl_matrix_get(H1F,j,i)*2./sqrt(sigmaSqF[j]));
+			  //'q.sigma.m[k,j]=dQ_{k,mis}(y_n,theta)/d sigma.sq_k', a matrix of 'K' by 'J'
+			  gsl_matrix_set(qSigmamF,j,i, wPjF*sigmaSqR[j]/2.*(gsl_matrix_get(H0F,j,i)-nu*gsl_matrix_get(H2F,j,i)));
+			  
+			  wPjR = w[j] / gsl_vector_get(PjR,i);		  
+			  //'q.w.m[k,j]=dQ_{k,mis}(y_n,theta)/d w_k', a matrix of 'K' by 'J'
+			  gsl_matrix_set(qWmR,j,i, gsl_matrix_get(H3R,j,i)/gsl_vector_get(PjR,i));
+			  //'qMu.m[k,j]=dQ_{k,mis}(y_n,theta)/d mu_k', a matrix of 'K' by 'J'
+			  gsl_matrix_set(qMumR,j,i, wPjR*gsl_matrix_get(H1R,j,i)*2./sqrt(sigmaSqR[j]));
+			  //'q.sigma.m[k,j]=dQ_{k,mis}(y_n,theta)/d sigma.sq_k', a matrix of 'K' by 'J'
+			  gsl_matrix_set(qSigmamR,j,i, wPjR*sigmaSqR[j]/2.*(gsl_matrix_get(H0R,j,i)-nu*gsl_matrix_get(H2R,j,i)));
+		  }
+	  }
+	  
+	  	  
+	  //the score matrix for miss data, a matrix of '5*K-1' by 'J'
+	  for(i=0;i<J;i++)
+	  {
+		  for(j=1;j<K;j++)
+		  {
+			  gsl_matrix_set(scoreMissF, j-1, i, gsl_matrix_get(qWmF,j,i));
+			  
+			  gsl_matrix_set(scoreMissR, j-1, i, gsl_matrix_get(qWmR,j,i));
+		  }
+		  for(j=0;j<K;j++)
+		  {
+			  gsl_matrix_set(scoreMissF, (K-1)+j, i, gsl_matrix_get(qMumF,j,i));
+			  gsl_matrix_set(scoreMissF, 2*K-1+j, i, -gsl_matrix_get(qMumF,j,i)/2.);
+			  gsl_matrix_set(scoreMissF, 3*K-1+j, i, gsl_matrix_get(qSigmamF,j,i));
+			  
+			  gsl_matrix_set(scoreMissR, (K-1)+j, i, gsl_matrix_get(qMumR,j,i));
+			  gsl_matrix_set(scoreMissR, 2*K-1+j, i, gsl_matrix_get(qMumR,j,i)/2.);
+			  gsl_matrix_set(scoreMissR, 4*K-1+j, i, gsl_matrix_get(qSigmamR,j,i));
+		  }
+	  }
+	  
+	  // Compute scoreMiss*1 (sum over rows)
+	  gsl_blas_dgemv(CblasNoTrans, 1.0/(1.0-P0F), scoreMissF, PjF, 0, scoreMissBarF);
+	  gsl_blas_dgemv(CblasNoTrans, 1.0/(1.0-P0R), scoreMissR, PjR, 0, scoreMissBarR);
+	  
+	  // Scale the matrix to compute the mean
+	  gsl_vector_scale(scoreMissBarF, 1./J);
+	  gsl_vector_scale(scoreMissBarR, 1./J);
+	  
+	  //the information matrix, a matrix of '5*K-1' by '5*K-1'
+	  for(i=0;i<J;i++)
+	  {
+		  scoreMissF_col=gsl_matrix_column(scoreMissF, i);
+		  gsl_blas_dsyr(CblasLower, gsl_vector_get(NjF,i), &scoreMissF_col.vector, infMatMissF);
+
+		  scoreMissR_col=gsl_matrix_column(scoreMissR, i);
+		  gsl_blas_dsyr(CblasLower, gsl_vector_get(NjR,i), &scoreMissR_col.vector, infMatMissR);
+	  }
+	  
+	  gsl_blas_dsyr(CblasLower, -1.0*NF*(1-P0F)/P0F, scoreMissBarF, infMatMissF);
+	  gsl_blas_dsyr(CblasLower, -1.0*NR*(1-P0R)/P0R, scoreMissBarR, infMatMissR);
+	  
+	  // I store everything in infMat
+	  gsl_matrix_add(infMat,infMatMissF);
+	  gsl_matrix_add(infMat,infMatMissR);
+
+	  
+	  /** Free the memory **/ 
+	  gsl_vector_free(PjF);gsl_vector_free(PjR); //gsl_vector_free(OneJ);
+	  //gsl_vector_free(rowSumH0F);  gsl_vector_free(rowSumH1F); gsl_vector_free(rowSumH2F);    gsl_vector_free(rowSumH3F);
+	  //gsl_vector_free(rowSumH0R);  gsl_vector_free(rowSumH1R); gsl_vector_free(rowSumH2R);    gsl_vector_free(rowSumH3R);
+	  gsl_matrix_free(cdfAF); gsl_matrix_free(cdfBF); gsl_matrix_free(cdfAR); gsl_matrix_free(cdfBR);
+	  gsl_matrix_free(aSinF); gsl_matrix_free(bSinF); gsl_matrix_free(aSinR); gsl_matrix_free(bSinR);
+	  gsl_matrix_free(H0F); gsl_matrix_free(H1F);gsl_matrix_free(H2F);gsl_matrix_free(H3F);
+	  gsl_matrix_free(H0R); gsl_matrix_free(H1R);gsl_matrix_free(H2R);gsl_matrix_free(H3R);
+	  gsl_matrix_free(qWmF), gsl_matrix_free(qWmR);
+	  gsl_matrix_free(qMumF), gsl_matrix_free(qMumR);
+	  gsl_matrix_free(qSigmamF), gsl_matrix_free(qSigmamR);
+	  gsl_matrix_free(scoreMissF),gsl_matrix_free(scoreMissR);
+	  gsl_vector_free(scoreMissBarF), gsl_vector_free(scoreMissBarR);
+	  gsl_matrix_free(infMatMissF), gsl_matrix_free(infMatMissR);	  
   }
 
   flag=gsl_linalg_cholesky_decomp(infMat);
@@ -1725,23 +1889,10 @@ int mergePeak(SEXP para, gsl_matrix* infMat, gsl_vector* se, gsl_vector* seF, gs
     TmpMu=(w[kMerge]*mu[kMerge]+w[kMerge+1]*mu[kMerge+1])/SumCombW;
       // New Delta
     TmpDelta=(w[kMerge]*delta[kMerge]+w[kMerge+1]*delta[kMerge+1])/SumCombW;
-      // New SigmaSqF
-    
-//    cl$para$sigmaSqF[kk:(kk+1)]<-((v-2)/v*(sum((v/(v-2)*cl$para$sigmaSqF[kk:(kk+1)]+(cl$para$mu[kk:(kk+1)]-cl$para$delta[kk:(kk+1)]/2)^2)*cl$para$w[kk:(kk+1)])/(sum(cl$para$w[kk:(kk+1)]))-
-//                                           (sum((cl$para$mu[kk:(kk+1)]-cl$para$delta[kk:(kk+1)]/2)*cl$para$w[kk:(kk+1)])/(sum(cl$para$w[kk:(kk+1)])))^2))
-    
-//    printf("sigmaSqF[kMerge]=%lf\n",sigmaSqF[kMerge]);
-//    printf("sigmaSqF[kMerge+1]=%lf\n",sigmaSqF[kMerge+1]);
-//    printf("kMerge=%d\n",kMerge);
-
+      // New SigmaSqF    
     TmpSigmaSqF=(nu-2.)/nu*(((nu/(nu-2.)*sigmaSqF[kMerge]+gsl_pow_2(mu[kMerge]-delta[kMerge]/2.))*w[kMerge]+(nu/(nu-2.)*sigmaSqF[kMerge+1]+gsl_pow_2(mu[kMerge+1]-delta[kMerge+1]/2.))*w[kMerge+1])/SumCombW-gsl_pow_2(TmpMu-TmpDelta/2.));
-//    printf("A=%lf\n",(nu/(nu-2.)*(sigmaSqF[kMerge]+gsl_pow_2(mu[kMerge]-delta[kMerge]/2.))*w[kMerge]+(nu/(nu-2.)*sigmaSqF[kMerge+1]+gsl_pow_2(mu[kMerge+1]-delta[kMerge+1]/2.))*w[kMerge+1])/SumCombW);
-//    printf("B=%lf\n",gsl_pow_2(TmpMu-TmpDelta/2.));
-//    printf("TmpSigmaSqF=%lf\n",TmpSigmaSqF);
-
       // New SigmaSqR
     TmpSigmaSqR=(nu-2.)/nu*(((nu/(nu-2.)*sigmaSqR[kMerge]+gsl_pow_2(mu[kMerge]+delta[kMerge]/2.))*w[kMerge]+(nu/(nu-2.)*sigmaSqR[kMerge+1]+gsl_pow_2(mu[kMerge+1]+delta[kMerge+1]/2.))*w[kMerge+1])/SumCombW-gsl_pow_2(TmpMu+TmpDelta/2.));
-    
       // Replace the current parameters by the new ones
     mu[kMerge]=TmpMu;
     delta[kMerge]=TmpDelta;

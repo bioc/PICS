@@ -7,6 +7,7 @@
 \alias{delta,picsList-method}
 \alias{w,picsList-method}
 \alias{score,picsList-method}
+\alias{density,picsList-method}
 \alias{se,picsList-method}
 \alias{seF,picsList-method}
 \alias{seR,picsList-method}
@@ -19,13 +20,13 @@
 \title{The pics class}
 
 \description{
-This object is used to gather all parameters from fitting PICS to multiple candidate regions (as returned by the 'segmentReads' function). 
-The objet contains the following slots: 'List', 'paraPrior', 'paraEM', 'minReads', 'N', 'Nc'. 'List' is a list of 'pics' or 'picsError' objects. 'paraPrior' is a list containing the hyperparameters used for the prior, 'paraEM' is a list of convergence parameters for the EM, 'minReads' is a list containing the minimum number of reads used to fit a region with 'PICS', 'N' is the total number of reads in the ChIP samples while 'Nc' is the total number of reads in the control sample.
+This object is used to gather all parameters from fitting PICS to multiple candidate regions (as returned by the `segmentReads' function). 
+The objet contains the following slots: `List', `paraPrior', `paraEM', `minReads', `N', `Nc'. `List' is a list of `pics' or `picsError' objects. `paraPrior' is a list containing the hyperparameters used for the prior, `paraEM' is a list of convergence parameters for the EM, `minReads' is a list containing the minimum number of reads used to fit a region with `PICS', `N' is the total number of reads in the ChIP samples while `Nc' is the total number of reads in the control sample.
 }
 
 \section{Accessors}{
 The PICS package provide accessors to directly access to most of the parameters/standard errors and chromosomes. 
-In the code snippets below, 'x' is a 'picsList' object. For all accessors, the 'picsError' objects are omitted, so that the accessors only return values for the 'pics' objects (i.e. all valid binding events).
+In the code snippets below, `x' is a `picsList' object. For all accessors, the `picsError' objects are omitted, so that the accessors only return values for the `pics' objects (i.e. all valid binding events).
 \describe{
 \item{'chromosome(x)'}{Gets the chromosome names of all candidate regions.}
 \item{'mu(x)'}{Gets the position estimates of all binding sites identified in all candidate regions.}
@@ -53,14 +54,14 @@ newPicsList(List, paraEM, paraPrior, minReads, N, Nc)
 
 \section{Methods}{
   \describe{
- \item{[}{\code{signature(x = "pics")}: subset PICS object.}
+ \item{[}{\code{signature(x = ``pics'')}: subset PICS object.}
 }
 }
 
 
 \section{Methods}{
   \describe{
- \item{length}{\code{signature(x = "pics")}: subset PICS object.}
+ \item{length}{\code{signature(x = ``pics'')}: subset PICS object.}
 }
 }
 
@@ -70,7 +71,7 @@ newPicsList(List, paraEM, paraPrior, minReads, N, Nc)
 
 
 \section{Constructor}{
-newPicsList<-function(List, paraEM, paraPrior, minReads, N, Nc) constructs a new 'picsList' object with the following arguments. 
+newPicsList<-function(List, paraEM, paraPrior, minReads, N, Nc) constructs a new `picsList' object with the following arguments. 
 \describe{
 \item{newPicsList}{}
 \item{w}{The mixture weights (a vector)}
@@ -95,7 +96,7 @@ newPicsList<-function(List, paraEM, paraPrior, minReads, N, Nc) constructs a new
 }
 
 \references{
-X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, "PICS: Probabilistic Inference for ChIP-seq," arXiv, 0903.3206, 2009.
+X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009. To appear in Biometrics.
 }
 
 \seealso{

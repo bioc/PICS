@@ -29,7 +29,7 @@ segReads<-new(yF, yR, cF, cR, map, chr)
 
 \section{Methods}{
   \describe{
- \item{map}{\code{signature(x = "pics")}: subset PICS object.}
+ \item{map}{\code{signature(x = ``pics'')}: subset PICS object.}
 }
 }
 
@@ -41,7 +41,7 @@ Arnaud Droit, \email{arnaud.droit@ircm.qc.ca}
 }
 
 \references{
-W. E. Johnson, Li, W., Meyer, C. A., Gottardo, R., Carroll, J. S., Brown, M., and Liu, X. S. (2006). Model-based analysis of tiling-arrays for ChIP-chip. PNAS 103:12457-12462.
+X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009. To appear in Biometrics.
 }
 
 \seealso{

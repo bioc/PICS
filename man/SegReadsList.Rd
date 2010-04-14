@@ -25,15 +25,15 @@ segReadsList<-new(List,paraSW,N,Nc)
 
 \section{Methods}{
   \describe{
- \item{[}{\code{signature(x = "pics")}: subset gadem object.}
-\item{[}{\code{signature(x = "pics")}: subset gadem object.}
+ \item{[}{\code{signature(x = ``pics'')}: subset gadem object.}
+\item{[}{\code{signature(x = ``pics'')}: subset gadem object.}
 	}
 }
 
 
 \section{Methods}{
   \describe{
- \item{length}{\code{signature(x = "pics")}: subset PICS object.}
+ \item{length}{\code{signature(x = ``pics'')}: subset PICS object.}
 }
 }
 
@@ -44,7 +44,7 @@ segReadsList<-new(List,paraSW,N,Nc)
 }
 
 \references{
-W. E. Johnson, Li, W., Meyer, C. A., Gottardo, R., Carroll, J. S., Brown, M., and Liu, X. S. (2006). Model-based analysis of tiling-arrays for ChIP-chip. PNAS 103:12457-12462.
+X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009. To appear in Biometrics.
 }
 \seealso{
 \code{\link{pics}}

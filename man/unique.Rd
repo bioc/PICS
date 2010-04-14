@@ -8,11 +8,11 @@
 \title{GenomeData Unique Reads} 
 
 \description{
-This methods select the unique enriched regions
+This methods select the unique elements in a GenomeData object
 }
 
 \arguments{
-\item{object}{Object returned from \code{\link{pics}} .}
+\item{object}{A `GenomeData' object.}
 }
 
 \author{
@@ -23,7 +23,7 @@ Raphael Gottardo <\email{raphael.gottardo@ircm.qc.ca}
 }
 
 \seealso{
-\code{\link{pics}}
+\code{\link{segmentReads}}
 }
 
 \keyword{print}

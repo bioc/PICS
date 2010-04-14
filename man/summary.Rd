@@ -10,7 +10,7 @@
 \title{summary PICS } 
 
 \description{
-This methods summary the objects of PICS.}
+This methods summarized `pics', `picsList', `seg' or `segList' objects.}
 
 \usage{
 \S4method{summary}{pics}(object)

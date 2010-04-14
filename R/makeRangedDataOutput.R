@@ -78,32 +78,38 @@ makeRangedDataOutput<-function(obj, type="fixed", filter=list(delta=c(0,Inf),se=
   }
   else if(type=="wig")
   {
-    temp<-lapply(obj@List,"density","+",step=20,filter=filter)
-    startp<-unlist(lapply(temp,function(x){head(x$x,-1)}))
-    scorep<-unlist(lapply(temp,function(x){head(x$y,-1)}))
-    lx<-unlist(lapply(temp,function(x){if(is.null(x)){return(0);}else{return(length(x$x)-1);}}))
-    chr<-unlist(lapply(obj@List,function(x){if(is(x,"picsError")){return(NA);}else{return(x@chr);}}))
-    chrom<-(paste("", chr, sep=""))
-    chromp<-rep(chrom,lx)
-    endp<-startp+9
+    temp<-density(obj,strand="*",step=10,sum=TRUE,filter=filter,scale=TRUE)
+    chrom<-temp$chr
+    start<-temp$x
+    end<-temp$x+9
+    score<-temp$density
+    strand="*"
+    # temp<-lapply(obj@List,"density","+",step=20,filter=filter)
+    # startp<-unlist(lapply(temp,function(x){head(x$x,-1)}))
+    # scorep<-unlist(lapply(temp,function(x){head(x$y,-1)}))
+    # lx<-unlist(lapply(temp,function(x){if(is.null(x)){return(0);}else{return(length(x$x)-1);}}))
+    # chr<-unlist(lapply(obj@List,function(x){if(is(x,"picsError")){return(NA);}else{return(x@chr);}}))
+    # chrom<-(paste("", chr, sep=""))
+    # chromp<-rep(chrom,lx)
+    # endp<-startp+9
     
-    temp<-lapply(obj@List,"density","-",step=20,filter=filter)
-    startn<-unlist(lapply(temp,function(x){head(x$x,-1)}))
-    scoren<-unlist(lapply(temp,function(x){head(x$y,-1)}))
-    lx<-unlist(lapply(temp,function(x){if(is.null(x)){return(0);}else{return(length(x$x)-1);}}))
-    chr<-unlist(lapply(obj@List,function(x){if(is(x,"picsError")){return(NA);}else{return(x@chr);}}))
-    chrom<-(paste("", chr, sep=""))
-    chromn<-rep(chrom,lx)
-    endn<-startn+9
+    # temp<-lapply(obj@List,"density","-",step=20,filter=filter)
+    # startn<-unlist(lapply(temp,function(x){head(x$x,-1)}))
+    # scoren<-unlist(lapply(temp,function(x){head(x$y,-1)}))
+    # lx<-unlist(lapply(temp,function(x){if(is.null(x)){return(0);}else{return(length(x$x)-1);}}))
+    # chr<-unlist(lapply(obj@List,function(x){if(is(x,"picsError")){return(NA);}else{return(x@chr);}}))
+    # chrom<-(paste("", chr, sep=""))
+    # chromn<-rep(chrom,lx)
+    # endn<-startn+9
     
-    start<-c(startp,startn)
-    end<-c(endp,endn)
-    chrom<-c(chromp,chromn)
-    strand<-c(rep("+",length(startp)),rep("-",length(startn)))
-    score<-c(scorep,scoren)
+    # start<-c(startp,startn)
+    # end<-c(endp,endn)
+    # chrom<-c(chromp,chromn)
+    # strand<-c(rep("+",length(startp)),rep("-",length(startn)))
+    # score<-c(scorep,scoren)
   }
   
-  if (length(score)==0) 
+  if(length(score)==0) 
   {
   	gr=NULL
   }else
