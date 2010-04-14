@@ -102,7 +102,7 @@ setMethod("score", "picsError",
 setMethod("score", "picsList",
           function(x)
           {
-            ans<-.Call("getScore", x@List, package="PICS");
+            ans<-.Call("getScore", x@List, PACKAGE="PICS");
             return(ans)
             
           })
@@ -124,7 +124,7 @@ setMethod("minRange", "picsError",
 setMethod("minRange", "picsList",
           function(x)
           {
-            ans<-.Call("getMin", x@List, package="PICS");
+            ans<-.Call("getMin", x@List, PACKAGE="PICS");
             return(ans)
           })
 
@@ -144,7 +144,7 @@ setMethod("maxRange", "picsError",
 setMethod("maxRange", "picsList",
           function(x)
           {
-            ans<-.Call("getMax", x@List, package="PICS");
+            ans<-.Call("getMax", x@List, PACKAGE="PICS");
             return(ans)
           })
 
@@ -165,7 +165,7 @@ setMethod("scoreReverse", "picsError",
 setMethod("scoreReverse", "picsList",
           function(x)
           {
-            ans<-.Call("getScoreR", x@List, package="PICS");
+            ans<-.Call("getScoreR", x@List, PACKAGE="PICS");
             return(ans)
             
           })
@@ -186,7 +186,7 @@ setMethod("scoreForward", "picsError",
 setMethod("scoreForward", "picsList",
           function(x)
           {
-            ans<-.Call("getScoreF", x@List, package="PICS");
+            ans<-.Call("getScoreF", x@List, PACKAGE="PICS");
             return(ans)
             
           })
@@ -206,7 +206,7 @@ setMethod("chromosome", "picsError",
 setMethod("chromosome", "picsList",
           function(x)
           {
-            ans<-.Call("getChr", x@List, package="PICS");
+            ans<-.Call("getChr", x@List, PACKAGE="PICS");
             return(ans)
           }
 )
@@ -230,7 +230,7 @@ setMethod("map", "segReads",
 setMethod("map", "segReadsList",
           function(x)
           {
-            ans<-.Call("getMap", x@List, package="PICS");
+            ans<-.Call("getMap", x@List, PACKAGE="PICS");
             return(ans)
           }
 )
@@ -252,7 +252,7 @@ setMethod("se", "picsError",
 setMethod("se", "picsList",
           function(x)
           {
-              ans<-.Call("getVector", x@List, as.integer(5), package="PICS");
+              ans<-.Call("getVector", x@List, as.integer(5), PACKAGE="PICS");
               return(ans)
           }
 )
@@ -273,7 +273,7 @@ setMethod("seF", "picsError",
 setMethod("seF", "picsList",
           function(x)
           {
-              ans<-.Call("getVector", x@List, as.integer(6), package="PICS");
+              ans<-.Call("getVector", x@List, as.integer(6), PACKAGE="PICS");
               return(ans)
           }
 )
@@ -295,7 +295,7 @@ setMethod("seR", "picsError",
 setMethod("seR", "picsList",
           function(x)
           {
-              ans<-.Call("getVector", x@List, as.integer(7), package="PICS");
+              ans<-.Call("getVector", x@List, as.integer(7), PACKAGE="PICS");
               return(ans)
           }
 )
@@ -319,7 +319,7 @@ setMethod("sigmaSqF", "picsList",
           {
               # temp<-lapply(x@List,"mu")
               # return(unlist(temp))
-              ans<-.Call("getVector", x@List, as.integer(3), package="PICS");
+              ans<-.Call("getVector", x@List, as.integer(3), PACKAGE="PICS");
               return(ans)
           }
 )
@@ -342,7 +342,7 @@ setMethod("sigmaSqR", "picsList",
           {
               # temp<-lapply(x@List,"mu")
               # return(unlist(temp))
-              ans<-.Call("getVector", x@List, as.integer(4), package="PICS");
+              ans<-.Call("getVector", x@List, as.integer(4), PACKAGE="PICS");
               return(ans)
           }
 )
@@ -365,7 +365,7 @@ setMethod("delta", "picsList",
           {
               # temp<-lapply(x@List,"mu")
               # return(unlist(temp))
-              ans<-.Call("getVector", x@List, as.integer(2), package="PICS");
+              ans<-.Call("getVector", x@List, as.integer(2), PACKAGE="PICS");
               return(ans)
           }
 )
@@ -389,7 +389,7 @@ setMethod("mu", "picsList",
           {
               # temp<-lapply(x@List,"mu")
               # return(unlist(temp))
-              ans<-.Call("getVector", x@List, as.integer(1), package="PICS");
+              ans<-.Call("getVector", x@List, as.integer(1), PACKAGE="PICS");
               return(ans)
           }
 )
@@ -410,7 +410,7 @@ setMethod("w", "picsError",
 setMethod("w", "picsList",
           function(x)
           {
-              ans<-.Call("getVector", x@List, as.integer(0), package="PICS");
+              ans<-.Call("getVector", x@List, as.integer(0), PACKAGE="PICS");
               return(ans)
           }
 )
@@ -431,7 +431,7 @@ setMethod("K", "picsError",
 setMethod("K", "picsList",
           function(x)
           {
-              ans<-.Call("getK", x@List, package="PICS");
+              ans<-.Call("getK", x@List, PACKAGE="PICS");
               return(ans)
           }
 )
