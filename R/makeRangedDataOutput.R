@@ -24,9 +24,9 @@ makeRangedDataOutput<-function(obj, type="fixed", filter=list(delta=c(0,Inf),se=
       ind5<-is.finite(score) & score>filter$score[1] & score<filter$score[2]
 	    ind<-ind1&ind2&ind3&ind5
       
-      if(!is.null(filter$se)) 
+      if(!is.null(filter$se))
       {
-      	ind4<-se>filter$se[1] & se<filter$se[2]
+      	ind4<-se>filter$se[1] & se<filter$se[2] & seF>filter$se[1] & seF<filter$se[2] & seR>filter$se[1] & seR<filter$se[2]
       	ind<-ind&ind4
       }
     }

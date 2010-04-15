@@ -1405,7 +1405,7 @@ SEXP getDensity(SEXP pics, SEXP strand, SEXP step, SEXP filter, SEXP sum, SEXP s
 {
   int k=0,K=1,i=0;
   double *w, *mu, *delta, *sF, *sR, *range, *se, sumW=0;
-  double *muFilter, *deltaFilter, *sFFilter, *sRFilter, *seFilter, *scoreFilter, *score;
+  double *muFilter, *deltaFilter, *sFFilter, *sRFilter, *seFilter, *seFilterF, *seFilterR, *scoreFilter, *score;
   SEXP filter1;
   gsl_vector *One;  
   gsl_matrix *Density;
@@ -1432,13 +1432,15 @@ SEXP getDensity(SEXP pics, SEXP strand, SEXP step, SEXP filter, SEXP sum, SEXP s
     deltaFilter=REAL(getListElement(filter, "delta"));
     sFFilter=REAL(getListElement(filter, "sigmaSqF"));
     sRFilter=REAL(getListElement(filter, "sigmaSqR"));
-    seFilter=REAL(getListElement(filter, "se"));
+    seFilter=REAL(getListElement(filter, "seMu"));
+    seFilterF=REAL(getListElement(filter, "seMuF"));
+    seFilterR=REAL(getListElement(filter, "seMuR"));
     scoreFilter=REAL(getListElement(filter, "score"));
 
     range=REAL(GET_SLOT(pics,install("range")));
 
     PROTECT(ans=NEW_LIST(2));nProtected++;
-    
+
     // Compute the number of steps I want
     length=(int)((range[1]-range[0])/REAL(step)[0]);
     // Allocate the memory for x and y
@@ -1460,6 +1462,8 @@ SEXP getDensity(SEXP pics, SEXP strand, SEXP step, SEXP filter, SEXP sum, SEXP s
           (sF[k]>sFFilter[0] & sF[k]<sFFilter[1]) & 
           (sR[k]>sRFilter[0] & sR[k]<sRFilter[1]) & 
           (se[k]>seFilter[0] & se[k]<seFilter[1]) &
+          (se[k]>seFilterF[0] & se[k]<seFilterF[1]) &
+          (se[k]>seFilterR[0] & se[k]<seFilterR[1]) &          
           (score[k]>scoreFilter[0] & score[k]<scoreFilter[1]))
         {
         //Keep track of the sum of the weights to renormalize the density
