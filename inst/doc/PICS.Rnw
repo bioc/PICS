@@ -69,22 +69,19 @@ Once the data have been read, we can create the `GenomeData' object, which is a 
 
 In this documentation, the path for the data is:  .../PICS/inst/doc folder.
 <<Reading the data>>=
-
-path<- system.file("extdata/",package="PICS")
+path<-system.file("extdata",package="PICS")
 #Read the experiment : 
-dataIP<-read.table(paste(path,"Treatment_tags_chr21_sort.bed",sep=""),header=TRUE,colClasses=c("factor","integer","integer","factor"))
+dataIP<-read.table(file.path(path,"Treatment_tags_chr21_sort.bed"),header=TRUE,colClasses=c("factor","integer","integer","factor"))
 dataIP<-as(dataIP,"RangedData")
 dataIP<-as(dataIP,"GenomeData")
 
-
-dataCont<-read.table(paste(path,"Input_tags_chr21_sort.bed",sep=""),header=TRUE,colClasses=c("factor","integer","integer","factor"))
+dataCont<-read.table(file.path(path,"Input_tags_chr21_sort.bed"),header=TRUE,colClasses=c("factor","integer","integer","factor"))
 dataCont<-as(dataCont,"RangedData")
 dataCont<-as(dataCont,"GenomeData")
-
 @
 
 <<Reading the mappability profile>>=
-map<-read.table(paste(path,"mapProfileShort",sep=""),header=TRUE,colClasses=c("factor","integer","integer","NULL"))
+map<-read.table(file.path(path,"mapProfileShort"),header=TRUE,colClasses=c("factor","integer","integer","NULL"))
 map<-as(map,"RangedData")
 ## Remove the chrM
 map<-map[-23]

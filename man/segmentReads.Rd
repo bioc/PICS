@@ -34,17 +34,17 @@ X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gotta
 \seealso{picsFDR}
 \examples{
 # Read data
-path<- system.file("extdata/",package="PICS")
+path<-system.file("extdata",package="PICS")
 ## Note that the col name for the chromosome needs to be space and not chr
-dataIP<-read.table(paste(path,"Treatment_tags_chr21_sort.bed",sep=""),header=TRUE,colClasses=c("factor","integer","integer","factor"))
+dataIP<-read.table(file.path(path,"Treatment_tags_chr21_sort.bed"),header=TRUE,colClasses=c("factor","integer","integer","factor"))
 dataIP<-as(dataIP,"RangedData")
 dataIP<-as(dataIP,"GenomeData")
 
-dataCont<-read.table(paste(path,"Input_tags_chr21_sort.bed",sep=""),header=TRUE,colClasses=c("factor","integer","integer","factor"))
+dataCont<-read.table(file.path(path,"Input_tags_chr21_sort.bed"),header=TRUE,colClasses=c("factor","integer","integer","factor"))
 dataCont<-as(dataCont,"RangedData")
 dataCont<-as(dataCont,"GenomeData")
 
-map<-read.table(paste(path,"mapProfileShort",sep=""),header=TRUE,colClasses=c("factor","integer","integer","NULL"))
+map<-read.table(file.path(path,"mapProfileShort"),header=TRUE,colClasses=c("factor","integer","integer","NULL"))
 map<-as(map,"RangedData")
 ## Remove the chrM
 map<-map[-23]
