@@ -1887,7 +1887,7 @@ int getInfMat(SEXP R, SEXP F, SEXP para, SEXP a, SEXP b, double rho, double xi, 
 
 int mergePeak(SEXP para, gsl_matrix* infMat, gsl_vector* se, gsl_vector* seF, gsl_vector* seR, int *K, double nu, double nSe, double minSpacingPeaks, int dataType)
 {
-  int i=0,j=0,k=0,l=0,kMerge=0;
+  int i=0,j=0,k=0,l=0,kMerge=0,flag=0;
   int K0=*K;
   gsl_matrix *Index=gsl_matrix_calloc(*K,*K);
   gsl_vector *A=gsl_vector_calloc(5**K-1),*B=gsl_vector_calloc(5**K-1),*C=gsl_vector_calloc(5**K-1);
