@@ -25,7 +25,7 @@ PICS<-function(segReadsList,dataType="TF")
     nClust<-sfCpus()
     # Split into nClust segReadsList
     segSplit<-split(segReadsList,cut(1:length(segReadsList),nClust))
-    name(segSplit)<-NULL
+    names(segSplit)<-NULL
     # Use a parallel version
     res<-unlist(sfLapply(segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads),recursive=FALSE)
   }
