@@ -36,9 +36,8 @@ SEXP initPara(SEXP F, SEXP R, SEXP kk);
 SEXP fitModel(SEXP kk, SEXP iMax, SEXP tol, SEXP mselect, SEXP yR, SEXP yF, SEXP a, SEXP b, SEXP xi, SEXP alpha, SEXP betap, SEXP rho, SEXP lambda, SEXP dMu, SEXP cst, SEXP nu, SEXP minReadPerPeak);
 SEXP fitModelK(SEXP kk, SEXP iMax, SEXP tol, SEXP mselect, SEXP yR, SEXP yF, SEXP a, SEXP b, SEXP xi, SEXP alpha, SEXP betap, SEXP rho, SEXP lambda, SEXP dMu, SEXP cst, SEXP nu, SEXP minReadPerPeak);
 void printPara(SEXP para);
-
-int getInfMat(SEXP R,SEXP F, SEXP para, SEXP a, SEXP b, double rho, double xi, double alpha, double cst, double lambda, double nu, gsl_matrix* infMat, gsl_vector* se, gsl_vector* seF, gsl_vector* seR);
 int mergePeak(SEXP para, gsl_matrix* infMat, gsl_vector* se, gsl_vector* seF, gsl_vector* seR, int *K, double nu, double nSe, double minSpacingPeaks);
+int getInfMat(SEXP R,SEXP F, SEXP para, SEXP a, SEXP b, double rho, double xi, double alpha, double cst, double lambda, double nu, gsl_matrix* infMat, gsl_vector* se, gsl_vector* seF, gsl_vector* seR);
 SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEXP N, SEXP Nc, SEXP chr);
 SEXP fitPICS(SEXP segReadsList, SEXP paraEM, SEXP paraPrior, SEXP minReads);
 
@@ -120,12 +119,11 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
   mergePeaks=VECTOR_ELT(paraEM,5);
   
   /** constant **/
-  PROTECT(cst=NEW_NUMERIC(1));
-  nProtected++;
+  PROTECT(cst=NEW_NUMERIC(1));nProtected++;
   REAL(cst)[0]=gsl_sf_gamma(3.5)/gsl_sf_gamma(3.0)/M_SQRTPI;
-  PROTECT(nu=NEW_INTEGER(1));
-  nProtected++;
+  PROTECT(nu=NEW_INTEGER(1));nProtected++;
   INTEGER(nu)[0]=4;
+  PROTECT(minReadPerPeak=VECTOR_ELT(minReads,0));nProtected++;
   
   /** range of the data used to infer the min/max number of components **/
   range=(fmax2(REAL(yF)[length(yF)-1],REAL(yR)[length(yR)-1])-fmin2(REAL(yF)[0],REAL(yR)[0]));
@@ -133,7 +131,11 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
   {
     Nnucle=(int)(range/200.); //number of nuclesomes in this region
     minK=imax2(1,(int)(Nnucle/3.)); //assume max 66% of region are NFR, Slide-window size =500 < d_mu * 3
-    maxKK=(int)(Nnucle*1.5+1);
+    maxKK=imax2((int)(Nnucle*1.5+1),minK+1);
+    // 
+    // minK=1;
+    // maxKK=3;
+    
   }
   else
   {
@@ -141,28 +143,27 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
     maxKK=(int)fmin2(REAL(VECTOR_ELT(paraEM, 1))[0],range/(REAL(VECTOR_ELT(paraPrior, 0))[0]+4.*sqrt(REAL(VECTOR_ELT(paraPrior, 3))[0]/REAL(VECTOR_ELT(paraPrior, 2))[0]))+1.0);
       //Here we make sure that maxKK>minK
     maxKK=imax2(minK,maxKK);
-        
   }
   
   /** List of the number of components **/
-  PROTECT(kk=NEW_INTEGER(maxKK-minK+1));
-  nProtected++;
+  PROTECT(kk=NEW_INTEGER(maxKK-minK+1));nProtected++;
+  PROTECT(kkList=NEW_LIST(maxKK-minK+1));nProtected++;
   
   for(i=0;i<(maxKK-minK+1);i++)
   {
     INTEGER(kk)[i]=minK+i;
+    // SET_VECTOR_ELT(kkList,i,kk);
   }
   
   /** Initialize the mappability intervals **/
     //Only if we have set mapCorrect to TRUE and we are given a mappability profile
-  a=R_NilValue, b=R_NilValue;
+  PROTECT(a=R_NilValue);nProtected++;
+  PROTECT(b=R_NilValue);nProtected++;
   
   if(LOGICAL(mapCorrect)[0] & (length(map)!=0))
   {
-    PROTECT(a=NEW_INTEGER(length(map)/2));
-    nProtected++;
-    PROTECT(b=NEW_INTEGER(length(map)/2));
-    nProtected++;
+    PROTECT(a=NEW_INTEGER(length(map)/2));nProtected++;
+    PROTECT(b=NEW_INTEGER(length(map)/2));nProtected++;
     for(i=0;i<(length(map)/2);i++)
     {
         // Check that I am getting the elements in the correct order
@@ -185,7 +186,7 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
     INTEGER(mselect)[0]=3;
   }
   
-  PROTECT(ans=fitModelK(AS_LIST(kk), VECTOR_ELT(paraEM, 3), VECTOR_ELT(paraEM, 2), mselect, yR, yF, a, b, VECTOR_ELT(paraPrior, 0), VECTOR_ELT(paraPrior, 2), VECTOR_ELT(paraPrior, 3), VECTOR_ELT(paraPrior, 1), VECTOR_ELT(paraPrior, 4), VECTOR_ELT(paraPrior, 5), cst, nu, AS_INTEGER(minReadPerPeak)));
+  PROTECT(ans=fitModelK(kk, VECTOR_ELT(paraEM, 3), VECTOR_ELT(paraEM, 2), mselect, yR, yF, a, b, VECTOR_ELT(paraPrior, 0), VECTOR_ELT(paraPrior, 2), VECTOR_ELT(paraPrior, 3), VECTOR_ELT(paraPrior, 1), VECTOR_ELT(paraPrior, 4), VECTOR_ELT(paraPrior, 5), cst, nu, minReadPerPeak));
   nProtected++;
 
   /** Check if we have had an error, if yes we return an object of class picsError **/
@@ -214,14 +215,10 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
     // Compute teh information matrix
   flag=getInfMat(yR, yF, Para, a, b, REAL(VECTOR_ELT(paraPrior, 1))[0], REAL(VECTOR_ELT(paraPrior, 0))[0], REAL(VECTOR_ELT(paraPrior, 2))[0], REAL(cst)[0], REAL(VECTOR_ELT(paraPrior, 4))[0], INTEGER(nu)[0], infMat, se, seF, seR);
   
-    //We have an error and dMu==0
-  if((flag!=0) & (REAL(VECTOR_ELT(paraPrior, 5))[0]==0))
   {
     classDef=MAKE_CLASS("picsError");
-    PROTECT(myPics=NEW_OBJECT(classDef));
-    nProtected++;
-    PROTECT(code=NEW_CHARACTER(1));
-    nProtected++;
+    PROTECT(myPics=NEW_OBJECT(classDef));nProtected++;
+    PROTECT(code=NEW_CHARACTER(1));nProtected++;
     STRING_PTR(code)[0]=mkChar("Singular information matrix");
     SET_SLOT(myPics,mkChar("errorCode"),code);
     UNPROTECT(nProtected);
@@ -246,7 +243,6 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
     }
     else //TF case
     {
-        flag=mergePeak(Para, infMat, se, seF, seR, &K, INTEGER(nu)[0], 3, 0);
     }
     //We encountered an error when merging
     if(flag!=0)
@@ -263,14 +259,10 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
     }
   }
   
-  
   /** Enrichment score **/
-  PROTECT(score=NEW_NUMERIC(K));
-  nProtected++;
-  PROTECT(scoreF=NEW_NUMERIC(K));
-  nProtected++;
-  PROTECT(scoreR=NEW_NUMERIC(K));
-  nProtected++;
+  PROTECT(score=NEW_NUMERIC(K));nProtected++;
+  PROTECT(scoreF=NEW_NUMERIC(K));nProtected++;
+  PROTECT(scoreR=NEW_NUMERIC(K));nProtected++;
   
   calpha=1.5;//percentile cutoff
   
@@ -302,7 +294,7 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
     }
 
     /** If we have control data, we can normalize the scores **/
-    INTEGER(Nc)[0]==0;
+    // INTEGER(Nc)[0]==0;
     if(INTEGER(Nc)[0]>0)
     { 
       sumcF=0;
@@ -334,27 +326,17 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
   }
   
   classDef=MAKE_CLASS("pics");
-  PROTECT(myPics=NEW_OBJECT(classDef));
-  nProtected++;
-  PROTECT(estimates=NEW_LIST(8));
-  nProtected++;
+  PROTECT(myPics=NEW_OBJECT(classDef));nProtected++;
+  PROTECT(estimates=NEW_LIST(8));nProtected++;
   
-  PROTECT(wOut=NEW_NUMERIC(K));
-  nProtected++;
-  PROTECT(muOut=NEW_NUMERIC(K));
-  nProtected++;
-  PROTECT(deltaOut=NEW_NUMERIC(K));
-  nProtected++;
-  PROTECT(sfOut=NEW_NUMERIC(K));
-  nProtected++;
-  PROTECT(srOut=NEW_NUMERIC(K));
-  nProtected++;
-  PROTECT(seOut=NEW_NUMERIC(K));
-  nProtected++;
-  PROTECT(seOutF=NEW_NUMERIC(K));
-  nProtected++;
-  PROTECT(seOutR=NEW_NUMERIC(K));
-  nProtected++;
+  PROTECT(wOut=NEW_NUMERIC(K));nProtected++;
+  PROTECT(muOut=NEW_NUMERIC(K));nProtected++;
+  PROTECT(deltaOut=NEW_NUMERIC(K));nProtected++;
+  PROTECT(sfOut=NEW_NUMERIC(K));nProtected++;
+  PROTECT(srOut=NEW_NUMERIC(K));nProtected++;
+  PROTECT(seOut=NEW_NUMERIC(K));nProtected++;
+  PROTECT(seOutF=NEW_NUMERIC(K));nProtected++;
+  PROTECT(seOutR=NEW_NUMERIC(K));nProtected++;
   
   
   for(k=0;k<K;k++)
@@ -379,8 +361,7 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
   SET_VECTOR_ELT(estimates,6,seOutF); //seMuF
   SET_VECTOR_ELT(estimates,7,seOutR); //seMuR
   
-  PROTECT(names = allocVector(STRSXP, 8)); 
-  nProtected++;
+  PROTECT(names = allocVector(STRSXP, 8)); nProtected++;
   SET_STRING_ELT(names, 0, mkChar("w"));
   SET_STRING_ELT(names, 1, mkChar("mu"));
   SET_STRING_ELT(names, 2, mkChar("delta"));
@@ -399,27 +380,23 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
   
     //set the name of the estimates list
   
-  PROTECT(Nmerged=NEW_NUMERIC(1));
-  nProtected++;
+  PROTECT(Nmerged=NEW_NUMERIC(1));nProtected++;
   REAL(Nmerged)[0]=kBest-K;
   SET_SLOT(myPics,mkChar("Nmerged"),Nmerged);
   
   
-  PROTECT(converge=allocVector(LGLSXP,1));
-  nProtected++;
+  PROTECT(converge=allocVector(LGLSXP,1));nProtected++;
     //Extract the logical from the best answer
   LOGICAL(converge)[0]=LOGICAL(VECTOR_ELT(ans,2))[0];
   SET_SLOT(myPics,mkChar("converge"),converge);
   
     //Range of the data
-  PROTECT(rangeOut=NEW_NUMERIC(2));
-  nProtected++;
+  PROTECT(rangeOut=NEW_NUMERIC(2));nProtected++;
   REAL(rangeOut)[0]=fmin2(REAL(yF)[0],REAL(yR)[0]);
   REAL(rangeOut)[1]=fmax2(REAL(yF)[length(yF)-1],REAL(yR)[length(yR)-1]);
   SET_SLOT(myPics,mkChar("range"),rangeOut);
   
-  PROTECT(name=NEW_CHARACTER(1));
-  nProtected++;
+  PROTECT(name=NEW_CHARACTER(1));nProtected++;
   
     // Set the chromosome name
   SET_STRING_ELT(name,0,STRING_PTR(chr)[0]);    
@@ -442,21 +419,29 @@ SEXP fitModelK(SEXP kk, SEXP iMax, SEXP tol, SEXP mselect, SEXP yR, SEXP yF, SEX
 	bool finiteBIC =FALSE; // indicator of if any k with finite BIC
 	bool okFit =FALSE; // indicator of if any successfully fitted model (infnite bic is allowed)
   char myError[]="";
-
+  SEXP nComp,iiMax,iminReadPerPeak;
+  
+  PROTECT(nComp=NEW_INTEGER(1));nProtected++;
+  PROTECT(iiMax=NEW_INTEGER(1));nProtected++;
+  INTEGER(iiMax)[0]=(int)REAL(iMax)[0];  
+  PROTECT(iminReadPerPeak=NEW_INTEGER(1));nProtected++;
+  INTEGER(iminReadPerPeak)[0]=(int)REAL(minReadPerPeak)[0];
+  
 	// prepare the output 'ans'
 	// I DONT THINK WE NEED TO ALLOCATE THE MEMORY HERE!
   //  PROTECT(ans = allocVector(VECSXP,  4)); nProtected++; 
 
-	for (k=0; k < kmax; k++) {
+	for (k=0; k < kmax; k++)
+	{
 
-		
+    INTEGER(nComp)[0]=INTEGER(kk)[k];
 		//Rprintf("start fit %i mixtures \n", INTEGER(VECTOR_ELT(kk, k))[0]);
-		PROTECT(temp = fitModel(AS_INTEGER(VECTOR_ELT(kk, k)),  AS_INTEGER(iMax),  tol,  mselect,  yR,  yF,  a,  b,  xi,  alpha,  betap,  rho,  lambda,  dMu,  cst,  nu,  minReadPerPeak));
-    nProtected++;
+		PROTECT(temp = fitModel(nComp,  iiMax,  tol,  mselect,  yR,  yF,  a,  b,  xi,  alpha,  betap,  rho,  lambda,  dMu,  cst,  nu,  iminReadPerPeak));nProtected++;
 
 		//Rprintf("end fit %i mixtures \n", INTEGER(VECTOR_ELT(kk, k))[0]);
 		
-		if (k==0) { // save it as output in case no model is fitted without error message
+		if (k==0)
+		{ // save it as output in case no model is fitted without error message
 			firstFit=temp;
 		}
 		
@@ -466,13 +451,16 @@ SEXP fitModelK(SEXP kk, SEXP iMax, SEXP tol, SEXP mselect, SEXP yR, SEXP yF, SEX
 		}
 		//Rprintf("k= %d, bic=%lf, bestBIC=%lf \n", k+1, REAL(VECTOR_ELT(temp, 1))[0], bestBIC);
 		
-		if ( REAL(VECTOR_ELT(temp, 1))[0] > bestBIC ) { //update 'ans' with new result with better bic
+		if ( REAL(VECTOR_ELT(temp, 1))[0] > bestBIC ) 
+		{ //update 'ans' with new result with better bic
 			ans = temp;
 			tempFlag  = FALSE;
 			finiteBIC = TRUE;
 			bestBIC  = REAL(VECTOR_ELT(temp, 1))[0];
 			//Rprintf("update new result to ANS \n");
-		}else if ( ! isTF ) {    //do nothing for Histone data
+		}
+		else if ( ! isTF )
+		{    //do nothing for Histone data
 			//Rprintf("continue the loop do nothing \n");
 			continue;
 		}else if (decreaseBIC) { //break loop as see bic decrease twice and is analyzing TF data
