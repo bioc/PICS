@@ -89,7 +89,7 @@ SEXP fitPICS(SEXP segReadsList, SEXP paraEM, SEXP paraPrior, SEXP minReads)
 SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEXP N, SEXP Nc, SEXP chr)
 {
   int Nnucle=0, minK=0, maxKK=0, i=0, k=0, kBest=0, K=0;
-  SEXP yF, yR, cF, cR, map, kk, kkList, classDef;
+  SEXP yF, yR, cF, cR, map, kk, classDef;
   SEXP score, scoreF, scoreR;
   double range=0;
   char myError[]="";
@@ -147,12 +147,10 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
   
   /** List of the number of components **/
   PROTECT(kk=NEW_INTEGER(maxKK-minK+1));nProtected++;
-  PROTECT(kkList=NEW_LIST(maxKK-minK+1));nProtected++;
   
   for(i=0;i<(maxKK-minK+1);i++)
   {
     INTEGER(kk)[i]=minK+i;
-    // SET_VECTOR_ELT(kkList,i,kk);
   }
   
   /** Initialize the mappability intervals **/
