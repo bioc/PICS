@@ -16,6 +16,7 @@ PICS<-function(segReadsList,dataType="TF")
   
   if(length(grep("snowfall",loadedNamespaces()))==0 || !sfParallel())
   {
+    message("Using the serial version of PICS")
     # C version
     res<-.Call("fitPICS", segReadsList, paraEM, paraPrior, minReads, PACKAGE="PICS")
   }
@@ -25,6 +26,7 @@ PICS<-function(segReadsList,dataType="TF")
     nClust<-sfCpus()
     # Split into nClust segReadsList
     segSplit<-split(segReadsList,cut(1:length(segReadsList),nClust))
+    message("Using the parallel (snowfall) version of PICS with ", nClust, " cpus or cores")
     # Use a parallel version
     res<-unlist(sfLapply(segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads),recursive=FALSE)
   }
