@@ -890,12 +890,22 @@ setMethod("plot", signature("picsList", "segReadsList"),
 setMethod("plot", signature("picsList", "picsList"),
           function(x, y, filter=NULL, h=.1, ...)
 {
-  FDR<-picsFDR(x,y,filter=filter)
+  arg<-list(...)
+  par(mar=c(4, 4, 4.5, 4) + 0.1)
   plot(FDR[,2],FDR[,1],xlab="score",ylab="FDR",panel.first=grid(nx=50),...)
   # points(FDR[,2],FDR[,3]/max(FDR[,3]),xaxt="n",yaxt="n",lty=3,col=3,pch=2)
-  # axis(4,at=seq(0,1,.05),labels=max(FDR[,3])*seq(0,1,.05))
+  if(length(arg$xlim)!=2)
+  {
+    xlim<-range(FDR[,2])
+  }
+  else
+  {
+    xlim<-arg$xlim
+  }
+  axis(3,at=seq(xlim[2],xlim[1],length.out=10),labels=round(seq(xlim[2],xlim[1],length.out=10)*max(FDR[FDR[,2]%in%xlim,3])/xlim[2],0))
+  mtext("# regions", side = 3, line = 3, ...)
   FDRex<-FDR[FDR[,1]>0,]
   notDup<-rev(!duplicated(rev(FDRex[,1])))
   lines(FDRex[notDup,2],FDRex[notDup,1],col=2,lty=2,lwd=1.5)
-  abline(h=h,lw=1.5,col="grey")
+  abline(h=h,lw=1.5,col="grey")  
 })

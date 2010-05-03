@@ -1892,7 +1892,7 @@ int mergePeak(SEXP para, gsl_matrix* infMat, gsl_vector* se, gsl_vector* seF, gs
   gsl_matrix *Index=gsl_matrix_calloc(*K,*K);
   gsl_vector *A=gsl_vector_calloc(5**K-1),*B=gsl_vector_calloc(5**K-1),*C=gsl_vector_calloc(5**K-1);
   gsl_vector *OriginalW=gsl_vector_calloc(*K);
-  _Bool loopflag=0;
+  bool loopflag=0;
   double DDelta, EisenbergerF, EisenbergerR, mycut=27/4;
   double minDiff=0,diff=0,SumCombW=0,SumW,TmpMu=0,TmpDelta=0,TmpSigmaSqF,TmpSigmaSqR;
   double *w=REAL(VECTOR_ELT(para, 0)), *mu=REAL(VECTOR_ELT(para, 1)), *delta=REAL(VECTOR_ELT(para, 2)), *sigmaSqF=REAL(VECTOR_ELT(para, 3)), *sigmaSqR=REAL(VECTOR_ELT(para, 4));
@@ -1934,6 +1934,7 @@ int mergePeak(SEXP para, gsl_matrix* infMat, gsl_vector* se, gsl_vector* seF, gs
 		  }
 	  }
   }
+  
   loopflag=(minDiff<minSpacingPeaks);	
 
 	
