@@ -893,7 +893,6 @@ setMethod("plot", signature("picsList", "picsList"),
   FDR<-picsFDR(x,y,filter=filter)
   arg<-list(...)
   par(mar=c(4, 4, 4.5, 4) + 0.1)
-  plot(FDR[,2],FDR[,1],xlab="score",ylab="FDR",panel.first=grid(nx=50),...)
   # points(FDR[,2],FDR[,3]/max(FDR[,3]),xaxt="n",yaxt="n",lty=3,col=3,pch=2)
   if(length(arg$xlim)!=2)
   {
@@ -901,9 +900,10 @@ setMethod("plot", signature("picsList", "picsList"),
   }
   else
   {
-    xlim<-arg$xlim
+    xlim<-c(max(arg$xlim[1],min(FDR[,2])),min(arg$xlim[2],max(FDR[,2])))
   }
-  axis(3,at=seq(xlim[2],xlim[1],length.out=10),labels=round(seq(xlim[1],xlim[2],length.out=10)*max(FDR[FDR[,2]%in%xlim,3])/xlim[2],0))
+  plot(FDR[,2],FDR[,1],xlab="score",ylab="FDR",panel.first=grid(nx=50),...)
+  axis(3,at=seq(xlim[1],xlim[2],length.out=10),labels=round(seq(max(FDR[FDR[,2]%in%xlim,3]),min(FDR[FDR[,2]%in%xlim,3]),length.out=10),0))
   mtext("# regions", side = 3, line = 3, ...)
   FDRex<-FDR[FDR[,1]>0,]
   notDup<-rev(!duplicated(rev(FDRex[,1])))
