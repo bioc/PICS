@@ -14,7 +14,7 @@ PICS<-function(segReadsList,dataType="TF")
     paraEM<-paraEMTF
   }
   
-  if((length(grep("multicore",loadedNamespaces()))==0) & (length(grep("snowfall",loadedNamespaces()))==0 || !sfParallel()))
+  if((length(grep("multicore",loadedNamespaces()))==0) & (length(grep("snowfall",loadedNamespaces()))==0 || suppressMessages(!sfParallel())))
   {
     message("Using the serial version of PICS")    
     # C version
