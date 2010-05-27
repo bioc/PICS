@@ -572,19 +572,22 @@ setMethod("summary", "segReadsList",
       })
 
 
-setMethod("summary", "segReads",
-      function(object)
-      {
-        m<-min(object@yF[1],object@yR[1])
-        M<-max(tail(object@yF,1),tail(object@yR,1))        
-        cat("** Region summary ** \n")                    
-        cat("Summary on Forward reads:\n",summary(object@yF,digits=100),"\n")
-        cat("Summary on Reverse reads:\n",summary(object@yR,digits=100),"\n")
-        cat("Summary on control Forward reads:\n",summary(object@cF,digits=100),"\n")
-        cat("Summary on control Reverse reads:\n",summary(object@cR,digits=100),"\n")        
-        cat("Non mappable intervals cover ", sum(diff(t(object@map)))/(M-m),"% of the region \n")
-      })
-
+      setMethod("summary", "segReads",
+            function(object)
+            {
+              m<-min(object@yF[1],object@yR[1])
+              M<-max(tail(object@yF,1),tail(object@yR,1))
+              cat("** Region summary ** \n")
+              cat("Summary on Forward reads:\n")
+              print(summary(object@yF,digits=100))
+              cat("Summary on Reverse reads:\n")
+              print(summary(object@yR,digits=100))
+              cat("Summary on control Forward reads:\n")
+              print(summary(object@cF,digits=100))
+              cat("Summary on control Reverse reads:\n")
+              print(summary(object@cR,digits=100))
+              cat("Non mappable intervals cover ", sum(diff(t(object@map)))/(M-m),"% of the region \n")
+            })
 
 setMethod("[","segReadsList",
 		function(x,i, j,..., drop=FALSE)
