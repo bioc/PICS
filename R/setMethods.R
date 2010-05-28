@@ -907,7 +907,11 @@ setMethod("plot", signature("picsList", "picsList"),
     xlim<-c(max(arg$xlim[1],min(FDR[,2])),min(arg$xlim[2],max(FDR[,2])))
   }
   plot(FDR[,2],FDR[,1],xlab="score",ylab="FDR",panel.first=grid(nx=50),...)
-  axis(3,at=seq(xlim[1],xlim[2],length.out=10),labels=round(seq(max(FDR[FDR[,2]%in%xlim,3]),min(FDR[FDR[,2]%in%xlim,3]),length.out=10),0))
+  xx<-FDR[FDR[,2]>xlim[1] & FDR[,2]<xlim[2],2]
+  yy<-FDR[FDR[,2]>xlim[1] & FDR[,2]<xlim[2],3]
+  xx<-xx[seq(1,length(xx),length.out=10)]
+  yy<-yy[seq(1,length(yy),length.out=10)]
+  axis(3,at=xx,labels=yy)
   mtext("# regions", side = 3, line = 3, ...)
   FDRex<-FDR[FDR[,1]>0,]
   notDup<-rev(!duplicated(rev(FDRex[,1])))
