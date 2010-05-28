@@ -475,8 +475,8 @@ setMethod("density", "pics",
           {
             
             # Check that all filters are passed
-            missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","score")%in%names(filter)
-            filter[c("delta","sigmaSqF","sigmaSqR","se","score")[missingNames]]<-list(c(0,Inf))
+            missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")%in%names(filter)
+            filter[c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")[missingNames]]<-list(c(0,Inf))
             if(strand=="+")
             {
               strand<-1
@@ -503,8 +503,8 @@ setMethod("density", "picsList",
           function(x,strand="+",step=10,sum=FALSE,filter=NULL,scale=TRUE)
           {
             # Check that all filters are passed
-            missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","score")%in%names(filter)
-            filter[c("delta","sigmaSqF","sigmaSqR","se","score")[missingNames]]<-list(c(0,Inf))
+            missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")%in%names(filter)
+            filter[c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")[missingNames]]<-list(c(0,Inf))
 
             if(strand=="+")
             {

@@ -1432,9 +1432,9 @@ SEXP getDensity(SEXP pics, SEXP strand, SEXP step, SEXP filter, SEXP sum, SEXP s
     deltaFilter=REAL(getListElement(filter, "delta"));
     sFFilter=REAL(getListElement(filter, "sigmaSqF"));
     sRFilter=REAL(getListElement(filter, "sigmaSqR"));
-    seFilter=REAL(getListElement(filter, "seMu"));
-    seFilterF=REAL(getListElement(filter, "seMuF"));
-    seFilterR=REAL(getListElement(filter, "seMuR"));
+    seFilter=REAL(getListElement(filter, "se"));
+    seFilterF=REAL(getListElement(filter, "seF"));
+    seFilterR=REAL(getListElement(filter, "seR"));
     scoreFilter=REAL(getListElement(filter, "score"));
 
     range=REAL(GET_SLOT(pics,install("range")));
