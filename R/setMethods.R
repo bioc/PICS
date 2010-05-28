@@ -475,8 +475,8 @@ setMethod("density", "pics",
           {
             
             # Check that all filters are passed
-            missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","score")%in%names(filter)
-            filter[c("delta","sigmaSqF","sigmaSqR","se","score")[missingNames]]<-list(c(0,Inf))
+            missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")%in%names(filter)
+            filter[c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")[missingNames]]<-list(c(0,Inf))
             if(strand=="+")
             {
               strand<-1
@@ -503,8 +503,8 @@ setMethod("density", "picsList",
           function(x,strand="+",step=10,sum=FALSE,filter=NULL,scale=TRUE)
           {
             # Check that all filters are passed
-            missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","score")%in%names(filter)
-            filter[c("delta","sigmaSqF","sigmaSqR","se","score")[missingNames]]<-list(c(0,Inf))
+            missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")%in%names(filter)
+            filter[c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")[missingNames]]<-list(c(0,Inf))
 
             if(strand=="+")
             {
@@ -572,22 +572,23 @@ setMethod("summary", "segReadsList",
       })
 
 
-      setMethod("summary", "segReads",
-            function(object)
-            {
-              m<-min(object@yF[1],object@yR[1])
-              M<-max(tail(object@yF,1),tail(object@yR,1))
-              cat("** Region summary ** \n")
-              cat("Summary on Forward reads:\n")
-              print(summary(object@yF,digits=100))
-              cat("Summary on Reverse reads:\n")
-              print(summary(object@yR,digits=100))
-              cat("Summary on control Forward reads:\n")
-              print(summary(object@cF,digits=100))
-              cat("Summary on control Reverse reads:\n")
-              print(summary(object@cR,digits=100))
-              cat("Non mappable intervals cover ", sum(diff(t(object@map)))/(M-m),"% of the region \n")
-            })
+setMethod("summary", "segReads",
+      function(object)
+      {
+        m<-min(object@yF[1],object@yR[1])
+        M<-max(tail(object@yF,1),tail(object@yR,1))
+        cat("** Region summary ** \n")
+        cat("Summary on Forward reads:\n")
+        print(summary(object@yF,digits=100))
+        cat("Summary on Reverse reads:\n")
+        print(summary(object@yR,digits=100))
+        cat("Summary on control Forward reads:\n")
+        print(summary(object@cF,digits=100))
+        cat("Summary on control Reverse reads:\n")
+        print(summary(object@cR,digits=100))
+        cat("Non mappable intervals cover ", sum(diff(t(object@map)))/(M-m),"% of the region \n")
+      })
+
 
 setMethod("[","segReadsList",
 		function(x,i, j,..., drop=FALSE)
@@ -915,5 +916,5 @@ setMethod("plot", signature("picsList", "picsList"),
   FDRex<-FDR[FDR[,1]>0,]
   notDup<-rev(!duplicated(rev(FDRex[,1])))
   lines(FDRex[notDup,2],FDRex[notDup,1],col=2,lty=2,lwd=1.5)
-  abline(h=h,lw=1.5,col="grey")
+  abline(h=h,lw=1.5,col="grey")  
 })
