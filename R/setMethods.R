@@ -701,11 +701,11 @@ setMethod("plot", signature("pics", "segReads"),
          #Set outer and figure margins to reduce gap between plots
         if(addNucleosome)
         {
-          nG<-5
+          nG<-4
         }
         else
         {
-          nG<-3
+          nG<-2
         }
         par(oma=c(2.5,5,5,5),mar=c(0,5,0,0),cex.lab=2)
         layout(matrix(1:nG,ncol=1), heights = c(.5,.2,.1,.1,.1))
@@ -793,9 +793,9 @@ setMethod("plot", signature("pics", "segReads"),
             points(x@estimates$mu,rep(.35,K),pch="+",cex=2)
             if (any(x@estimates$seMu!=0))
             {
-				points(x@estimates$mu-2*x@estimates$seMu,rep(.35,K),pch="[",cex=1)
-				points(x@estimates$mu+2*x@estimates$seMu,rep(.35,K),pch="]",cex=1)
-				segments(x@estimates$mu-2*x@estimates$seMu,rep(.35,K),x@estimates$mu+2*x@estimates$seMu,rep(.35,K),lwd=1,lty=rep(1,K))
+              points(x@estimates$mu-2*x@estimates$seMu,rep(.35,K),pch="[",cex=1)
+              points(x@estimates$mu+2*x@estimates$seMu,rep(.35,K),pch="]",cex=1)
+              segments(x@estimates$mu-2*x@estimates$seMu,rep(.35,K),x@estimates$mu+2*x@estimates$seMu,rep(.35,K),lwd=1,lty=rep(1,K))
             }
         }
 
