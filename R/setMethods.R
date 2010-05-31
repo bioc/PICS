@@ -504,7 +504,7 @@ setMethod("density", "picsList",
           {
             # Check that all filters are passed
             missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")%in%names(filter)
-            filter[c("delta","sigmaSqF","sigmaSqR","se","score")[missingNames]]<-list(c(0,Inf))
+            filter[c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")[missingNames]]<-list(c(0,Inf))
 
             if(strand=="+")
             {

@@ -1172,7 +1172,7 @@ SEXP getMin(SEXP list)
 			K=length(VECTOR_ELT(GET_SLOT(VECTOR_ELT(list, i),install("estimates")), 0));
 			for(j=0;j<K;j++)
 			{      
-				INTEGER(ans)[counter]= INTEGER(GET_SLOT(VECTOR_ELT(list, i),install("range")))[0];
+				INTEGER(ans)[counter]= REAL(GET_SLOT(VECTOR_ELT(list, i),install("range")))[0];
 				counter++;
 			}
 		}
@@ -1206,7 +1206,7 @@ SEXP getMax(SEXP list)
 			K=length(VECTOR_ELT(GET_SLOT(VECTOR_ELT(list, i),install("estimates")), 0));
 			for(j=0;j<K;j++)
 			{      
-				INTEGER(ans)[counter]= INTEGER(GET_SLOT(VECTOR_ELT(list, i),install("range")))[1];
+				INTEGER(ans)[counter]= REAL(GET_SLOT(VECTOR_ELT(list, i),install("range")))[1];
 				counter++;
 			}
 		}
