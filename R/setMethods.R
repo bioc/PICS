@@ -504,7 +504,7 @@ setMethod("density", "picsList",
           {
             # Check that all filters are passed
             missingNames<-!c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")%in%names(filter)
-            filter[c("delta","sigmaSqF","sigmaSqR","se","seF","seR","score")[missingNames]]<-list(c(0,Inf))
+            filter[c("delta","sigmaSqF","sigmaSqR","se","score")[missingNames]]<-list(c(0,Inf))
 
             if(strand=="+")
             {
@@ -691,138 +691,138 @@ setMethod("summary", "pics",
             cat(delta(object),"\n")
             cat("** Number of binding events in the candidate region** \n")
             cat(K(object),"\n")
-          })
-
+})
 
 
 setMethod("plot", signature("pics", "segReads"),
-          function(x, y, addKernel=FALSE, addNucleosome=FALSE, addSe=TRUE, main=NULL, ...)
+function(x, y, addKernel=FALSE, addNucleosome=FALSE, addSe=TRUE, main=NULL, ...)
+{
+  #Set outer and figure margins to reduce gap between plots
+  if(addNucleosome)
+  {
+    nG<-4
+  }
+  else
+  {
+    nG<-2
+  }
+  par(oma=c(2.5,5,5,5),mar=c(0,5,0,0),cex.lab=2)
+  layout(matrix(1:nG,ncol=1), heights = c(.5,.2,.1,.1,.1))
+
+  step<-5
+  .densityMix<-function(x,para)
+  {
+    v<-4
+    w<-para$w
+    mu<-para$mu
+    sigmaSq<-para$sigmaSq
+    sigma<-sqrt(sigmaSq)
+    xNorm<-outer(-mu,x,"+")/sigma 
+    return(colSums(w*dt(xNorm,df=v)/sigma))
+  }
+
+  yF<-y@yF
+  yR<-y@yR
+  cF<-y@cF
+  cR<-y@cR        
+  map<-y@map
+  m<-min(yF[1],yR[1])-100
+  M<-max(tail(yF,1),tail(yR,1))+100
+
+  paraR<-list(w=x@estimates$w, mu=x@estimates$mu+x@estimates$delta/2, sigmaSq=x@estimates$sigmaSqR)
+  paraF<-list(w=x@estimates$w, mu=x@estimates$mu-x@estimates$delta/2, sigmaSq=x@estimates$sigmaSqF)
+
+  dR<-.densityMix(seq(m,M,step),paraR)
+  dF<-.densityMix(seq(m,M,step),paraF)
+  maxRange<-max(c(dF,dR))
+  plot(seq(m,M,step),dF,xlim=c(m,M),ylim=c(0,maxRange),lty=2,type="l",xlab="",ylab="density",xaxt='n',axes=FALSE)
+  title(main=main,outer=TRUE,cex.main=2)
+  axis(2)
+  axis(1)
+
+
+  lines(seq(m,M,step),dR,lty=2,col=2)
+
+  # if(length(map)>0)
+  # {
+    #   nMap<-nrow(map)
+    #   for(i in 1:nMap)
+    #   {
+      #     segments(map[i,1], 0, map[i,2], 0,lwd=3,col=3)
+      #   }
+      # }
+
+      # Add kernel density estimate
+      if((addKernel==TRUE) & (length(yF)>1 & length(yR)>1))
       {
-         #Set outer and figure margins to reduce gap between plots
-        if(addNucleosome)
+        dkF<-density(yF)
+        dkR<-density(yR)
+        lines(dkF,lty=3)
+        lines(dkR,col=2,lty=3)
+      }
+
+      #Add single components and se's
+      K<-length(x@estimates$w)
+      for(k in 1:K)
+      {
+        paraR<-list(w=x@estimates$w[k], mu=x@estimates$mu[k]+x@estimates$delta[k]/2, sigmaSq=x@estimates$sigmaSqR[k])
+        paraF<-list(w=x@estimates$w[k], mu=x@estimates$mu[k]-x@estimates$delta[k]/2, sigmaSq=x@estimates$sigmaSqF[k])
+
+        dsR<-.densityMix(seq(m,M,step),paraR)
+        dsF<-.densityMix(seq(m,M,step),paraF)
+
+        lines(seq(m,M,step),dsF,lty=1)
+        lines(seq(m,M,step),dsR,col=2,lty=1)
+      }
+
+      stripchart(yF[1],pch=">",method="overplot",cex=2,at=.55,add=FALSE,axes=FALSE,xlim=c(m,M),ylim=c(0,1))        
+      if(length(map)>0)
+      {
+        nMap<-nrow(map)
+        symbols((map[,1]+map[,2])/2,rep(.35,nMap),rectangle=cbind(map[,2]-map[,1],rep(.6,nMap)), inches=FALSE, bg=grey(.6), fg=0, add=TRUE,xlim=c(m,M),ylim=c(0,1))
+      }
+
+      stripchart(yF,pch=">",method="overplot",cex=2,at=.55,axes=FALSE,xlim=c(m,M),ylim=c(0,1),add=TRUE)
+      mtext("IP",cex=1.2,side=2,las=2,at=.5)                  
+      stripchart(yR,pch="<",method="overplot",cex=2,at=.45,col=2,add=TRUE)
+
+      abline(h=.35,lty=3)
+      if(addSe)
+      {
+        points(x@estimates$mu,rep(.35,K),pch="+",cex=2)
+        if (any(x@estimates$seMu!=0))
         {
-          nG<-5
+          points(x@estimates$mu-2*x@estimates$seMu,rep(.35,K),pch="[",cex=1)
+          points(x@estimates$mu+2*x@estimates$seMu,rep(.35,K),pch="]",cex=1)
+          segments(x@estimates$mu-2*x@estimates$seMu,rep(.35,K),x@estimates$mu+2*x@estimates$seMu,rep(.35,K),lwd=1,lty=rep(1,K))
+        }
+      }
+
+      if(length(cF)>0)
+      {
+        stripchart(cF,pch=">",method="overplot",at=0.25,cex=2,add=TRUE,xlim=c(m,M),ylab="Cont.",axes=FALSE)
+      }
+      if(length(cR)>0)
+      {
+        stripchart(cR,pch="<",method="overplot",at=0.15,cex=2,col=2,add=TRUE)
+      }
+      mtext("Cont.",cex=1.2,side=2,las=2,at=.2)
+
+      if(addNucleosome)
+      {
+        plot(c(m,M),c(0,1),axes=FALSE,col=0,ylim=c(0,1),xlim=c(m,M),ylab="")
+        if(addSe)
+        {
+          symbols(x@estimates$mu,rep(.5,K),rec=matrix(rep(c(147,.8),K),ncol=2,byrow=TRUE), inches=FALSE, bg=grey(.5*pmin(se(x)/50,1)), fg=0, add=TRUE,xlim=c(m,M),ylim=c(0,1))
         }
         else
         {
-          nG<-3
+          symbols(x@estimates$mu,rep(.5,K),rec=matrix(rep(c(147,.8),K),ncol=2,byrow=TRUE), inches=FALSE, fg=0, bg=1, add=TRUE,xlim=c(m,M),ylim=c(0,1))            
         }
-        par(oma=c(2.5,5,5,5),mar=c(0,5,0,0),cex.lab=2)
-        layout(matrix(1:nG,ncol=1), heights = c(.5,.2,.1,.1,.1))
-        
-        step<-5
-        .densityMix<-function(x,para)
-        {
-          v<-4
-          w<-para$w
-          mu<-para$mu
-          sigmaSq<-para$sigmaSq
-          sigma<-sqrt(sigmaSq)
-          xNorm<-outer(-mu,x,"+")/sigma 
-          return(colSums(w*dt(xNorm,df=v)/sigma))
-        }
-
-        yF<-y@yF
-        yR<-y@yR
-        cF<-y@cF
-        cR<-y@cR        
-        map<-y@map
-        m<-min(yF[1],yR[1])-100
-        M<-max(tail(yF,1),tail(yR,1))+100
-
-        paraR<-list(w=x@estimates$w, mu=x@estimates$mu+x@estimates$delta/2, sigmaSq=x@estimates$sigmaSqR)
-        paraF<-list(w=x@estimates$w, mu=x@estimates$mu-x@estimates$delta/2, sigmaSq=x@estimates$sigmaSqF)
-
-        dR<-.densityMix(seq(m,M,step),paraR)
-        dF<-.densityMix(seq(m,M,step),paraF)
-        maxRange<-max(c(dF,dR))
-        plot(seq(m,M,step),dF,xlim=c(m,M),ylim=c(0,maxRange),lty=2,type="l",xlab="",ylab="density",xaxt='n',axes=FALSE)
-        title(main=main,outer=TRUE,cex.main=2)
-        axis(2)
-        axis(1)
-        
-        
-        lines(seq(m,M,step),dR,lty=2,col=2)
-
-        # if(length(map)>0)
-        # {
-        #   nMap<-nrow(map)
-        #   for(i in 1:nMap)
-        #   {
-        #     segments(map[i,1], 0, map[i,2], 0,lwd=3,col=3)
-        #   }
-        # }
-        
-        # Add kernel density estimate
-        if((addKernel==TRUE) & (length(yF)>1 & length(yR)>1))
-        {
-          dkF<-density(yF)
-          dkR<-density(yR)
-          lines(dkF,lty=3)
-          lines(dkR,col=2,lty=3)
-        }
-
-        #Add single components and se's
-        K<-length(x@estimates$w)
-        for(k in 1:K)
-        {
-          paraR<-list(w=x@estimates$w[k], mu=x@estimates$mu[k]+x@estimates$delta[k]/2, sigmaSq=x@estimates$sigmaSqR[k])
-          paraF<-list(w=x@estimates$w[k], mu=x@estimates$mu[k]-x@estimates$delta[k]/2, sigmaSq=x@estimates$sigmaSqF[k])
-
-          dsR<-.densityMix(seq(m,M,step),paraR)
-          dsF<-.densityMix(seq(m,M,step),paraF)
-
-          lines(seq(m,M,step),dsF,lty=1)
-          lines(seq(m,M,step),dsR,col=2,lty=1)
-        }
-
-        stripchart(yF[1],pch=">",method="overplot",cex=2,at=.55,add=FALSE,axes=FALSE,xlim=c(m,M),ylim=c(0,1))        
-        if(length(map)>0)
-        {
-          nMap<-nrow(map)
-          symbols((map[,1]+map[,2])/2,rep(.35,nMap),rectangle=cbind(map[,2]-map[,1],rep(.6,nMap)), inches=FALSE, bg=grey(.6), fg=0, add=TRUE,xlim=c(m,M),ylim=c(0,1))
-        }
-
-        stripchart(yF,pch=">",method="overplot",cex=2,at=.55,axes=FALSE,xlim=c(m,M),ylim=c(0,1),add=TRUE)
-        mtext("IP",cex=1.2,side=2,las=2,at=.5)                  
-        stripchart(yR,pch="<",method="overplot",cex=2,at=.45,col=2,add=TRUE)
-        
-        abline(h=.35,lty=3)
-        if(addSe)
-        {
-            points(x@estimates$mu,rep(.35,K),pch="+",cex=2)
-            if (any(x@estimates$seMu!=0))
-            {
-				points(x@estimates$mu-2*x@estimates$seMu,rep(.35,K),pch="[",cex=1)
-				points(x@estimates$mu+2*x@estimates$seMu,rep(.35,K),pch="]",cex=1)
-				segments(x@estimates$mu-2*x@estimates$seMu,rep(.35,K),x@estimates$mu+2*x@estimates$seMu,rep(.35,K),lwd=1,lty=rep(1,K))
-            }
-        }
-
-        if(length(cF)>0)
-        {
-          stripchart(cF,pch=">",method="overplot",at=0.25,cex=2,add=TRUE,xlim=c(m,M),ylab="Cont.",axes=FALSE)
-        }
-        if(length(cR)>0)
-        {
-          stripchart(cR,pch="<",method="overplot",at=0.15,cex=2,col=2,add=TRUE)
-        }
-        mtext("Cont.",cex=1.2,side=2,las=2,at=.2)
-        
-        if(addNucleosome)
-        {
-          plot(c(m,M),c(0,1),axes=FALSE,col=0,ylim=c(0,1),xlim=c(m,M),ylab="")
-          if(addSe)
-          {
-            symbols(x@estimates$mu,rep(.5,K),rec=matrix(rep(c(147,.8),K),ncol=2,byrow=TRUE), inches=FALSE, bg=grey(.5*pmin(se(x)/50,1)), fg=0, add=TRUE,xlim=c(m,M),ylim=c(0,1))
-          }
-          else
-          {
-            symbols(x@estimates$mu,rep(.5,K),rec=matrix(rep(c(147,.8),K),ncol=2,byrow=TRUE), inches=FALSE, fg=0, bg=1, add=TRUE,xlim=c(m,M),ylim=c(0,1))            
-          }
-          mtext("Nucl.",cex=1.2,side=2,las=2,at=.5)
-        }
+        mtext("Nucl.",cex=1.2,side=2,las=2,at=.5)
+      }
 })
+
 
 setMethod("plot", signature("picsError", "segReads"),
           function(x, y, addKernel=FALSE, main=NULL, ...)
