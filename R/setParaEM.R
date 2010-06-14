@@ -34,6 +34,6 @@ setParaEM<-function(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,
   
   unlockBinding("paraEMTF", environment(PICS))
   assign("paraEMTF",list(minK=minK,maxK=maxK,tol=tol,B=B,mSelect=mSelect,mergePeaks=mergePeaks,mapCorrect=mapCorrect),envir=environment(PICS))
+  assign("paraEMTF",list(minK=minK,maxK=maxK,tol=tol,B=B,mSelect=mSelect,mergePeaks=mergePeaks,mapCorrect=mapCorrect),envir=.GlobalEnv)
   lockBinding("paraEMTF", environment(PICS))
-
 }

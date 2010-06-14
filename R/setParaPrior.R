@@ -35,5 +35,6 @@ setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200,dataTyp
   
   unlockBinding("paraPriorTF", environment(PICS))
   assign("paraPriorTF",list(xi=xi,rho=rho,alpha=alpha,beta=beta,lambda=lambda,dMu=dMu), envir=environment(PICS))
+  assign("paraPriorTF",list(xi=xi,rho=rho,alpha=alpha,beta=beta,lambda=lambda,dMu=dMu), envir=.GlobalEnv)
   lockBinding("paraPriorTF", environment(PICS))
 }
