@@ -2,43 +2,49 @@ setMethod("unique", "GenomeData",
 function(x,incomparables = FALSE, ...)
 {
   GenomeData(lapply(x,function(x){lapply(x,unique)}))
-  })
+})
 
 setAs("picsList", "RangedData",
-      function(from) {
-            makeRangedDataOutput(from, type="bed", filter=list(delta=c(50,300),se=c(0,50),sigmaSqF=c(0,22500),sigmaSqR=c(0,22500),score=c(1,Inf)),length=100)
-      })
+function(from) 
+{
+  makeRangedDataOutput(from, type="bed", filter=list(delta=c(50,300),se=c(0,50),sigmaSqF=c(0,22500),sigmaSqR=c(0,22500),score=c(1,Inf)),length=100)
+}
+)
 
 setAs("RangedData", "GenomeData",
-      function(from) {
-            readStart <- ifelse(strand(from) == "-",end(from),start(from))
-            alignLocs <-
-                split(data.frame(position = readStart, strand = strand(from)),
-                      space(from)[drop=TRUE])
-            GenomeData(lapply(alignLocs,function(df) with(df, split(position, strand))[c("-", "+")]))
-      })
+function(from)
+{
+  readStart <- ifelse(strand(from) == "-",end(from),start(from))
+  alignLocs <-
+  split(data.frame(position = readStart, strand = strand(from)),space(from)[drop=TRUE])
+  GenomeData(lapply(alignLocs,function(df) with(df, split(position, strand))[c("-", "+")]))
+}
+)
 
-      setAs("data.frame", "GenomeData",            
-            function(from) {
-                  from<-as(from,"RangedData")
-                  readStart <- ifelse(strand(from) == "-",end(from),start(from))
-                  alignLocs <-
-                      split(data.frame(position = readStart, strand = strand(from)),
-                            space(from)[drop=TRUE])
-                  GenomeData(lapply(alignLocs,function(df) with(df, split(position, strand))[c("-", "+")]))
-            })
+setAs("data.frame", "GenomeData",            
+function(from) 
+{
+  from<-as(from,"RangedData")
+  readStart <- ifelse(strand(from) == "-",end(from),start(from))
+  alignLocs <-
+  split(data.frame(position = readStart, strand = strand(from)),
+  space(from)[drop=TRUE])
+  GenomeData(lapply(alignLocs,function(df) with(df, split(position, strand))[c("-", "+")]))
+}
+)
 
 setAs("picsList", "data.frame",
 function(from)
 {
   ans <- data.frame(ID=rep(1:length(from),K(from)),chr=chromosome(from),w=w(from), mu=mu(from),
-  					delta=delta(from), sigmaSqF=sigmaSqF(from), sigmaSqR=sigmaSqR(from),se=se(from),
-					score=score(from), scoreF=scoreForward(from),scoreR=scoreReverse(from),
-					minRange=minRange(from), maxRange=maxRange(from))
+  delta=delta(from), sigmaSqF=sigmaSqF(from), sigmaSqR=sigmaSqR(from),se=se(from),
+  score=score(from), scoreF=scoreForward(from),scoreR=scoreReverse(from),
+  minRange=minRange(from), maxRange=maxRange(from))
   ans$chr	<- as.character(ans$chr)
   ans		<- ans[is.finite(ans$mu),]
   return(ans)
-})
+}
+)
 
 
 ## show and summary methods
