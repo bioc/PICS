@@ -37,10 +37,8 @@
 \alias{K,pics-method}
 \alias{K,picsList-method}
 \alias{K,picsError-method}
-\alias{plot}
 \alias{plot,pics,segReads-method}
 \alias{plot,picsError,segReads-method}
-\alias{plot,picsList,picsList-method}
 \alias{plot,picsList,segReadsList-method}
 \alias{maxRange}
 \alias{maxRange,pics-method}
