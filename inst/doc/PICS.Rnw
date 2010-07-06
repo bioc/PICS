@@ -34,9 +34,10 @@ A step-by-step guide in the analysis of ChIP-Seq data using the PICS package in 
 
 Under the Artistic license 2.0, you are free to use and redistribute this software. However, if you use this package for your own publication, we would ask you to cite the following paper:
 
-\begin{itemize}
-\item[] X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo. (2009). PICS: Probabilistic Inference for ChIP-Seq.
-\end{itemize}
+<<Loading PICS,eval=TRUE,echo=TRUE>>=
+library(PICS)
+citation(package="PICS")
+@
 
 
 \section{Introduction}

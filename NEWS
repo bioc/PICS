@@ -19,5 +19,6 @@ BUG FIXES
     o Fixed a bug when calculating the scores. The scores are now normalized for the 
     number of reads in the control. This could have affected the FDR calculation.
 
+    o Added better documentation for the plotting methods. Typing ?plot or ?FDR should get you better documentation.
 
 (start date: 1 May, 2010)
