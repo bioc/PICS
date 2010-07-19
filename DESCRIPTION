@@ -6,7 +6,8 @@ Author: Xuekui Zhang <xzhang@stat.ubc.ca>, Raphael Gottardo <raph@stat.ubc.ca>
 Maintainer: Arnaud Droit <arnaud.droit@ircm.qc.ca>, Xuekui Zhang <xzhang@stat.ubc.ca>, Raphael Gottardo <raph@stat.ubc.ca>
 Depends: R(>= 2.11.0), IRanges, GenomicRanges, BSgenome, chipseq
 Imports: IRanges, GenomicRanges, BSgenome, methods, graphics, grDevices, stats
-Suggests: multicore, snowfall, ShortRead, rtracklayer
+Suggests: snowfall, ShortRead, rtracklayer
+Enhances: multicore
 Description: Probabilistic inference of ChIP-Seq using an empirical Bayes mixture model approach. 
 biocViews: Clustering, Statistics, Visualization, Sequencing, ChIPseq
 License: Artistic-2.0
