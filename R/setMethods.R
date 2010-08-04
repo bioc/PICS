@@ -1,3 +1,26 @@
+.useRanges <- function() {
+  .Deprecated(msg = "Storing reads only by their start positions is deprecated. Please use a range representation like GRanges.")
+}
+
+setMethod("as.list", "AlignedRead",
+          function(x, ...) {
+              .useRanges()
+              readStart <- ifelse(strand(x) == "-",
+                                  position(x) + width(x) - 1L,
+                                  position(x))
+              alignLocs <-
+                  split(data.frame(position = readStart, strand = strand(x)),
+                        chromosome(x)[drop=TRUE])
+              lapply(alignLocs,
+                     function(df) with(df, split(position, strand))[c("-", "+")])
+          })
+
+setAs("AlignedRead", "GenomeData",
+      function(from) {
+          .useRanges()
+          GenomeData(as.list(from))
+      })
+
 setMethod("unique", "GenomeData",
 function(x,incomparables = FALSE, ...)
 {
@@ -14,6 +37,7 @@ function(from)
 setAs("RangedData", "GenomeData",
 function(from)
 {
+  .useRanges()
   readStart <- ifelse(strand(from) == "-",end(from),start(from))
   alignLocs <-
   split(data.frame(position = readStart, strand = strand(from)),space(from)[drop=TRUE])
