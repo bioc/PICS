@@ -159,5 +159,9 @@ rdBed<-makeRangedDataOutput(pics,type="wig",filter=c(myFilter,list(score=c(1,Inf
 export(rdBed,"myfile.wig")
 @
 
+<<echo=FALSE>>=
+sfStop()
+@
+
 \end{document}
 
