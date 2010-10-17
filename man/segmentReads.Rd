@@ -6,7 +6,8 @@
 \description{ 
     Pre-process bidirectional aligned reads data from a single ChIP-Seq experiment to detect candidate regions with a minimum number of forward and reverse reads. These candidate regions will then be processed by PICS.}
 \usage{
-segmentReads(data, dataC=NULL, map=NULL,minReads=2, minReadsInRegion=3,jitter=FALSE, dataType="TF",maxLregion=0,minLregion=100)
+segmentReads(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegion=3,
+    jitter=FALSE, dataType="TF", maxLregion=0, minLregion=100)
 }
 
 
@@ -26,12 +27,11 @@ segmentReads(data, dataC=NULL, map=NULL,minReads=2, minReadsInRegion=3,jitter=FA
 An object of class `segmentReadsList' containing the results for all regions pre-processed. 
 }
 \references{
-X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq" arXiv, 0903.3206, 2009.
+X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009.
 }
 \author{Xuekui Zhang and Raphael Gottardo <\email{raphael.gottardo@ircm.qc.ca}>}
 
-\seealso{segmentReads}
-\seealso{picsFDR}
+\seealso{segmentReads, picsFDR}
 \examples{
 # Read data
 path<-system.file("extdata",package="PICS")

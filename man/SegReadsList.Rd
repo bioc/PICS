@@ -2,7 +2,9 @@
 \docType{class}
 \alias{segReadsList}
 \alias{segReadsList-class}
+\alias{[,segReadsList-method}
 \alias{[,segReadsList,ANY,ANY-method}
+\alias{[[,segReadsList-method}
 \alias{[[,segReadsList,ANY,ANY-method}
 \alias{length,segReadsList-method}
 

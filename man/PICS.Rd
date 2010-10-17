@@ -2,6 +2,7 @@
 \alias{pics}
 \alias{PICS}
 \alias{pics-class}
+\alias{as.list,AlignedRead-method}
 \alias{code}
 \alias{code,pics-method}
 \alias{code,picsError-method}
@@ -9,6 +10,7 @@
 \alias{coerce}
 \alias{coerce,picsList,RangedData-method}
 \alias{coerce,picsList,data.frame-method}
+\alias{coerce,AlignedRead,GenomeData-method}
 \alias{coerce,RangedData,GenomeData-method}
 \alias{coerce,data.frame,GenomeData-method}
 \alias{coerce,data.frame,picsList-method}

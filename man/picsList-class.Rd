@@ -11,7 +11,9 @@
 \alias{se,picsList-method}
 \alias{seF,picsList-method}
 \alias{seR,picsList-method}
+\alias{[,picsList-method}
 \alias{[,picsList,ANY,ANY-method}
+\alias{[[,picsList-method}
 \alias{[[,picsList,ANY,ANY-method}
 \alias{newPicsList,picsList-method}
 \alias{length}
