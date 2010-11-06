@@ -9,5 +9,5 @@ Imports: IRanges, GenomicRanges, BSgenome, methods, graphics, grDevices, stats
 Suggests: snowfall, ShortRead, rtracklayer
 Enhances: multicore
 Description: Probabilistic inference of ChIP-Seq using an empirical Bayes mixture model approach. 
-biocViews: Clustering, Statistics, Visualization, Sequencing, ChIPseq
+biocViews: Clustering, Visualization, Sequencing, ChIPseq
 License: Artistic-2.0
