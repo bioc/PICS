@@ -14,7 +14,7 @@
 Pre-process bidirectional aligned reads data from a single ChIP-Seq experiment to detect candidate regions with a minimum number of forward and reverse reads. These candidate regions will then be processed by PICS.}
 
 \usage{
-segReadsList<-new(List,paraSW,N,Nc)
+new(List,paraSW,N,Nc)
 }
 
 \arguments{

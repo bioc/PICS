@@ -63,7 +63,7 @@ segReadsList, dataType.
 }
 
 \usage{
-PICS<-pics(segReadsList,dataType="TF")
+pics(segReadsList,dataType="TF")
 }
 
 \arguments{

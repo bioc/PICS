@@ -14,7 +14,7 @@ Pre-process bidirectional aligned reads data from a single ChIP-Seq experiment t
 }
 
 \usage{
-segReads<-new(yF, yR, cF, cR, map, chr)
+new(yF, yR, cF, cR, map, chr)
 }
 
 \arguments{
