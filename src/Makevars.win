@@ -1,8 +1,8 @@
-PKG_LIBS+=-lws2_32 -L$(GSL_LIB) -lgsl -lgslcblas -lm
+PKG_LIBS+=-lws2_32 -L$(LIB_GSL)$(R_ARCH)/lib -lgsl -lgslcblas -lm
 
 PKG_CPPFLAGS=\
 -Ifusion_sdk\
  -D_USE_MEM_MAPPING_\
- -I$(GSL_INC)
+ -I$(LIB_GSL)$(R_ARCH)/include
 
 
