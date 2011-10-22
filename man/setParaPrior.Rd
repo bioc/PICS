@@ -29,7 +29,7 @@ No value returned. The function simply modifies the internal variables `paraPrio
 \references{
 X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009. To appear in Biometrics.
 }
-\author{Xuekui Zhang and Raphael Gottardo <\email{raphael.gottardo@ircm.qc.ca}>}
+\author{ Xuekui Zhang, Arnaud Droit <\email{arnaud.droit@crchuq.ualaval.ca}> and Raphael Gottardo <\email{rgottard@fhcrc.org}>}
 
 \seealso{setParaEM}
 \examples{

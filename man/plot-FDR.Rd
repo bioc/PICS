@@ -24,9 +24,8 @@ This method plots an FDR curve showing the FDR as a function of the PICS scores.
 % \note{
 % }
 
-\author{
-Raphael Gottardo <\email{raph@rglab.org}>
-}
+\author{ Xuekui Zhang, Arnaud Droit <\email{arnaud.droit@crchuq.ualaval.ca}> and Raphael Gottardo <\email{rgottard@fhcrc.org}>}
+
 
 \references{
 X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, "PICS: Probabilistic Inference for ChIP-seq," Biometrics, iss. In press, 2010.

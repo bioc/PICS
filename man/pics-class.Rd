@@ -64,7 +64,7 @@ newPics(w,mu,delta,sigmaSqF,sigmaSqR,seMu,seMuF,seMuR,score,Nmerged,converge,inf
 }
 
 \author{
-  Xuekui Zhang <\email{xzhang@stat.ubc.ca}> and Raphael Gottardo <\email{raphael.gottardo@ircm.qc.ca}>
+\author{ Xuekui Zhang, Arnaud Droit <\email{arnaud.droit@crchuq.ualaval.ca}> and Raphael Gottardo <\email{rgottard@fhcrc.org}>}
 }
 
 \references{

@@ -15,12 +15,8 @@ This methods select the unique elements in a GenomeData object
 \item{object}{A `GenomeData' object.}
 }
 
-\author{
-Xuekui Zhang <\email{xzhang@stat.ubc.ca}
-Arnaud Droit, \email{arnaud.droit@ircm.qc.ca}
-Raphael Gottardo <\email{raphael.gottardo@ircm.qc.ca}
-  
-}
+\author{ Xuekui Zhang, Arnaud Droit <\email{arnaud.droit@crchuq.ualaval.ca}> and Raphael Gottardo <\email{rgottard@fhcrc.org}>}
+
 
 \seealso{
 \code{\link{segmentReads}}

@@ -63,7 +63,7 @@ segReadsList, dataType.
 }
 
 \usage{
-pics(segReadsList,dataType="TF")
+PICS(segReadsList,dataType="TF")
 }
 
 \arguments{
@@ -87,11 +87,9 @@ pics(segReadsList,dataType="TF")
 }
 }
 
-\author{
-  Xuekui Zhang, \email{ubcxzhang@gmail.com} and
-  Raphael Gottardo, \email{raphael.gottardo@ircm.qc.ca}
-  Arnaud Droit, \email{arnaud.droit@ircm.qc.ca}
-}
+ \author{ Xuekui Zhang, Arnaud Droit <\email{arnaud.droit@crchuq.ualaval.ca}> and Raphael Gottardo <\email{rgottard@fhcrc.org}>}
+
+
 \references{
 X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009. To appear in Biometrics.
 }
