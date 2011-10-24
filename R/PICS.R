@@ -35,7 +35,7 @@ PICS<-function(segReadsList,dataType="TF")
     # Split into nClust segReadsList
     segSplit<-split(segReadsList,cut(1:length(segReadsList),nClust))
     names(segSplit)<-NULL
-    res<-unlist(mclapply(segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads,mc.preschedule=FALSE),recursive=FALSE)
+    res<-unlist(sfLapply(segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads,mc.preschedule=FALSE),recursive=FALSE)
   }
   else if(length(grep("snowfall",loadedNamespaces()))==1 && sfParallel())
   {
