@@ -6,6 +6,8 @@ importFrom(graphics, abline, axis, grid, layout, lines, mtext, par,
 importFrom(grDevices, grey)
 importFrom(stats, density, dt)
 
+importFrom(BiocGenerics, order)
+
 importFrom(IRanges, IRanges, RangedData)
 importClassesFrom(IRanges, IRanges, RangedData)
 importMethodsFrom(IRanges, space, score, sort, unique, order, duplicated, start, end, lapply)
