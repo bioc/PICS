@@ -6,7 +6,7 @@ importFrom(graphics, abline, axis, grid, layout, lines, mtext, par,
 importFrom(grDevices, grey)
 importFrom(stats, density, dt)
 
-importFrom(BiocGenerics, order)
+import(BiocGenerics)
 
 importFrom(IRanges, IRanges, RangedData)
 importClassesFrom(IRanges, IRanges, RangedData)
