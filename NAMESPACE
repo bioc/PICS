@@ -4,8 +4,8 @@ import(methods)
 importFrom(graphics, abline, axis, grid, layout, lines, mtext, par,
            plot, points, segments, stripchart, symbols, title)
 importFrom(grDevices, grey)
-importFrom(stats, density, dt)
-
+importFrom(stats, dt)
+importFrom(stats4, density, plot)
 import(BiocGenerics)
 
 importFrom(IRanges, IRanges, RangedData)
