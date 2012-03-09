@@ -6,6 +6,7 @@ importFrom(graphics, abline, axis, grid, layout, lines, mtext, par,
 importFrom(grDevices, grey)
 importFrom(stats, dt)
 importFrom(stats4, plot)
+importFrom(stats4, summary)
 import(BiocGenerics)
 importFrom(BiocGenerics, density)
 
