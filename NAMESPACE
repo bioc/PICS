@@ -1,0 +1,35 @@
+useDynLib(PICS)
+
+import(methods)
+importFrom(graphics, abline, axis, grid, layout, lines, mtext, par,
+           plot, points, segments, stripchart, symbols, title)
+importFrom(grDevices, grey)
+importFrom(stats, dt)
+importFrom(stats4, plot)
+importFrom(stats4, summary)
+import(BiocGenerics)
+importFrom(BiocGenerics, density)
+
+importFrom(IRanges, IRanges, RangedData)
+importClassesFrom(IRanges, IRanges, RangedData)
+importMethodsFrom(IRanges, space, score, sort, unique, order, duplicated, start, end, lapply, levels, as.factor)
+
+importClassesFrom(GenomicRanges, GRanges)
+importMethodsFrom(GenomicRanges, strand)
+importFrom(GenomicRanges, GRanges)
+
+importFrom(BSgenome, GenomeData)
+importClassesFrom(BSgenome, GenomeData)
+
+
+exportClasses(segReads, segReadsList, pics, picsError, picsList)
+exportMethods(coerce, show, summary, plot, density, chromosome, score, se, seF, seR,
+	sigmaSqF, sigmaSqR, mu, delta, w, code, length, K,"[","[[",
+	map, minRange, maxRange, scoreForward, scoreReverse, unique)
+export(segReadsList, segReadsGeneric, segReads, segmentPICS, summarySeg, makeRangedDataOutput)
+
+### export anything w/out a dot in front. 
+#exportPattern(".+")
+# I export the default parameters for the PICS code, so that the user does not have to worry about them
+# export(paraPriorH,paraPriorTF,paraEMH,paraEMTF)
+export(paraPriorTF, paraEMTF)
