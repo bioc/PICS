@@ -18,20 +18,25 @@ SEXP getK(SEXP list);
 SEXP getScore(SEXP list);
 SEXP getChr(SEXP list);
 SEXP getMap(SEXP list);
+//PING functions
+void wThreCountsPING(int *step, int *dataF, int *dataR, int *nReadsF, int *nReadsR, int *width, int *scoreF, int *scoreR);
+void callRegionsLPING(int *center, int *nProbes, int *width, int *scoreF, int *scoreR, int *scoreRegionF, int *scoreRegionR, int *cutoff, int *StartRegion, int *EndRegion, int *nRegions, int maxStep, int kStep, int minL);
+SEXP segRPING(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartRegion, SEXP EndRegion, SEXP StartMap, SEXP EndMap, SEXP jitter, int nRegions);
+//PICS functions
 void wThreCounts(int *step, int *dataF, int *dataR, int *nReadsF, int *nReadsR, int *width, int *scoreF, int *scoreR);
 void callRegions(int *center, int *lengthCenter, int *width, int *scoreF, int *scoreR, int *scoreRegionF, int *scoreRegionR, int *cutoff, int *StartRegion, int *EndRegion, int *nRegions);
 void callRegionsL(int *center, int *nProbes, int *width, int *scoreF, int *scoreR, int *scoreRegionF, int *scoreRegionR, int *cutoff, int *StartRegion, int *EndRegion, int *nRegions, int maxStep, int kStep, int minL);
-SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartMap, SEXP EndMap, SEXP jitter, SEXP width, SEXP cutoff, SEXP step, SEXP maxStep, SEXP minLength);
+SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartMap, SEXP EndMap, SEXP jitter, SEXP width, SEXP cutoff, SEXP step, SEXP maxStep, SEXP minLength, SEXP pPackage);
 SEXP segR(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartRegion, SEXP EndRegion, SEXP StartMap, SEXP EndMap, SEXP jitter, int nRegions);
-SEXP segR2(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartRegion, SEXP EndRegion, SEXP StartMap, SEXP EndMap, SEXP jitter, int nRegions);
-SEXP segR3(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartRegion, SEXP EndRegion, SEXP StartMap, SEXP EndMap, SEXP jitter, int nRegions);
-SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter, SEXP paraSW, SEXP maxStep, SEXP minLength);
+
+SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter, SEXP paraSW, SEXP maxStep, SEXP minLength, SEXP pPackage);
 SEXP getDensity(SEXP pics, SEXP strand, SEXP step, SEXP filter, SEXP sum, SEXP scale);
 SEXP getDensityList(SEXP picsList, SEXP strand, SEXP step, SEXP filter, SEXP sum, SEXP scale);
 SEXP getListElement(SEXP list, const char *str);
 int testClass(SEXP list, int i);
+int testObj(SEXP pPackage);
 
-SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter, SEXP paraSW, SEXP maxStep, SEXP minLength)
+SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter, SEXP paraSW, SEXP maxStep, SEXP minLength, SEXP pPackage)
 {
   int i=0,nChr;
   SEXP d,dC;
@@ -40,9 +45,16 @@ SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter,
   SEXP st,ed;
   SEXP contp,contm;
   
-  d=GET_SLOT(data,install("listData"));
-  dC=GET_SLOT(dataC,install("listData"));
+  //d=GET_SLOT(data,install("listData"));
+  //dC=GET_SLOT(dataC,install("listData"));
+  d=data;
+  dC=dataC;
   nChr=length(d);
+ 
+  Rprintf("maxstep=%d\n", INTEGER_VALUE(maxStep));
+  Rprintf("step=%d\n", INTEGER_VALUE(VECTOR_ELT(paraSW,0)));
+  Rprintf("width=%d\n", INTEGER_VALUE(VECTOR_ELT(paraSW,1)));
+  Rprintf("minReads=%d\n", INTEGER_VALUE(VECTOR_ELT(paraSW,2)));
   
 
   PROTECT(names=getAttrib(d, R_NamesSymbol));
@@ -73,14 +85,14 @@ SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter,
     }
 	
     // Rprintf("process chr %s\n", mkChar(chr));
-    SET_VECTOR_ELT(ans,i, segReads(chr, VECTOR_ELT(VECTOR_ELT(d,i),0), VECTOR_ELT(VECTOR_ELT(d,i),1), contp, contm, st, ed, jitter, VECTOR_ELT(paraSW,1), VECTOR_ELT(paraSW,2), VECTOR_ELT(paraSW,0),maxStep, minLength));
+    SET_VECTOR_ELT(ans,i, segReads(chr, VECTOR_ELT(VECTOR_ELT(d,i),0), VECTOR_ELT(VECTOR_ELT(d,i),1), contp, contm, st, ed, jitter, VECTOR_ELT(paraSW,1), VECTOR_ELT(paraSW,2), VECTOR_ELT(paraSW,0),maxStep, minLength, pPackage));
 	  //Rprintf("Finished chr %d \n",i);
   }
   UNPROTECT(2);
   return(ans);
 }
 
-SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartMap, SEXP EndMap, SEXP jitter, SEXP width, SEXP cutoff, SEXP step, SEXP maxStep, SEXP minLength)
+SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartMap, SEXP EndMap, SEXP jitter, SEXP width, SEXP cutoff, SEXP step, SEXP maxStep, SEXP minLength, SEXP pPackage)
 {
   int *center;
   int *scoreF;
@@ -119,6 +131,10 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
 
   /** Allocate memory for the start/end of each preprocessed region **/
   /** Because I do not know the size yet, I use the maximum possible size **/
+  if(INTEGER_VALUE(width)<0)
+  {
+    Rprintf("width is negative (%d) and will cause memory allocation issues", INTEGER_VALUE(width));
+  } 
   scoreRegionF=(int*)R_alloc((int)((M-m)/(2*INTEGER_VALUE(width))), sizeof(int));
   scoreRegionR=(int*)R_alloc((int)((M-m)/(2*INTEGER_VALUE(width))), sizeof(int));
   PROTECT(StartRegion=allocVector(INTSXP, lengthCenter));
@@ -129,12 +145,26 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
 	{
 		center[i]=m+i*INTEGER_VALUE(step);
 	}
-	
-  wThreCounts(INTEGER(step), dF, dR, &nF, &nR, INTEGER(width), scoreF, scoreR);
+
+  if(testObj(pPackage))
+  {
+    wThreCounts(INTEGER(step), dF, dR, &nF, &nR, INTEGER(width), scoreF, scoreR);
+  }
+  else
+  {
+    wThreCountsPING(INTEGER(step), dF, dR, &nF, &nR, INTEGER(width), scoreF, scoreR);
+  }
   if (INTEGER_VALUE(maxStep)>0) 
   {
 	  //Rprintf("Call Long region\n");
-	  callRegionsL(center, &lengthCenter, &dMerge, scoreF, scoreR, scoreRegionF, scoreRegionR, INTEGER(cutoff), INTEGER(StartRegion), INTEGER(EndRegion), &nRegions, INTEGER_VALUE(maxStep), kStep, INTEGER_VALUE(minLength));
+    if(testObj(pPackage))
+    {
+      callRegionsL(center, &lengthCenter, &dMerge, scoreF, scoreR, scoreRegionF, scoreRegionR, INTEGER(cutoff), INTEGER(StartRegion), INTEGER(EndRegion), &nRegions, INTEGER_VALUE(maxStep), kStep, INTEGER_VALUE(minLength));
+    }
+    else
+    {
+      callRegionsLPING(center, &lengthCenter, &dMerge, scoreF, scoreR, scoreRegionF, scoreRegionR, INTEGER(cutoff), INTEGER(StartRegion), INTEGER(EndRegion), &nRegions, INTEGER_VALUE(maxStep), kStep, INTEGER_VALUE(minLength));
+    }
   }else 
   {
 	  	  //Rprintf("Call region\n");
@@ -178,16 +208,14 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
 	
   if(nRegions>0)
   {
-	  //Rprintf("INTEGER_VALUE(cutSeg)=%i, \t INTEGER(cutSeg)=%i \n",INTEGER_VALUE(cutSeg), INTEGER(cutSeg));
-	  	if (1==0) 
-		{
-			//Rprintf("Do not Cut region\n");
-			PROTECT(ans=segR2(chr, dataF, dataR, contF, contR, StartRegion, EndRegion, StartMap, EndMap, jitter, nRegions));
-		}else {
-			//Rprintf("Cut region\n");
-			PROTECT(ans=segR(chr, dataF, dataR, contF, contR, StartRegion, EndRegion, StartMap, EndMap, jitter, nRegions));
-		}
-
+    if(testObj(pPackage))
+    {
+      PROTECT(ans=segR(chr, dataF, dataR, contF, contR, StartRegion, EndRegion, StartMap, EndMap, jitter, nRegions));
+    }
+    else
+    {
+      PROTECT(ans=segRPING(chr, dataF, dataR, contF, contR, StartRegion, EndRegion, StartMap, EndMap, jitter, nRegions));
+    }
   }
   else
   {  
@@ -232,6 +260,53 @@ void wThreCounts(int *step, int* dataF, int* dataR, int *nReadsF, int *nReadsR, 
     }
     startR=i;
     while((i<*nReadsR) && ((dataR[i]-center)<=*width) && ((dataR[i]-center)>=0))
+    {      
+      nbR++;
+      i++;
+    }
+
+    scoreF[nbCenters]=nbF;
+		scoreR[nbCenters]=nbR;
+    nbCenters++;
+    center+=*step;
+  }  
+}
+
+void wThreCountsPING(int *step, int* dataF, int* dataR, int *nReadsF, int *nReadsR, int *width, int *scoreF, int *scoreR)
+{
+  int m=imin2(dataR[0],dataF[0]);
+  int M=imax2(dataR[*nReadsR-1],dataF[*nReadsF-1]);
+  int center=m;
+  int nbR=0,nbF=0;
+  int startF=0,startR=0;
+  int nbCenters=0,i;
+	int minDist=25; // the min-distance, when reads are too close to the center of window, they are not counted in the window score
+
+  while(center<M)
+  {    
+    /* Count the number of forward reads within width of center on the left side only */    
+    nbF=0;    
+    i=startF;
+    while((i<*nReadsF) && (center-dataF[i])>*width)
+    {
+      i++;
+    }
+    startF=i;
+    while((i<*nReadsF) && ((center-dataF[i])<=*width) && ((center-dataF[i])>=minDist))
+    {      
+      nbF++;
+      i++;
+    }
+
+    /* Count the number of reverse reads within width of center on the right side only */        
+    nbR=0;
+    i=startR;
+    while((i<*nReadsR) && (dataR[i]-center)<minDist)
+    {
+      i++;
+    }
+    startR=i;
+    while((i<*nReadsR) && ((dataR[i]-center)<=*width) && ((dataR[i]-center)>=minDist))
     {      
       nbR++;
       i++;
@@ -383,6 +458,136 @@ void callRegionsL(int *center, int *nProbes, int *width, int *scoreF, int *score
 			{
 				EndRegion[*nRegions-1]=center[ww]+*width/2;
 			}else if ((w-start)>maxStep) 
+			{
+				EndRegion[*nRegions-1]=center[min];
+				cutCenter=1;
+			}else {
+				EndRegion[*nRegions-1]=center[ww]+*width/2;
+				cutCenter=0;
+			}
+			//Rprintf("EndRegion[%i]=%i \n", *nRegions-1,EndRegion[*nRegions-1]);
+			if ((EndRegion[*nRegions-1]-StartRegion[*nRegions-1]) < minL) 
+			{
+				//Rprintf("\n %i - %i < %i, go back one step \n", EndRegion[*nRegions-1], StartRegion[*nRegions-1], minL);
+				(*nRegions)--;
+			}
+
+
+			p=w;
+		} else // do nothing, look at next window
+		{
+			p++;
+		}/*else if (cutCenter==1) //current window have too few reads, but last regions was cut
+		  { 
+		  (*nRegions)++;
+		  StartRegion[*nRegions-1]=EndRegion[*nRegions-2]+1;
+		  EndRegion[*nRegions-1]=center[p-1]+*width/2;
+		  cutCenter=0;
+		  Rprintf("StartRegion[%i]=%i \n", *nRegions-1,StartRegion[*nRegions-1]);
+		  Rprintf("EndRegion[%i]=%i \n", *nRegions-1,EndRegion[*nRegions-1]);
+		  p=p-1+kStep;
+		  if ((EndRegion[*nRegions-1]-StartRegion[*nRegions-1]) < minL) 
+		  {
+		  Rprintf("\n %i - %i < %i, go back one step \n", EndRegion[*nRegions-1], StartRegion[*nRegions-1], minL);
+		  (*nRegions)--;
+		  }
+		  Rprintf("\n End last cut window \n");
+		  }*/
+		//Rprintf("end loop: p=%i \n",p);
+	}
+}
+
+void callRegionsLPING(int *center, int *nProbes, int *width, int *scoreF, int *scoreR, int *scoreRegionF, int *scoreRegionR, int *cutoff, int *StartRegion, int *EndRegion, int *nRegions, int maxStep, int kStep, int minL)
+{
+	//Rprintf("\n Regions shorter than %i bps, will not be called. \n", minL);
+	int p=0, w=0, ww=0, start=0, minScore=0,  min=0,  cutCenter=0, pp; 
+	//p		:the index of current center (outer loop)
+	//ww	:the index of temperory last center in the regions
+	//w		:the index of current center (inner loop)
+	//start	:the index of first center in current segment
+	//minScore: save the minimium score of current region
+	//min	:save the index of center correponding to the min score, used for cut window in ceter
+	//cutCenter: a flag indicating if last region was cut inthe center of window
+	//kStep	:INTEGER(width)/INTEGER(step), when cut in the center, I want the index of start window is cut point+kStep
+	
+	*nRegions=0;
+	
+	//Rprintf("nProbes=%i \n",*nProbes);
+	while(p < *nProbes)
+	{
+		//Rprintf("Start loop: p=%i \n",p);
+		if(((scoreF[p]>=*cutoff) && (scoreR[p]>=*cutoff))|| (cutCenter==1)) //current window has enough reads to be recorded
+		{
+			//maxF=scoreF[p];
+			//maxR=scoreR[p];     
+			(*nRegions)++;
+			
+			/*set start point of the region according to if last region was cut in the center*/
+			if (cutCenter==0) 
+			{
+				StartRegion[*nRegions-1]=center[p]-*width/2;
+				//update new minscore
+				start=p;
+				min=start;
+ 				minScore=imin2(scoreF[start], scoreR[start]);
+				//Rprintf("\n Start a new segment \n");
+			}else 
+			{
+				StartRegion[*nRegions-1]=EndRegion[*nRegions-2]+1;
+				//update new mini score
+				start=min+kStep;
+				min=start;
+				minScore=imin2(scoreF[start], scoreR[start]);
+				for (pp=start; pp<=p; pp++) {
+					if (scoreF[pp]<minScore)
+					{
+						minScore= scoreF[pp];
+						min=pp;
+					}
+					if (scoreR[pp]<minScore) 
+					{
+						minScore= scoreR[pp];
+						min=pp;
+					}
+					pp++;
+					
+				}
+				//Rprintf("\n Continue from last cut window \n");
+			}
+							
+			//Rprintf("StartRegion[%i]=%i \n", *nRegions-1,StartRegion[*nRegions-1]);
+			//Rprintf("min=%i, \t start=%i, \t p=%i, \t kStep=%i \n", min, start, p, kStep);
+
+			
+			w=p+1;  
+			ww=p;	
+
+			
+			while(((w-start)<=maxStep) && ((center[w]-center[ww])<=*width) && (w < *nProbes))
+			{
+				if((scoreF[w]>=*cutoff) & (scoreR[w]>=*cutoff))
+				{
+					ww=w;
+					
+					if (scoreF[w]<minScore)
+					{
+						minScore= scoreF[w];
+						min=w;
+					}
+					if (scoreR[w]<minScore) 
+					{
+						minScore= scoreR[w];
+						min=w;
+					}
+
+				}
+				w++;
+			}
+			
+			if (w == *nProbes)
+			{
+				EndRegion[*nRegions-1]=center[ww]+*width/2;
+			}else if ((ww-start)>=maxStep) 
 			{
 				EndRegion[*nRegions-1]=center[min];
 				cutCenter=1;
@@ -640,15 +845,16 @@ SEXP segR(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartRe
 	return(ans);
 }
 
-
-SEXP segR3(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartRegion, SEXP EndRegion, SEXP StartMap, SEXP EndMap, SEXP jitter, int nRegions)
+SEXP segRPING(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartRegion, SEXP EndRegion, SEXP StartMap, SEXP EndMap, SEXP jitter, int nRegions)
 {
 	int nF = length(dataF), nR = length(dataR), ncF = length(contF), ncR = length(contR), nMap = length(StartMap);
 	int i=0, j=0, pF=0, pR=0, pcF=0, pcR=0, pM=0;
-	int indStart=0, indEnd=0, indStartF=0, indEndF=0,indStartR=0, indEndR=0, *rmap, nProtect;
-	int minLoc, maxLoc, temp; //temparoryly save boundary each regions
+	int indStart=0, indEnd=0, indStartM=0, indEndM=0, indStartF=0, indEndF=0,indStartR=0, indEndR=0, *rmap, nProtect;
+	int minLocF, maxLocF, minLocR, maxLocR, temp; //temparoryly save boundary each regions
 	SEXP ans, map, seg, yF, yR, cF, cR, classDef;
 	SEXP name;
+
+	int ext=50; // extend each segments by ext bps on each side, only forward/reverse reads exist in the extended regions on the left/right
 	
 	PROTECT(name=NEW_CHARACTER(1));
 	SET_STRING_ELT(name,0,mkChar(CHAR(chr)));
@@ -660,80 +866,142 @@ SEXP segR3(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartR
 		/** Initialize the protects **/
 		nProtect=0;
 		
-		/* find the index of 1st&last yF bounded by regions start&ends */
-		while((pF<nF) && (INTEGER(dataF)[pF]<INTEGER(StartRegion)[i]))
+		if (pM>0) pM--; //if PM>0 we want to move the counter one step back since last unmappable regions might overlap with two segments
+		/*Process mappability profile*/
+		if((pM<nMap) & (nMap>0))
+		{
+			while((pM<nMap) & (INTEGER(EndMap)[pM]<INTEGER(StartRegion)[i]))
+			{
+				pM++;
+			}
+			/** Makes sure the index does not go out of bound */
+			indStartM=imin2(pM,nMap);
+			minLocF=imax2(INTEGER(StartMap)[indStartM],INTEGER(StartRegion)[i]-ext);
+			//minLocR=imax2(INTEGER(StartMap)[indStartM],INTEGER(StartRegion)[i]+ext);
+			minLocR=INTEGER(StartRegion)[i]+ext;
+			
+			
+			/** Keep looking **/
+			while((pM<nMap) & (INTEGER(StartMap)[pM]<INTEGER(EndRegion)[i]))
+			{
+				pM++;
+			}
+			indEndM=imin2(pM,nMap);
+			//maxLocF=imin2(INTEGER(EndMap)[indEndM],INTEGER(EndRegion)[i]-ext);
+			maxLocR=imin2(INTEGER(EndMap)[indEndM],INTEGER(EndRegion)[i]+ext);
+			maxLocF=INTEGER(EndRegion)[i]-ext;
+			
+			
+			PROTECT(map = allocMatrix(INTSXP,indEndM-indStartM,2));
+			nProtect++;
+			rmap=INTEGER(map);
+			
+			for(j=indStartM;j<indEndM;j++)
+			{
+				rmap[j-indStartM+(indEndM-indStartM)*0]=imax2(INTEGER(StartMap)[j],INTEGER(StartRegion)[i]);
+				rmap[j-indStartM+(indEndM-indStartM)*1]=imin2(INTEGER(EndMap)[j],INTEGER(EndRegion)[i]);
+			}
+			
+			
+		}
+		else
+		{
+			minLocF=INTEGER(StartRegion)[i]-ext;
+			minLocR=INTEGER(StartRegion)[i]+ext;
+			maxLocF=INTEGER(EndRegion)[i]-ext;
+			maxLocR=INTEGER(EndRegion)[i]+ext;
+			PROTECT(map = allocMatrix(INTSXP,0,2));
+			nProtect++;
+		}
+		
+		//Rprintf("No Truncation: \t\t minLoc[%i]=%i,\t maxLoc[%i]=%i \n",i,INTEGER(StartRegion)[i],i,INTEGER(EndRegion)[i]);
+		//Rprintf("Map Truncation: \t minLoc[%i]=%i,\t maxLoc[%i]=%i \n",i,minLoc,i,maxLoc);
+		
+		/* find the index of 1st yF bounded by regions start,
+		 and define "minLoc=min(yF[1], StartMap[1])" */
+		while((pF<nF) && (INTEGER(dataF)[pF]<((INTEGER(StartRegion)[i])-ext)))
 		{
 			pF++;
 		}
 		indStartF=pF;
-		minLoc=INTEGER(dataF)[indStartF];
-
-		
-		while((pF<nF) && (INTEGER(dataF)[pF]<=INTEGER(EndRegion)[i]))
+		temp=minLocF;
+		if (temp>(INTEGER(StartRegion)[i]-ext)) 
 		{
-			pF++;
+			minLocF=imin2(temp, INTEGER(dataF)[indStartF]);
+		}else {
+			minLocF=imax2(temp, INTEGER(dataF)[indStartF]);
 		}
-		indEndF=imin2(pF-1,nF);
-		indEndF=imax2(indEndF,indStartF);
 
 		
-		/* find the index of 1st&last yR bounded by 1st F read and regions ends */
-		while((pR<nR) && (INTEGER(dataR)[pR]<minLoc))
+	
+		/* find the index of 1st yR bounded by minLoc */
+		while((pR<nR) && (INTEGER(dataR)[pR]<minLocR))
 		{
 			pR++;
 		}
 		indStartR=pR;
-
 		
-		while((pR<nR) && (INTEGER(dataR)[pR]<=INTEGER(EndRegion)[i]))
+		
+		/* find the index of last yR bounded by regions ends,
+		 and define "maxLoc=min(yF[max], EndMap[max])" */
+		while((pR<nR) && (INTEGER(dataR)[pR]<=(INTEGER(EndRegion)[i]+ext)))
 		{
 			pR++;
 		}
 		indEndR=imin2(pR-1,nR);
 		indEndR=imax2(indEndR,indStartR);
-		maxLoc=INTEGER(dataR)[indEndR];
-			
-		/* update the index of last yR bounded by last R read */		
-		temp=indEndF;
-		while((INTEGER(dataF)[temp]>maxLoc))
+		temp=maxLocR;
+		if (temp<INTEGER(EndRegion)[i])
 		{
-			temp--;
+			maxLocR=imax2(temp, INTEGER(dataR)[indEndR]);
+		}else {
+			maxLocR=imin2(temp, INTEGER(dataR)[indEndR]);
 		}
-		indEndF=temp;
+
+		//Rprintf("Reads Truncation: \t minLoc[%i]=%i,\t minLoc[%i]=%i \n",i,minLoc,i,maxLoc);
+		
+		/* find the index of last yF bounded by maxLoc */
+		while((pF<nF) && (INTEGER(dataF)[pF]<=maxLocF))
+		{
+			pF++;
+		}
+		indEndF=imin2(pF-1,nF);
+		indEndF=imax2(indEndF,indStartF);
+		
 		
 		/*
-		Rprintf("Start: yF[%i]=%i, \n", indStartF,  INTEGER(dataF)[indStartF]);
-		Rprintf("Start: yR[%i]=%i, \n", indStartR,  INTEGER(dataR)[indStartR]);
-		Rprintf("End: yF[%i]=%i,   \n", indEndF,    INTEGER(dataF)[indEndF]);
-		Rprintf("End: yR[%i]=%i,   \n", indEndR,    INTEGER(dataR)[indEndR]);		
-		*/
+		 Rprintf("Start: yF[%i]=%i, \n", indStartF,  INTEGER(dataF)[indStartF]);
+		 Rprintf("Start: yR[%i]=%i, \n", indStartR,  INTEGER(dataR)[indStartR]);
+		 Rprintf("End: yF[%i]=%i,   \n", indEndF,    INTEGER(dataF)[indEndF]);
+		 Rprintf("End: yR[%i]=%i,   \n", indEndR,    INTEGER(dataR)[indEndR]);		
+		 */
 		
 		/** Split the data using the start/end index **/
 		PROTECT(yF = allocVector(REALSXP,indEndF-indStartF+1));
 		nProtect++;
 		for(j=indStartF;j<=indEndF;j++)
 		{
-			REAL(yF)[j-indStartF]=INTEGER(dataF)[j]+rnorm(0,.1)*INTEGER(jitter)[0];
+			REAL(yF)[j-indStartF]=INTEGER(dataF)[j]+rnorm(0,2)*INTEGER(jitter)[0];
 		}
 		
 		PROTECT(yR = allocVector(REALSXP,indEndR-indStartR+1));
 		nProtect++;    
 		for(j=indStartR;j<=indEndR;j++)
 		{
-			REAL(yR)[j-indStartR]=INTEGER(dataR)[j]+rnorm(0,.1)*INTEGER(jitter)[0];
+			REAL(yR)[j-indStartR]=INTEGER(dataR)[j]+rnorm(0,2)*INTEGER(jitter)[0];
 		}
 		
 		
 		/*Process control data*/
 		if((ncF>0) & (ncR>0))
 		{
-			while((pcF<ncF) & (INTEGER(contF)[pcF]<minLoc))
+			while((pcF<ncF) & (INTEGER(contF)[pcF]<minLocF))
 			{
 				pcF++;
 			}
 			indStart=pcF;
 			
-			while((pcF<ncF) & (INTEGER(contF)[pcF]<=maxLoc))
+			while((pcF<ncF) & (INTEGER(contF)[pcF]<=maxLocF))
 			{
 				pcF++;
 			}
@@ -746,13 +1014,13 @@ SEXP segR3(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartR
 				REAL(cF)[j-indStart]=INTEGER(contF)[j]+rnorm(0,.1)*INTEGER(jitter)[0];
 			}
 			
-			while((pcR<ncR) & (INTEGER(contR)[pcR]<minLoc))
+			while((pcR<ncR) & (INTEGER(contR)[pcR]<minLocR))
 			{
 				pcR++;
 			}
 			indStart=pcR;
 			
-			while((pcR<ncR) & (INTEGER(contR)[pcR]<=maxLoc))
+			while((pcR<ncR) & (INTEGER(contR)[pcR]<=maxLocR))
 			{
 				pcR++;
 			}
@@ -770,36 +1038,6 @@ SEXP segR3(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartR
 			cF = R_NilValue;
 			cR = R_NilValue;
 		}
-				
-		if((pM<nMap) & (nMap>0))
-		{
-			while((pM<(nMap-1)) & (INTEGER(EndMap)[pM]<minLoc))
-			{
-				pM++;
-			}
-			/** Makes sure the index does not go out of bound */
-			indStart=imin2(pM,nMap-1);
-			/** Keep looking **/
-			while((pM<(nMap-1)) & (INTEGER(StartMap)[pM]<maxLoc))
-			{
-				pM++;
-			}
-			indEnd=imin2(pM,nMap-1);
-			PROTECT(map = allocMatrix(INTSXP,indEnd-indStart,2));
-			nProtect++;
-			rmap=INTEGER(map);
-			
-			for(j=indStart;j<indEnd;j++)
-			{
-				rmap[j-indStart+(indEnd-indStart)*0]=imax2(INTEGER(StartMap)[j],minLoc);
-				rmap[j-indStart+(indEnd-indStart)*1]=imin2(INTEGER(EndMap)[j],maxLoc);
-			}
-		}
-		else
-		{
-			PROTECT(map = allocMatrix(INTSXP,0,2));
-			nProtect++;
-		}
 		
 		classDef=MAKE_CLASS("segReads");
 		PROTECT(seg=NEW_OBJECT(classDef));
@@ -816,164 +1054,6 @@ SEXP segR3(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartR
 	UNPROTECT(2);
 	PutRNGstate();
 	return(ans);
-}
-
-
-SEXP segR2(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartRegion, SEXP EndRegion, SEXP StartMap, SEXP EndMap, SEXP jitter, int nRegions)
-{
-  int nF = length(dataF), nR = length(dataR), ncF = length(contF), ncR = length(contR), nMap = length(StartMap);
-  int i=0, j=0, pF=0, pR=0, pcF=0, pcR=0, pM=0;
-  int indStart=0, indEnd=0, *rmap, nProtect;
-  SEXP ans, map, seg, yF, yR, cF, cR, classDef;
-  SEXP name;
-	int minLoc,maxLoc;
-  
-  PROTECT(name=NEW_CHARACTER(1));
-  SET_STRING_ELT(name,0,mkChar(CHAR(chr)));
-  GetRNGstate();
-  /** Define the list for the output **/
-  PROTECT(ans = NEW_LIST(nRegions));
-  for(i=0;i<nRegions;i++)
-  {
-    /** Initialize the protects **/
-    nProtect=0;
-    while((pF<nF) && (INTEGER(dataF)[pF]<INTEGER(StartRegion)[i]))
-    {
-      pF++;
-    }
-    indStart=pF;
-	  minLoc=INTEGER(dataF)[indStart];
-	  //Rprintf("indStart=%i, \t minLoc=%i \n",indStart, minLoc);
-
-    while((pF<nF) && (INTEGER(dataF)[pF]<=INTEGER(EndRegion)[i]))
-    {
-      pF++;
-    }
-    indEnd=imin2(pF,nF);
-	  //Rprintf("indEndF=%i, \t loc=%i  \n",indEnd, INTEGER(dataF)[indEnd]);
-
-    /** Split the data using the start/end index **/
-    PROTECT(yF = allocVector(REALSXP,indEnd-indStart));
-    nProtect++;
-    for(j=indStart;j<indEnd;j++)
-    {
-      REAL(yF)[j-indStart]=INTEGER(dataF)[j]+rnorm(0,.1)*INTEGER(jitter)[0];
-    }
-
-    while((pR<nR) && (INTEGER(dataR)[pR]<INTEGER(StartRegion)[i]))
-    {
-      pR++;
-    }
-    indStart=pR;
-	 // Rprintf("indStartR=%i, \t loc=%i \n",indStart,INTEGER(dataR)[indStart]);
-
-    while((pR<nR) && (INTEGER(dataR)[pR]<=INTEGER(EndRegion)[i]))
-    {
-      pR++;
-    }
-    indEnd=imin2(pR,nR);
-	  maxLoc=INTEGER(dataR)[indEnd];
-	 // Rprintf("indEndR=%i, \t maxLoc=%i \n",indEnd, maxLoc);
-
-    /** Split the data using the start/end index **/
-    PROTECT(yR = allocVector(REALSXP,indEnd-indStart));
-    nProtect++;    
-    for(j=indStart;j<indEnd;j++)
-    {
-      REAL(yR)[j-indStart]=INTEGER(dataR)[j]+rnorm(0,.1)*INTEGER(jitter)[0];
-    }
-
-    if((ncF>0) & (ncR>0))
-    {
-      while((pcF<ncF) & (INTEGER(contF)[pcF]<INTEGER(StartRegion)[i]))
-      {
-        pcF++;
-      }
-      indStart=pcF;
-
-      while((pcF<ncF) & (INTEGER(contF)[pcF]<=INTEGER(EndRegion)[i]))
-      {
-        pcF++;
-      }
-      indEnd=imin2(pcF,ncF);
-
-      PROTECT(cF = allocVector(REALSXP,indEnd-indStart));
-      nProtect++;      
-      for(j=indStart;j<indEnd;j++)
-      {
-        REAL(cF)[j-indStart]=INTEGER(contF)[j]+rnorm(0,.1)*INTEGER(jitter)[0];
-      }
-
-      while((pcR<ncR) & (INTEGER(contR)[pcR]<INTEGER(StartRegion)[i]))
-      {
-        pcR++;
-      }
-      indStart=pcR;
-
-      while((pcR<ncR) & (INTEGER(contR)[pcR]<=INTEGER(EndRegion)[i]))
-      {
-        pcR++;
-      }
-      indEnd=imin2(pcR,ncR);
-
-      PROTECT(cR = allocVector(REALSXP,indEnd-indStart));
-      nProtect++;      
-      for(j=indStart;j<indEnd;j++)
-      {
-        REAL(cR)[j-indStart]=INTEGER(contR)[j]+rnorm(0,.1)*INTEGER(jitter)[0];
-      }
-    }
-    else
-    {
-      cF = R_NilValue;
-      cR = R_NilValue;
-    }
-
-    if((pM<nMap) & (nMap>0))
-    {
-      while((pM<(nMap-1)) & (INTEGER(EndMap)[pM]<INTEGER(StartRegion)[i]))
-      {
-        pM++;
-      }
-      /** Makes sure the index does not go out of bound */
-      indStart=imin2(pM,nMap-1);
-      /** Keep looking **/
-      while((pM<(nMap-1)) & (INTEGER(StartMap)[pM]<INTEGER(EndRegion)[i]))
-      {
-        pM++;
-      }
-      indEnd=imin2(pM,nMap-1);
-      PROTECT(map = allocMatrix(INTSXP,indEnd-indStart,2));
-      nProtect++;
-      rmap=INTEGER(map);
-      
-      for(j=indStart;j<indEnd;j++)
-      {
-        rmap[j-indStart+(indEnd-indStart)*0]=imax2(INTEGER(StartMap)[j],INTEGER(StartRegion)[i]);
-        rmap[j-indStart+(indEnd-indStart)*1]=imin2(INTEGER(EndMap)[j],INTEGER(EndRegion)[i]);
-      }
-    }
-    else
-    {
-      PROTECT(map = allocMatrix(INTSXP,0,2));
-      nProtect++;
-    }
-
-    classDef=MAKE_CLASS("segReads");
-    PROTECT(seg=NEW_OBJECT(classDef));
-    nProtect++;    
-    SET_SLOT(seg,mkChar("yF"),yF);
-    SET_SLOT(seg,mkChar("yR"),yR);
-    SET_SLOT(seg,mkChar("cF"),cF);
-    SET_SLOT(seg,mkChar("cR"),cR);
-    SET_SLOT(seg,mkChar("map"),map);
-    SET_SLOT(seg,mkChar("chr"),name);
-    SET_VECTOR_ELT(ans,i,seg);
-    UNPROTECT(nProtect);
-  }
-  UNPROTECT(2);
-  PutRNGstate();
-  return(ans);
 }
 
 SEXP getVector(SEXP list, SEXP ind)
@@ -1175,7 +1255,7 @@ SEXP getMin(SEXP list)
 	}
 	
 	/** Allocate the memory for the results **/
-	PROTECT(ans = allocVector(INTSXP, nTotal));
+	PROTECT(ans = allocVector(REALSXP, nTotal));
 	
 	for(i=0;i<n;i++)
 	{
@@ -1185,7 +1265,7 @@ SEXP getMin(SEXP list)
 			K=length(VECTOR_ELT(GET_SLOT(VECTOR_ELT(list, i),install("estimates")), 0));
 			for(j=0;j<K;j++)
 			{      
-				INTEGER(ans)[counter]= REAL(GET_SLOT(VECTOR_ELT(list, i),install("range")))[0];
+				REAL(ans)[counter]= REAL(GET_SLOT(VECTOR_ELT(list, i),install("range")))[0];
 				counter++;
 			}
 		}
@@ -1211,7 +1291,7 @@ SEXP getMax(SEXP list)
 	}
 	
 	/** Allocate the memory for the results **/
-	PROTECT(ans = allocVector(INTSXP, nTotal));
+	PROTECT(ans = allocVector(REALSXP, nTotal));
 	
 	for(i=0;i<n;i++)
 	{
@@ -1221,7 +1301,7 @@ SEXP getMax(SEXP list)
 			K=length(VECTOR_ELT(GET_SLOT(VECTOR_ELT(list, i),install("estimates")), 0));
 			for(j=0;j<K;j++)
 			{      
-				INTEGER(ans)[counter]= REAL(GET_SLOT(VECTOR_ELT(list, i),install("range")))[1];
+				REAL(ans)[counter]= REAL(GET_SLOT(VECTOR_ELT(list, i),install("range")))[1];
 				counter++;
 			}
 		}
@@ -1562,6 +1642,16 @@ int testClass(SEXP list, int i)
   { res=1; }
   else
   { res=0; }
-  Rprintf("res=%d",res);
+  return(res);
+}
+
+//This function finds out if the object has been called from 'PICS' or 'PING'
+int testObj(SEXP pPackage)
+{
+  int res=1;
+  if(strcmp(CHAR(STRING_ELT(pPackage,0)),"PICS")==0)
+  { res=1; }
+  else
+  { res=0; }
   return(res);
 }

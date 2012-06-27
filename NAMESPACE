@@ -26,7 +26,7 @@ exportClasses(segReads, segReadsList, pics, picsError, picsList)
 exportMethods(coerce, show, summary, plot, density, chromosome, score, se, seF, seR,
 	sigmaSqF, sigmaSqR, mu, delta, w, code, length, K,"[","[[",
 	map, minRange, maxRange, scoreForward, scoreReverse, unique)
-export(segReadsList, segReadsGeneric, segReads, segmentPICS, summarySeg, makeRangedDataOutput)
+export("segReadsList", "segReadsGeneric", "segReads", "segmentPICS", "summarySeg", "makeRangedDataOutput", "PICS", "picsFDR","backgroundSim")
 
 ### export anything w/out a dot in front. 
 #exportPattern(".+")

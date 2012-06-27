@@ -5,7 +5,7 @@
 #include <R_ext/Rdynload.h>
 
 double ran_flat(double m, double M);
-void background(double *dataF, double *dataR, int *nReadsF, int *nReadsR, int *mapS, int *mapE, int *lMap, int *gapS, int *gapE, int *lGap, double *pRetain)
+void backgroundSim(double *dataF, double *dataR, int *nReadsF, int *nReadsR, int *mapS, int *mapE, int *lMap, int *gapS, int *gapE, int *lGap, double *pRetain)
 {
   int FLAG=1,i=0,j=0,l=0,countR=0;
   double data=0,mF=dataF[0],MF=dataF[*nReadsF-1],mR=dataR[0],MR=dataR[*nReadsR-1];

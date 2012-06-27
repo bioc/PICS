@@ -60,9 +60,9 @@ PICS<-function(segReadsList,dataType="TF")
 
 
 ## This function could be used to simulate random reads in the case there are no background reads
-.background<-function(dataF, dataR, mapPro=NULL,gapPro=NULL,pRetain=0.01)
+backgroundSim<-function(dataF, dataR, mapPro=NULL,gapPro=NULL,pRetain=0.01)
 {
-  obj<-.C("background",
+  obj<-.C("backgroundSim",
   dataF=as.double(dataF),
   dataR=as.double(dataR),
   nF=as.integer(length(dataF)),

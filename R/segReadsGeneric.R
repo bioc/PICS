@@ -55,7 +55,7 @@ segReadsGeneric<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegi
 	}
 	else
 	{
-		map<-map[seqnames(map) %in% levels(seqnames(data))]
+		map<-map[as.character(seqnames(map)) %in% levels(seqnames(data))]
 		chrs<-levels(seqnames(data))
 		start<-end<-vector('list',length(chrs))
 		names(start) <- names(end) <- chrs
@@ -89,7 +89,7 @@ segReadsGeneric<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegi
 	}
 	
 	## Perform the segmentation
-	newSegReadsList<-.Call("segReadsAll", lData, lDataC, start, end, as.integer(jitter), paraSW , as.integer(maxStep), as.integer(minLregion),PACKAGE=package)
+	newSegReadsList<-.Call("segReadsAll", lData, lDataC, start, end, as.integer(jitter), paraSW , as.integer(maxStep), as.integer(minLregion), pPackage=package, PACKAGE="PICS")
 	
 	
 	temp<-unlist(newSegReadsList,recursive=FALSE,use.names=FALSE)
@@ -116,7 +116,7 @@ segReadsGeneric<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegi
 # max: end location of segments
 summarySeg <- function(x)
 {
-	temp<-.Call("getSegL", x@List, PACKAGE="PING");
+	temp<-.Call("getSegL", x@List, PACKAGE="PICS");
 	ans <- data.frame(chr=temp[[1]],NF=temp[[2]],NR=temp[[3]],L=temp[[4]],min=temp[[5]],max=temp[[6]])
 	ans$chr <- as.character(ans$chr)
 	return(ans)
