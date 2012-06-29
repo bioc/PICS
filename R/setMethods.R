@@ -6,11 +6,11 @@
 ## All the setAs method force an object to belong to a chosen class
 ## setAs(from, to, def)
 ##value<-as(object, Class)
-setMethod("unique", "GenomeData",
-function(x,incomparables = FALSE, ...)
-{
-  GenomeData(lapply(x,function(x){lapply(x,unique)}))
-})
+##setMethod("unique", "GenomeData",
+##function(x,incomparables = FALSE, ...)
+##{
+##  GenomeData(lapply(x,function(x){lapply(x,unique)}))
+##})
 
 setAs("picsList", "RangedData",
 function(from) 

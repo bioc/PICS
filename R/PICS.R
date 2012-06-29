@@ -1,4 +1,4 @@
-PICS<-function(segReadsList,dataType="TF")
+PICS<-function(segReadsList,dataType="TF", paraEM=NULL, paraPrior=NULL)
 {
   ### Constant used in the calculations
   cst<-gamma(3.5)/gamma(3)/sqrt(pi)
@@ -10,8 +10,16 @@ PICS<-function(segReadsList,dataType="TF")
   }
   else
   {
-    paraPrior<-paraPriorTF
-    paraEM<-paraEMTF
+    if(length(paraEM)!=7)
+    {
+      message("Using the default paraEM")
+      paraEM<-list(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,mapCorrect=TRUE)
+    }
+    if(length(paraPrior)!=6)
+    {
+      message("Using the default paraPrior")
+      paraPrior<-list(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=0)
+    }
   }
   
   if((length(grep("multicore",loadedNamespaces()))==0) & (length(grep("snowfall",loadedNamespaces()))==0 || suppressMessages(!sfParallel())))

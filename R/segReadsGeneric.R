@@ -114,9 +114,9 @@ segReadsGeneric<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegi
 # L  : length of segment
 # min: start location of segments
 # max: end location of segments
-summarySeg <- function(x)
+summarySeg <- function(seg)
 {
-	temp<-.Call("getSegL", x@List, PACKAGE="PICS");
+	temp<-.Call("getSegL", seg@List, PACKAGE="PICS");
 	ans <- data.frame(chr=temp[[1]],NF=temp[[2]],NR=temp[[3]],L=temp[[4]],min=temp[[5]],max=temp[[6]])
 	ans$chr <- as.character(ans$chr)
 	return(ans)

@@ -3,7 +3,7 @@ Type: Package
 Title: Probabilistic inference of ChIP-seq
 Version: 1.11.0
 Author: Xuekui Zhang <xzhang@stat.ubc.ca>, Raphael Gottardo <rgottard@fhcrc.org>
-Maintainer: Arnaud Droit <arnaud.droit@crchuq.ulaval.ca>
+Maintainer: Renan Sauteraud <rsautera@fhcrc.org>
 Depends: R (>= 2.11.0), BiocGenerics (>= 0.1.3), IRanges (>= 1.13.10),
         GenomicRanges, BSgenome
 Imports: methods, BiocGenerics, stats4, IRanges, GenomicRanges,
