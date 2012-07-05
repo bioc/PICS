@@ -33,12 +33,9 @@ setParaEM<-function(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,
   return(list(minK=minK,maxK=maxK,tol=tol,B=B,mSelect=mSelect,mergePeaks=mergePeaks,mapCorrect=mapCorrect))
 }
 
-setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200,dataType="TF")
+#default for PICS
+setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200)
 {
-  if(dataType!="TF" & dataType!="H")
-  {
-    stop("Object 'dataType' must be either 'TF' or 'H'")
-  }
   if(!is.finite(xi))
   {
     stop("'xi' must be a numeric value")

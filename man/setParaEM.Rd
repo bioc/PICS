@@ -2,11 +2,11 @@
 \alias{setParaEM}
 
 \title{
-	Function that returns a list of parameters for the EM algorithm that can be used as an argument of PICS and PING.
+	Function that returns a list of parameters for the EM algorithm that can be used as an argument of PICS.
 }
 
 \description{
-	This function takes from 0 to 7 EM algorithm parameters as argument, check if they are valid and returns a list to be used in a call to PICS or PING.
+	This function takes from 0 to 7 EM algorithm parameters as argument, check if they are valid and returns a list to be used in a call to PICS.
 }
 
 \usage{
@@ -25,7 +25,7 @@
 }
 
 \value{
-	Returns a list of parameters to be used in PICS or PING.
+	Returns a list of parameters to be used in PICS.
 }
 
 \author{
@@ -34,7 +34,6 @@ Renan Sauteraud
 
 \seealso{
 	\code{PICS}
-	\code{PING}
 }
 
 \keyword{functions}
