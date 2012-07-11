@@ -8,8 +8,7 @@ Depends: R (>= 2.14.0), BiocGenerics (>= 0.1.3), IRanges (>= 1.13.10),
         GenomicRanges, BSgenome
 Imports: methods, BiocGenerics, stats4, IRanges, GenomicRanges,
         BSgenome, graphics, grDevices, stats
-Suggests: snowfall, ShortRead, rtracklayer
-Enhances: multicore
+Suggests: ShortRead, rtracklayer, parallel
 Description: Probabilistic inference of ChIP-Seq using an empirical Bayes mixture model approach. 
 biocViews: Clustering, Visualization, Sequencing, ChIPseq
 License: Artistic-2.0
