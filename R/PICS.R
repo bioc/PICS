@@ -21,41 +21,7 @@ PICS<-function(segReadsList,dataType="TF", paraEM=NULL, paraPrior=NULL)
       paraPrior<-list(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=0)
     }
   }
-  
-#  if((length(grep("multicore",loadedNamespaces()))==0) & (length(grep("snowfall",loadedNamespaces()))==0 || suppressMessages(!sfParallel())))
-#  {
-#    message("Using the serial version of PICS")    
-#    # C version
-#    res<-.Call("fitPICS", segReadsList, paraEM, paraPrior, minReads, PACKAGE="PICS")
-#  }
-#  else if(length(grep("multicore",loadedNamespaces()))==1)
-#  {
-#    cores<-getOption("cores")
-#    if(is.null(cores))
-#    {
-#      nClust<-multicore:::volatile$detectedCores
-#    }
-#    else
-#    {
-#      nClust<-cores
-#    }
-#    message("Using the multicore version of PICS with ",nClust," cores")
-#    # Split into nClust segReadsList
-#    segSplit<-split(segReadsList,cut(1:length(segReadsList),nClust))
-#    names(segSplit)<-NULL
-#    res<-unlist(sfLapply(segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads,mc.preschedule=FALSE),recursive=FALSE)
-#  }
-#  else if(length(grep("snowfall",loadedNamespaces()))==1 && sfParallel())
-#  {
-#    # Number of clusters
-#    nClust<-sfCpus()
-#    message("Using the parallel (snowfall) version of PICS with ", nClust, " cpus or cores")
-#    # Split into nClust segReadsList
-#    segSplit<-split(segReadsList,cut(1:length(segReadsList),nClust))
-#    names(segSplit)<-NULL
-#    # Use a parallel version
-#    res<-unlist(sfLapply(segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads),recursive=FALSE)
-#  }
+
 
   if("parallel" %in% names(getLoadedDLLs()) )
   {
@@ -67,6 +33,7 @@ PICS<-function(segReadsList,dataType="TF", paraEM=NULL, paraPrior=NULL)
 	  segSplit<-split(segReadsList,cut(1:length(segReadsList),nCores))
 	  #Use parallel version of lapply
 	  res<-unlist(parLapply(cl,segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads),recursive=FALSE)
+	  stopCluster(cl)
   }
   else
   {
