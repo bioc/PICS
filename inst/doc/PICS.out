@@ -1,0 +1,11 @@
+\BOOKMARK [1][-]{section.1}{Licensing}{}
+\BOOKMARK [1][-]{section.2}{Introduction}{}
+\BOOKMARK [1][-]{section.3}{PICS pipeline}{}
+\BOOKMARK [1][-]{section.4}{Data Input and Formating}{}
+\BOOKMARK [1][-]{section.5}{PICS analysis}{}
+\BOOKMARK [2][-]{subsection.5.1}{Genome segmentation}{section.5}
+\BOOKMARK [2][-]{subsection.5.2}{Parameter estimation}{section.5}
+\BOOKMARK [2][-]{subsection.5.3}{FDR estimation}{section.5}
+\BOOKMARK [1][-]{section.6}{Result output}{}
+\BOOKMARK [2][-]{subsection.6.1}{Writing enriched regions to BED files}{section.6}
+\BOOKMARK [2][-]{subsection.6.2}{Writing density scores to WIG files}{section.6}

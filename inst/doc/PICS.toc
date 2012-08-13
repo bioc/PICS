@@ -1,0 +1,11 @@
+\contentsline {section}{\numberline {1}Licensing}{2}{section.1}
+\contentsline {section}{\numberline {2}Introduction}{2}{section.2}
+\contentsline {section}{\numberline {3}PICS pipeline}{2}{section.3}
+\contentsline {section}{\numberline {4}Data Input and Formating}{3}{section.4}
+\contentsline {section}{\numberline {5}PICS analysis}{4}{section.5}
+\contentsline {subsection}{\numberline {5.1}Genome segmentation}{4}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Parameter estimation}{4}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}FDR estimation}{4}{subsection.5.3}
+\contentsline {section}{\numberline {6}Result output}{6}{section.6}
+\contentsline {subsection}{\numberline {6.1}Writing enriched regions to BED files}{6}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Writing density scores to WIG files}{6}{subsection.6.2}

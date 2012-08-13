@@ -10,9 +10,9 @@ importFrom(stats4, summary)
 import(BiocGenerics)
 importFrom(BiocGenerics, density)
 
-importFrom(IRanges, IRanges, RangedData)
+importFrom(IRanges, IRanges, RangedData, coverage)
 importClassesFrom(IRanges, IRanges, RangedData)
-importMethodsFrom(IRanges, space, score, sort, order, duplicated, start, end, lapply, levels, as.factor)
+importMethodsFrom(IRanges, space, score, sort, order, duplicated, start, end, lapply, levels, as.factor, as.matrix)
 
 importClassesFrom(GenomicRanges, GRanges)
 importMethodsFrom(GenomicRanges, strand)
@@ -22,9 +22,10 @@ importFrom(BSgenome, GenomeData)
 importClassesFrom(BSgenome, GenomeData)
 
 
-exportClasses(segReads, segReadsList, pics, picsError, picsList)
+exportClasses(segReads, segReadsList, segReadsPE, segReadsListPE, pics, picsError, picsList)
 exportMethods(coerce, show, summary, plot, density, chromosome, score, se, seF, seR,
 	sigmaSqF, sigmaSqR, mu, delta, w, code, length, K,"[","[[",
 	map, minRange, maxRange, scoreForward, scoreReverse)
-export("segReadsList", "segReadsGeneric", "segReads", "segmentPICS", "summarySeg", "makeRangedDataOutput", "PICS", "picsFDR", "newPicsError", "setParaEM", "setParaPrior")
+export("segReadsList", "segReadsListPE", "segReadsPE", "segReadsGeneric", "segReads", "segmentPICS", "summarySeg", "makeRangedDataOutput", "PICS", "picsFDR", "newPicsError", "setParaEM", "setParaPrior",
+	"candidate.region","segChrRead")
 

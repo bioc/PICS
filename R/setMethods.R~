@@ -19,19 +19,6 @@ function(from)
 }
 )
 
-##Transform a list of reads into a GRanges object
-#setAs("list", "GRanges", function(from, chrs)
-#{
-#  idx<-which(names(reads)=="P")
-#  if(is.null(idx))
-#    stop("The list to coerce should have an attribute 'P'")
-#  idx2 <- ( from$P$"pos.-" >  from$P$"pos.+")
-#  PE_data<-from$P[idx2,]
-#  #The reads are saved in a file containing 2 R objects: reads & chrs
-#  GRanges(IRanges(start=PE_data$"pos.+" , end=PE_data$"pos.-"), strand="*", seqnames=chrs)
-#}
-
-
 #Transform a .bed like data.frame into a GRanges object
 setAs("data.frame", "GRanges",function(from)
 {
@@ -668,51 +655,6 @@ setMethod("[[","segReadsList",
       }
       x@List[[i]]
 })
-
-
-setMethod("[","segReadsListPE",
-                function(x,i, j,..., drop=FALSE)
-                {
-                        if(missing(i))
-                        {
-                                return(x)
-                        }
-                        if(!missing(j))
-                        {
-                          stop("incorrect number of dimensions")
-                        }
-      else
-      {
-        segReadsListPE(x@List[i],x@paraSW,x@N,x@NFm,x@NRm,x@Nc,x@NcFm,x@NcRm)
-      }
-                })
-
-#Same as for segReadsList. Should not be needed
-setMethod("[[","segReadsListPE",
-    function(x, i, j, ..., exact = TRUE)
-    {
-      if(length(i) != 1)
-      {
-        stop("subscript out of bounds (index must have length 1)")
-      }
-      if(missing(i))
-      {
-        return(x)
-      }
-      if(!missing(j))
-      {
-        stop("incorrect number of dimensions")
-      }
-      x@List[[i]]
-})
-
-
-
-
-
-
-
-
 
 setMethod("[","picsList",
 		function(x,i, j,..., drop=FALSE)
