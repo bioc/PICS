@@ -145,8 +145,8 @@ segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD , PEC.RD=NULL, PECM
 				
 		if(!is.null(PEC.RD)){
  			index_PEC <- as.matrix(findOverlaps(target, PEC.RD))[,2]
- 			index_PECMF <- as.matrix(findOverlaps(target, PECM.RD))[,2]
- 			index_PECMR <- as.matrix(findOverlaps(target, PECM.RD))[,2]
+ 			index_PECMF <- as.matrix(findOverlaps(target, PECMF.RD))[,2]
+ 			index_PECMR <- as.matrix(findOverlaps(target, PECMR.RD))[,2]
 #			index_PEC <-   findOverlaps(target, PEC.RD )@matchMatrix[,2]
 #			index_PECMF <- findOverlaps(target, PECM.RD)@matchMatrix[,2]
 #			index_PECMR <- findOverlaps(target, PECM.RD)@matchMatrix[,2]
@@ -155,12 +155,12 @@ segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD , PEC.RD=NULL, PECM
 			cR <- end(PEC.RD)[index_PEC]
 
 			if(length(index_PECMF)>0){
-				cFm <- start(PECM.RD)[index_PECMF]
+				cFm <- start(PECMF.RD)[index_PECMF]
 			}else{
 				cFm <- numeric(0)
 			}
 			if(length(index_PECMR)>0){
-				cRm <- start(PECM.RD)[index_PECMR]	
+				cRm <- start(PECMR.RD)[index_PECMR]	
 			}else{
 				cRm <- numeric(0)
 			}

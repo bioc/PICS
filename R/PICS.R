@@ -6,19 +6,21 @@ PICS<-function(segReadsList,dataType="TF", paraEM=NULL, paraPrior=NULL)
 
   if(dataType!="TF")
   {
-    stop("Object 'dataType' must be either 'TF'")
+    stop("Object 'dataType' must be 'TF'")
   }
   else
   {
     if(length(paraEM)!=7)
     {
-      message("Using the default paraEM")
-      paraEM<-list(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,mapCorrect=TRUE)
+#      message("Using the default paraEM")
+#      paraEM<-list(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,mapCorrect=TRUE)
+	  paraEM<-setParaEM(dataType=dataType)
     }
     if(length(paraPrior)!=6)
     {
-      message("Using the default paraPrior")
-      paraPrior<-list(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=0)
+#      message("Using the default paraPrior")
+#      paraPrior<-list(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=0)
+	  paraPrior<-setParaPrior(dataType=dataType)
     }
   }
 

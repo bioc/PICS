@@ -43,28 +43,28 @@ setAs("data.frame", "GRanges",function(from)
 })
 
 
-setAs("RangedData", "GenomeData",
-function(from)
-{
-  .useRanges()
-  readStart <- ifelse(strand(from) == "-",end(from),start(from))
-  alignLocs <-
-  split(data.frame(position = readStart, strand = strand(from)),space(from)[drop=TRUE])
-  GenomeData(lapply(alignLocs,function(df) with(df, split(position, strand))[c("-", "+")]))
-}
-)
-
-setAs("data.frame", "GenomeData",            
-function(from) 
-{
-  from<-as(from,"RangedData")
-  readStart <- ifelse(strand(from) == "-",end(from),start(from))
-  alignLocs <-
-  split(data.frame(position = readStart, strand = strand(from)),
-  space(from)[drop=TRUE])
-  GenomeData(lapply(alignLocs,function(df) with(df, split(position, strand))[c("-", "+")]))
-}
-)
+#setAs("RangedData", "GenomeData",
+#function(from)
+#{
+#  .useRanges()
+#  readStart <- ifelse(strand(from) == "-",end(from),start(from))
+#  alignLocs <-
+#  split(data.frame(position = readStart, strand = strand(from)),space(from)[drop=TRUE])
+#  GenomeData(lapply(alignLocs,function(df) with(df, split(position, strand))[c("-", "+")]))
+#}
+#)
+#
+#setAs("data.frame", "GenomeData",            
+#function(from) 
+#{
+#  from<-as(from,"RangedData")
+#  readStart <- ifelse(strand(from) == "-",end(from),start(from))
+#  alignLocs <-
+#  split(data.frame(position = readStart, strand = strand(from)),
+#  space(from)[drop=TRUE])
+#  GenomeData(lapply(alignLocs,function(df) with(df, split(position, strand))[c("-", "+")]))
+#}
+#)
 
 setAs("picsList", "data.frame",
 function(from)
@@ -151,6 +151,12 @@ setMethod("score", "picsList",
             
           })
 
+setMethod("score", "data.frame",
+		function(x)
+		{
+		  return(x$score)
+		})
+
 
 setGeneric("minRange", function(x, ...) standardGeneric("minRange"))
 setMethod("minRange", "pics",
@@ -210,9 +216,14 @@ setMethod("scoreReverse", "picsList",
           function(x)
           {
             ans<-.Call("getScoreR", x@List, PACKAGE="PICS");
-            return(ans)
-            
-          })
+            return(ans)            
+})
+
+setMethod("scoreReverse", "data.frame",
+		function(x)
+	  	{
+		  return(x$scoreR)
+})
           
 setGeneric("scoreForward", function(x, ...) standardGeneric("scoreForward"))
 setMethod("scoreForward", "pics",
@@ -233,7 +244,13 @@ setMethod("scoreForward", "picsList",
             ans<-.Call("getScoreF", x@List, PACKAGE="PICS");
             return(ans)
             
-          })
+})
+
+setMethod("scoreForward", "data.frame",
+		function(x)
+		{
+			return(x$scoreF)
+})
 
 setGeneric("chromosome", function(x, ...) standardGeneric("chromosome"))
 setMethod("chromosome", "pics",
@@ -254,6 +271,14 @@ setMethod("chromosome", "picsList",
             return(ans)
           }
 )
+
+setMethod("chromosome", "data.frame",
+		function(x)
+		{
+			return(x$chr)
+		})
+
+
 
 setGeneric("map", function(x, ...) standardGeneric("map"))
 setMethod("map", "segReads",
@@ -301,6 +326,12 @@ setMethod("se", "picsList",
           }
 )
 
+setMethod("se", "data.frame",
+		function(x)
+		{
+			return(x$se)
+		})
+
 setGeneric("seF", function(x, ...) standardGeneric("seF"))
 setMethod("seF", "pics",
           function(x)
@@ -321,6 +352,12 @@ setMethod("seF", "picsList",
               return(ans)
           }
 )
+
+setMethod("seF", "data.frame",
+		function(x)
+		{
+			return(x$seF)
+		})
 
 setGeneric("seR", function(x, ...) standardGeneric("seR"))
 setMethod("seR", "pics",
@@ -343,6 +380,12 @@ setMethod("seR", "picsList",
               return(ans)
           }
 )
+
+setMethod("seR", "data.frame",
+		function(x)
+		{
+			return(x$seR)
+		})
 
 
 setGeneric("sigmaSqF", function(x, ...) standardGeneric("sigmaSqF"))
@@ -368,6 +411,12 @@ setMethod("sigmaSqF", "picsList",
           }
 )
 
+setMethod("sigmaSqF", "data.frame",
+		function(x)
+		{
+			return(x$sigmaSqF)
+		})
+
 setGeneric("sigmaSqR", function(x, ...) standardGeneric("sigmaSqR"))
 setMethod("sigmaSqR", "pics",
           function(x)
@@ -390,6 +439,12 @@ setMethod("sigmaSqR", "picsList",
               return(ans)
           }
 )
+
+setMethod("sigmaSqR", "data.frame",
+		function(x)
+		{
+			return(x$sigmaSqR)
+		})
 
 setGeneric("delta", function(x, ...) standardGeneric("delta"))
 setMethod("delta", "pics",
@@ -414,6 +469,11 @@ setMethod("delta", "picsList",
           }
 )
 
+setMethod("delta", "data.frame",
+		function(x)
+		{
+			return(x$delta)
+		})
 
 setGeneric("mu", function(x, ...) standardGeneric("mu"))
 setMethod("mu", "pics",
@@ -437,6 +497,12 @@ setMethod("mu", "picsList",
               return(ans)
           }
 )
+
+setMethod("mu", "data.frame",
+		function(x)
+		{
+			return(x$mu)
+		})
 
 setGeneric("w", function(x, ...) standardGeneric("w"))
 setMethod("w", "pics",
@@ -513,8 +579,8 @@ setMethod("length", "segReadsList",
             return(length(x@List))
 })
 
-# setGeneric("density", function(x, ...) standardGeneric("density"))
-setMethod("density", "pics",
+setGeneric("wigDensity", function(x, ...) standardGeneric("wigDensity"))
+setMethod("wigDensity", "pics",
           function(x,strand="+",step=10,sum=FALSE,filter=NULL,scale=TRUE)
           {
             
@@ -543,7 +609,7 @@ setMethod("density", "pics",
           }
 )
 
-setMethod("density", "picsList",
+setMethod("wigDensity", "picsList",
           function(x,strand="+",step=10,sum=FALSE,filter=NULL,scale=TRUE)
           {
             # Check that all filters are passed
@@ -571,7 +637,7 @@ setMethod("density", "picsList",
           }
 )
 
-setMethod("density", "picsError",
+setMethod("wigDensity", "picsError",
           function(x,strand=NULL,step=NULL,sum=NULL,filter=NULL)
           {
             return(NULL)

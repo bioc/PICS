@@ -375,7 +375,7 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
   SET_STRING_ELT(names, 4, mkChar("sigmaSqR"));
   SET_STRING_ELT(names, 5, mkChar("seMu"));
   SET_STRING_ELT(names, 6, mkChar("seMuF"));
-  SET_STRING_ELT(names, 7, mkChar("seMuF"));
+  SET_STRING_ELT(names, 7, mkChar("seMuR"));
   setAttrib(estimates, R_NamesSymbol, names);  
   
   SET_SLOT(myPics,mkChar("estimates"),estimates);

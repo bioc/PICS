@@ -5,10 +5,12 @@
 ## =========================================================================##
 
 
-setClass("segReads", representation(yF="numeric", yR="numeric", cF="numeric", cR="numeric", map="matrix",chr="character"),prototype(yF=numeric(0), yR=numeric(0), cF=numeric(0), cR=numeric(0), map=matrix(0,0,2),chr=character(0)))
+setClass("segReads", representation(yF="numeric", yR="numeric", cF="numeric", cR="numeric", map="matrix",chr="character"),
+		prototype(yF=numeric(0), yR=numeric(0), cF=numeric(0), cR=numeric(0), map=matrix(0,0,2),chr=character(0)))
 
 ## I will need to add some annotations latter on.
-setClass("segReadsList", representation(List="list", paraSW="list", N="integer", Nc="integer"),prototype(List=list(List=list(0),paraSW=list(step=integer(0),width=integer(0),minReads=integer(0)),N=integer(0),Nc=integer(0))))
+setClass("segReadsList", representation(List="list", paraSW="list", N="integer", Nc="integer"),
+		prototype(List=list(List=list(0),paraSW=list(step=integer(0),width=integer(0),minReads=integer(0)),N=integer(0),Nc=integer(0))))
 
 ### Constructor
 
@@ -52,12 +54,14 @@ segReadsList<-function(List,paraSW,N,Nc)
   new("segReadsList", List=List, paraSW=paraSW, N=N, Nc=Nc)
 }
 
-setClass("pics", representation(estimates="list",score="numeric",scoreF="numeric",scoreR="numeric",Nmerged="numeric",converge="logical",range="integer",chr="character"),prototype(estimates=list(w=numeric(0),mu=numeric(0),delta=numeric(0),sigmaSqF=numeric(0),sigmaSqR=numeric(0),seMu=numeric(0),seMuF=numeric(0),seMuR=numeric(0)),score=numeric(0),scoreF=numeric(0),scoreR=numeric(0),Nmerged=numeric(0),converge=logical(0),range=integer(0),chr=character(0)))
+setClass("pics", representation(estimates="list",score="numeric",scoreF="numeric",scoreR="numeric",Nmerged="numeric",converge="logical",range="integer",chr="character"),
+		prototype(estimates=list(w=numeric(0),mu=numeric(0),delta=numeric(0),sigmaSqF=numeric(0),sigmaSqR=numeric(0),seMu=numeric(0),seMuF=numeric(0),seMuR=numeric(0)),score=numeric(0),scoreF=numeric(0),scoreR=numeric(0),Nmerged=numeric(0),converge=logical(0),range=integer(0),chr=character(0)))
 
 setClass("picsError", representation(errorCode="character"),prototype(errorCode=character(0)))
 
 ## Should I add some annotations?
-setClass("picsList", representation(List="list", paraPrior="list", paraEM="list", minReads="list", N="integer", Nc="integer"), prototype(List=list(0),minReads=list(perPeak=integer(0),perRegion=integer(0)), paraPrior=list(xi=double(0),rho=double(0),alpha=double(0),beta=double(0)),paraEM=list(kMax=integer(0),B=integer(0),tol=double(0)),N=integer(0), Nc=integer(0)))
+setClass("picsList", representation(List="list", paraPrior="list", paraEM="list", minReads="list", N="integer", Nc="integer"), 
+		prototype(List=list(0),minReads=list(perPeak=integer(0),perRegion=integer(0)), paraPrior=list(xi=double(0),rho=double(0),alpha=double(0),beta=double(0)),paraEM=list(kMax=integer(0),B=integer(0),tol=double(0)),N=integer(0), Nc=integer(0)))
 
 ### Constructor
 newPics<-function(w,mu,delta,sigmaSqF,sigmaSqR,seMu,seMuF,seMuR,score,scoreF,scoreR,Nmerged,converge,range,chr)

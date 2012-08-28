@@ -1451,7 +1451,7 @@ SEXP getDensityList(SEXP picsList, SEXP strand, SEXP step, SEXP filter, SEXP sum
   for(l=0;l<length(List);l++)
   {
     pics=VECTOR_ELT(List,l);
-    if(strcmp(CHAR(STRING_ELT(GET_CLASS(pics), 0)),"pics")==0)
+    if((strcmp(CHAR(STRING_ELT(GET_CLASS(pics), 0)),"pics")==0) || (strcmp(CHAR(STRING_ELT(GET_CLASS(pics), 0)),"ping")==0))
     {
       range=REAL(GET_SLOT(pics,install("range")));
       totalLength+=(int)((range[1]-range[0])/REAL(step)[0]);
@@ -1466,7 +1466,8 @@ SEXP getDensityList(SEXP picsList, SEXP strand, SEXP step, SEXP filter, SEXP sum
   for(l=0;l<length(List);l++)
   { 
     pics=VECTOR_ELT(List,l);
-    if(strcmp(CHAR(STRING_ELT(GET_CLASS(pics), 0)),"pics")==0)
+    //if(strcmp(CHAR(STRING_ELT(GET_CLASS(pics), 0)),"pics")==0)
+    if((strcmp(CHAR(STRING_ELT(GET_CLASS(pics), 0)),"pics")==0) || (strcmp(CHAR(STRING_ELT(GET_CLASS(pics), 0)),"ping")==0))
     {
     
       chromosome=GET_SLOT(pics,install("chr"));
@@ -1532,6 +1533,7 @@ SEXP getDensity(SEXP pics, SEXP strand, SEXP step, SEXP filter, SEXP sum, SEXP s
     seFilterF=REAL(getListElement(filter, "seF"));
     seFilterR=REAL(getListElement(filter, "seR"));
     scoreFilter=REAL(getListElement(filter, "score"));
+    //Rprintf("seFF=%f, seFR=%f\n", seFilterF, seFilterR);
 
     range=REAL(GET_SLOT(pics,install("range")));
 

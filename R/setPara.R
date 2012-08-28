@@ -1,11 +1,28 @@
 ## Functions to return a list of parameters to be used by PICS functions
 
-setParaEM<-function(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,mapCorrect=TRUE,dataType="TF")
+setParaEM<-function(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,mapCorrect=TRUE,dataType=NULL)
 {
-  if(dataType!="TF" & dataType!="H")
+  if(!is.null(dataType))
   {
-    stop("Object 'dataType' must be either 'TF' or 'H'")
+    if(tolower(dataType)=="mnase" | tolower(dataType)=="h")
+	{
+		message("Using the default paraEM for MNase data")
+		minK=0;maxK=0;tol=1e-4;B=100;mSelect="AIC3";mergePeaks=TRUE;mapCorrect=TRUE;
+	}
+	else if(tolower(dataType)=="chip-seq" | tolower(dataType)=="tf")
+	{
+		message("Using the default paraEM for ChIP-Seq data")
+		minK=1;maxK=15;tol=1e-4;B=100;mSelect="BIC";mergePeaks=TRUE;mapCorrect=TRUE;
+	}
+	else
+	{
+		stop("Invalid dataType")
+	}
   }
+#  if(dataType!="TF" & dataType!="H")
+#  {
+#    stop("Object 'dataType' must be either 'TF' or 'H'")
+#  }
   if(!is.finite(tol) & tol<=0 & tol>1)
   {
     stop("'tol' must be a positive number between 0 and 1")
@@ -34,8 +51,25 @@ setParaEM<-function(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,
 }
 
 #default for PICS
-setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200)
+setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataType=NULL)
 {
+  if(!is.null(dataType))
+  {
+	  if(tolower(dataType)=="mnase" | tolower(dataType)=="h")
+	  {
+		  message("Using the default paraPrior for MNase data")
+		  xi=150;rho=0.8;alpha=20;beta=20000;lambda=-0.000064;dMu=200;
+	  }
+	  else if(tolower(dataType)=="chip-seq" | tolower(dataType)=="tf")
+	  {
+		  message("Using the default paraPrior for ChIP-Seq data")
+		  xi=200;rho=1;alpha=20;beta=40000;lambda=0;dMu=200;
+	  }
+	  else
+	  {
+		  stop("Invalid dataType")
+	  }
+  }
   if(!is.finite(xi))
   {
     stop("'xi' must be a numeric value")
