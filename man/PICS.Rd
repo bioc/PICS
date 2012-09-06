@@ -16,26 +16,30 @@
 \alias{coerce,data.frame,GRanges-method}
 \alias{coerce,data.frame,picsList-method}
 \alias{coerce,data.frame,picsList-method}
-\alias{density}
-\alias{density,pics-method}
-\alias{density,picsError-method}
+\alias{wigDensity}
+\alias{wigDensity,pics-method}
+\alias{wigDensity,picsError-method}
 \alias{score}
 \alias{scoreForward}
 \alias{scoreForward,pics-method}
 \alias{scoreForward,picsList-method}
 \alias{scoreForward,picsError-method}
+\alias{scoreForward,data.frame-method}
 \alias{scoreReverse}
 \alias{scoreReverse,pics-method}
 \alias{scoreReverse,picsList-method}
 \alias{scoreReverse,picsError-method}
+\alias{scoreReverse,data.frame-method}
 \alias{sigmaSqR}
 \alias{sigmaSqR,pics-method}
 \alias{sigmaSqR,picsList-method}
 \alias{sigmaSqR,picsError-method}
+\alias{sigmaSqR,data.frame-method}
 \alias{sigmaSqF}
 \alias{sigmaSqF,pics-method}
 \alias{sigmaSqF,picsList-method}
 \alias{sigmaSqF,picsError-method}
+\alias{sigmaSqF,data.frame-method}
 \alias{K}
 \alias{K,pics-method}
 \alias{K,picsList-method}
@@ -103,7 +107,7 @@ PICS(segReadsList,dataType="TF", paraEM=NULL, paraPrior=NULL)
 \item{maxRange}{\code{signature(x = ``pics'')}: return the range maximum.}
 \item{minRange}{\code{signature(x = ``pics'')}: return the range minimal.}
  \item{K}{\code{signature(x = ``pics'')}: subset PICS object.}
- \item{density}{\code{signature(x = ``pics'')}: return the density for each binding event.}
+ \item{wigDensity}{\code{signature(x = ``pics'')}: return the density for each binding event.}
 }
 }
 

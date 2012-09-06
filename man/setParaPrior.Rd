@@ -10,7 +10,7 @@
 }
 
 \usage{
-	setParaPrior(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200)
+	setParaPrior(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataType=NULL)
 }
 
 \arguments{
@@ -20,6 +20,7 @@
 	\item{beta}{ An \code{integer}, default=40000. Second hyperparameter of the inverse Gamma distribution for sigma^2 in the PICS model}
 	\item{lambda}{ An \code{integer}, default=0. The precision of the prior for mu used for histone data.}
 	\item{dMu}{ An \code{integer}, default=0. Our best guess for the distance between two neighboring nucleosomes.}
+	\item{dataType}{ A character string. If a valid dataType is specified, use our suggested parameters.}
 }
 
 \value{
@@ -37,6 +38,9 @@ Renan Sauteraud
 \examples{
 	# set prior for PICS data
 	paraPrior<-setParaPrior(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200)
+	# set prior for chip-seq data using our selected default parameters
+	paraPrior<-setParaPrior(dataType="chip-seq")
+	
 }
 
 \keyword{functions}

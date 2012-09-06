@@ -51,10 +51,10 @@ SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter,
   dC=dataC;
   nChr=length(d);
  
-  Rprintf("maxstep=%d\n", INTEGER_VALUE(maxStep));
-  Rprintf("step=%d\n", INTEGER_VALUE(VECTOR_ELT(paraSW,0)));
-  Rprintf("width=%d\n", INTEGER_VALUE(VECTOR_ELT(paraSW,1)));
-  Rprintf("minReads=%d\n", INTEGER_VALUE(VECTOR_ELT(paraSW,2)));
+  //Rprintf("maxstep=%d\n", INTEGER_VALUE(maxStep));
+  //Rprintf("step=%d\n", INTEGER_VALUE(VECTOR_ELT(paraSW,0)));
+  //Rprintf("width=%d\n", INTEGER_VALUE(VECTOR_ELT(paraSW,1)));
+  //Rprintf("minReads=%d\n", INTEGER_VALUE(VECTOR_ELT(paraSW,2)));
   
 
   PROTECT(names=getAttrib(d, R_NamesSymbol));

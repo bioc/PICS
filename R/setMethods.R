@@ -84,7 +84,7 @@ function(from)
 setMethod("show", "segReads",
           function(object)
       {
-          cat("Object of class 'segReads'","\n")
+          cat("Object of class ",as.character(class(object)),"\n")
           cat("This object has the following slots: \n")
           cat(paste(names(getSlots(class(object))),collapse=", "),"\n")
           #cat("yR, yF, cF, cR, map\n")
@@ -93,7 +93,7 @@ setMethod("show", "segReads",
 setMethod("show", "segReadsList",
           function(object)
       {
-          cat("Object of class 'segReadsList'","\n")
+          cat("Object of class",as.character(class(object)),"\n")
           cat("This object has the following slots: \n")
           cat(paste(names(getSlots(class(object))),collapse=", "),"\n")
           #cat("List, paraSW, N, Nc\n")

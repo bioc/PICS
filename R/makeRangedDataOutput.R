@@ -121,6 +121,18 @@ makeRangedDataOutput<-function(obj, type="fixed", filter=list(delta=c(0,Inf),se=
 		gr<-RangedData(ranges, score, space = chrom)
 #		gr<-GRanges(seqnames=chrom,ranges=ranges,strand="*",score)
 	  }
+	  else if(type=="wig")
+	  {
+		  #I just remove all overlapping elements (which is bad)
+		  rd<-RangedData(ranges, score, space = chrom,  strand=strand)
+		  chrs<-unique(chrom)
+		  overlap<-as.matrix(findOverlaps(ranges(rd)[[chrs]]))
+		  res<-split(overlap[,1], overlap[,2])
+		  r2<-as.integer(lapply(res, length))
+		  r3<-which(r2==1)
+		  r4<-which(r2!=1)
+		  gr<-rd[r3,]
+	  }
 	  else
 	  {
 		  
@@ -215,7 +227,18 @@ MRO<-function(obj, type="fixed",filter=list(delta=c(0,Inf),se=c(0,Inf),sigmaSqF=
 	}
 	else if(type=="wig")
 	{
-		#if data.frame: cannot call density.
+		#To avoid overlapping ranges, when I have overlapping nucleosomes, I will keep the one with the highest score.
+#		sList<-c()
+#		eList<-c()
+#		scoreList<-c()
+#		for(idx in 1:length(ping))
+#		{
+#			sList<-c(sList, ping[[idx]]@range[1])
+#			eList<-c(eList, ping[[idx]]@range[2])
+#			scoreList<-c(scoreList, max(score(ping[[idx]])))
+#		}
+#		nucRanges<-GRanges(ranges=IRanges(start=sList, end=eList), seqnames="chr1", score=scoreList)
+		#if data.frame: cannot call density.		
 		temp<-density(obj,strand="*",step=10,sum=TRUE,filter=filter,scale=TRUE)
 		chrom<-temp$chr
 		start<-temp$x
@@ -238,17 +261,6 @@ MRO<-function(obj, type="fixed",filter=list(delta=c(0,Inf),se=c(0,Inf),sigmaSqF=
 		{
 			names(ranges)<-paste("pics",1:(length(score)),sep="")
 			gr<-RangedData(ranges, score, space = chrom)
-		}
-		else if(type=="wig")
-		{
-			#get the coverage
-			cov<-coverage(ranges)$chrom
-			#get the max coverage
-			#if>1
-			#for each base where coverage>1
-			which(cov@values>1)
-			#get all the ranges where they are, get the score, average it
-			#
 		}
 		else
 		{		
