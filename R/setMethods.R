@@ -43,6 +43,9 @@ setAs("data.frame", "GRanges",function(from)
 })
 
 
+#I need a concatenate method to add pics objects
+
+
 #setAs("RangedData", "GenomeData",
 #function(from)
 #{

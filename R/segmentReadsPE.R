@@ -69,7 +69,7 @@ cand_recursive <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, ma
 		}
 
 		islandDepth <- islandDepth + 1
-		cat("islandDepth=", islandDepth)
+		#cat("islandDepth=", islandDepth)
 		
 	}	
 	cand_IR_sep <- IRanges(start=sort(st), end=sort(ed))
@@ -199,49 +199,4 @@ segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD , PEC.RD=NULL, PECM
 		seg[[i]] <- segReadsPE(as.numeric(yF), as.numeric(yR), yFm=numeric(0), yRm=numeric(0), cF=numeric(0), cR=numeric(0), cFm=numeric(0), cRm=numeric(0), map=map, chr)
 	}	
 	return(seg)
-}
-
-
-###########################################
-## Pre-process bam files for segmentation
-##
-prePING<-function(bamFile, outpath="./", save=TRUE)
-{
-	paras <- ScanBamParam(what=c("qname", "rname", "strand", "pos", "mapq", "qwidth"), flag=scanBamFlag(isUnmappedQuery=FALSE,isDuplicate=FALSE))
-	rawData <- scanBam(paste(bamFile), param=paras)[[1]]
-	addon <- rawData$qwidth
-	addon[rawData$strand!="-"] <- 0  # to get end of "-" reads, seq length need to be added to their positions
-	retained <-  rawData$mapq > 10  # filter out reads with bad quality scores
-	temp1 <- data.frame(qname=rawData$qname[retained], 
-			rname=rawData$rname[retained], 
-			strand=rawData$strand[retained], 
-			pos=(rawData$pos+addon)[retained])
-	temp1$qname <- as.character(temp1$qname) #change qname into characters
-	temp1$rname <- as.character(temp1$rname) #change strand into characters
-	temp1 <- split(temp1[,c( "qname", "strand", "pos" )],temp1$rname) # split data into chromosomes
-	
-	PEreads<-vector('list', length(temp1))
-	names(PEreads<-names(temp1))
-	for(chrs in names(temp1))
-	{
-		print(chrs)
-		qnames=substring(temp1[[chrs]]$qname,15)
-		temp1[[chrs]]$qname=as.character(sapply(qnames, gsub, pattern="/3", replacement=""))	
-		dat <- temp1[[chrs]]
-		temp3=reshape(dat, timevar="strand", idvar="qname", direction="wide")
-		idx <- is.na(temp3[,c("pos.+","pos.-")])
-		reads <- list(P=temp3[!(idx[,1]|idx[,2]),], yFm=temp3[idx[,2],], yRm=temp3[idx[,1],])
-		if(isTRUE(save))
-		{
-			fName=paste(outpath,"/",bamFile,"_",chrs,".rda",sep="")
-			cat("Saving reads for chromosome", chrs, "in the file", fName)
-			save(reads, file=fName)
-		}
-		else
-		{
-			PEreads$chrs<-reads
-		}
-	}
-	
-	return(PEreads)
 }

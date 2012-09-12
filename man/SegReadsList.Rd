@@ -3,11 +3,9 @@
 \alias{segReadsList}
 \alias{segReadsList-class}
 \alias{[,segReadsList-method}
-%\alias{[,segReadsListPE-method}
 \alias{[,segReadsList,ANY,ANY-method}
 \alias{[[,segReadsList-method}
 \alias{[[,segReadsList,ANY,ANY-method}
-%\alias{[[,segReadsListPE,ANY,ANY-method}
 \alias{length,segReadsList-method}
 
 \title{Segment the genome into candidate regions} 
@@ -21,7 +19,7 @@ Pre-process bidirectional aligned reads data from a single ChIP-Seq experiment t
 \section{Methods}{
   \describe{
  \item{[}{\code{signature(x = ``pics'')}: subset gadem object.}
- \item{[}{\code{signature(x = ``pics'')}: subset gadem object.}
+ \item{[[}{\code{signature(x = ``pics'')}: subset gadem object.}
 	}
 }
 

@@ -54,8 +54,8 @@ segReadsList<-function(List,paraSW,N,Nc)
   new("segReadsList", List=List, paraSW=paraSW, N=N, Nc=Nc)
 }
 
-setClass("pics", representation(estimates="list",score="numeric",scoreF="numeric",scoreR="numeric",Nmerged="numeric",converge="logical",range="integer",chr="character"),
-		prototype(estimates=list(w=numeric(0),mu=numeric(0),delta=numeric(0),sigmaSqF=numeric(0),sigmaSqR=numeric(0),seMu=numeric(0),seMuF=numeric(0),seMuR=numeric(0)),score=numeric(0),scoreF=numeric(0),scoreR=numeric(0),Nmerged=numeric(0),converge=logical(0),range=integer(0),chr=character(0)))
+setClass("pics", representation(estimates="list",score="numeric",scoreF="numeric",scoreR="numeric",Nmerged="numeric",converge="logical",range="numeric",chr="character"),
+		prototype(estimates=list(w=numeric(0),mu=numeric(0),delta=numeric(0),sigmaSqF=numeric(0),sigmaSqR=numeric(0),seMu=numeric(0),seMuF=numeric(0),seMuR=numeric(0)),score=numeric(0),scoreF=numeric(0),scoreR=numeric(0),Nmerged=numeric(0),converge=logical(0),range=numeric(0),chr=character(0)))
 
 setClass("picsError", representation(errorCode="character"),prototype(errorCode=character(0)))
 
@@ -68,7 +68,7 @@ newPics<-function(w,mu,delta,sigmaSqF,sigmaSqR,seMu,seMuF,seMuR,score,scoreF,sco
 {
   if(!all(is.double(w)))
   {
-    stop("Argument 'mu' must be numeric ", call.=FALSE)
+    stop("Argument 'w' must be numeric ", call.=FALSE)
   }
   if(!all(is.double(mu)))
   {

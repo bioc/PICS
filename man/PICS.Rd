@@ -18,6 +18,7 @@
 \alias{coerce,data.frame,picsList-method}
 \alias{wigDensity}
 \alias{wigDensity,pics-method}
+\alias{wigDensity,picsList-method}
 \alias{wigDensity,picsError-method}
 \alias{score}
 \alias{scoreForward}

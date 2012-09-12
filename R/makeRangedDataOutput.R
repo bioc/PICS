@@ -121,151 +121,70 @@ makeRangedDataOutput<-function(obj, type="fixed", filter=list(delta=c(0,Inf),se=
 		gr<-RangedData(ranges, score, space = chrom)
 #		gr<-GRanges(seqnames=chrom,ranges=ranges,strand="*",score)
 	  }
-	  else if(type=="wig")
-	  {
-		  #I just remove all overlapping elements (which is bad)
-		  rd<-RangedData(ranges, score, space = chrom,  strand=strand)
-		  chrs<-unique(chrom)
-		  overlap<-as.matrix(findOverlaps(ranges(rd)[[chrs]]))
-		  res<-split(overlap[,1], overlap[,2])
-		  r2<-as.integer(lapply(res, length))
-		  r3<-which(r2==1)
-		  r4<-which(r2!=1)
-		  gr<-rd[r3,]
-	  }
-	  else
+
+	  else #wig
 	  {
 		  
 		  gr<-RangedData(ranges, score, space = chrom,  strand=strand)
+		  print("Removing overlapping binding events")
+		  overlap<-as.matrix(findOverlaps(ranges(gr)))
+		  overlap<-split(overlap[,1], overlap[,2])
+		  scL<-score(gr)
+		  maxScores<-lapply(overlap, function(x){
+					  max(scL[x])
+				  })
+		  maxScscores<-as.numeric(unlist(maxScores))
+		  idx<-which(maxScores==scL)
+		  gr<-gr[idx,]
+		  
+#		  gr<-killOverlaps(gr)
 		  #Create the new GRanges objec to return
 #		  gr<-GRanges(seqnames=chrom, ranges=ranges, score, strand=strand)
 	  }
   } 	
   return(gr)
 }
-
-
-##
-# Make a RangedData object easier to understand that can be exported to different file formats.
-#   type : fixed : fixed ranges around the predicted center
-#          bed : ranges determined by the predicted delta and se
-#          wig : density for windows of size 10
-#   length : half the fixed length of the TF or nuclosome
-##
-MRO<-function(obj, type="fixed",filter=list(delta=c(0,Inf),se=c(0,Inf),sigmaSqF=c(0,Inf),sigmaSqR=c(0,Inf),score=c(0,Inf)),
-		dataType="TF", length=NULL)
-{
-	if(is.null(length))
-	{
-		if(tolower(dataType)=="chip-seq" | tolower(dataType)=="tf")
-		{
-			length<-100
-		}
-		else if(tolower(dataType)=="mnase" | tolower(dataType)=="h")
-		{
-			length<-73
-		}
-	}
-
-	mu<-mu(obj)
-	delta<-delta(obj)
-	score<-score(obj)
-	se<-se(obj)
-	seF<-seF(obj)
-	seR<-seR(obj)
-	sigmaSqF<-sigmaSqF(obj)
-	sigmaSqR<-sigmaSqR(obj)
-	chromosome<-chromosome(obj)
-	
-	nSe<-3
-
-	## Filter regions with small deltas over a region
-	if(!is.null(filter))
-	{
-		# indK<-unlist(sapply(obj@List,function(x,dmin){k<-K(x);if(k==0){return(NULL);};if(any(delta(x)<dmin & se(x)<20)){return(rep(FALSE,k));}else{return(rep(TRUE,k));}},dmin=filter$delta[1]))
-		### Filter based on delta
-		ind1<-delta>filter$delta[1] & delta<filter$delta[2]
-		ind2<-sigmaSqF>filter$sigmaSqF[1] & sigmaSqR<filter$sigmaSqF[2]
-		ind3<-sigmaSqR>filter$sigmaSqR[1] & sigmaSqR<filter$sigmaSqR[2]
-		ind5<-is.finite(score) & score>filter$score[1] & score<filter$score[2]
-		ind<-ind1&ind2&ind3&ind5
-		
-		if(!is.null(filter$se))
-		{
-			ind4<-se>filter$se[1] & se<filter$se[2] & seF>filter$se[1] & seF<filter$se[2] & seR>filter$se[1] & seR<filter$se[2]
-			ind<-ind&ind4
-		}
-	}
-	else
-	{
-		ind<-is.finite(score)
-	}
-
-	if(type=="fixed")
-	{
-		score<-score[ind]
-		ord<-order(-score)
-		score<-score[ord]
-		start<-(mu-length)[ind]
-		end<-(mu+length)[ind]
-		start<-start[ord]
-		end<-end[ord]
-		chrom<-chromosome[ind]
-		chrom<-chrom[ord]
-	}
-	else if(type=="bed")
-	{
-		score<-score[ind]
-		ord<-order(-score)
-		score<-score[ord]
-		start<-(mu-delta/2-nSe*seF)[ind]
-		end<-(mu+delta/2+nSe*seR)[ind]
-		start<-start[ord]
-		end<-end[ord]
-		chrom<-chromosome[ind]
-		chrom<-chrom[ord]
-	}
-	else if(type=="wig")
-	{
-		#To avoid overlapping ranges, when I have overlapping nucleosomes, I will keep the one with the highest score.
-#		sList<-c()
-#		eList<-c()
-#		scoreList<-c()
-#		for(idx in 1:length(ping))
+#
+#
+#killOverlaps<-function(RD, step=10)
+#{
+#	NRD<-RangedData()
+#	space<-levels(space(RD))
+#	cov1<-coverage(RD)[[space]] #work only with one space (I should get the chr from mRDO and call killO once per chr)
+#	cnt<-0
+#	coord<-1
+#	rVal<-runValue(cov1)
+#	rLen<-runLength(cov1)
+#	for(idx in 1:length(rVal))
+#	{
+#		len<-rLen[idx]
+#		val<-rVal[idx]
+##		print(coord)
+##		print(len)
+##		print(val)
+#		if(val==1)
 #		{
-#			sList<-c(sList, ping[[idx]]@range[1])
-#			eList<-c(eList, ping[[idx]]@range[2])
-#			scoreList<-c(scoreList, max(score(ping[[idx]])))
+#			cnt<-cnt+1
+#			NRD<-c(NRD,RD[which(start(RD)>=coord & end(RD)<=coord+len),]) #All the steps in this range
 #		}
-#		nucRanges<-GRanges(ranges=IRanges(start=sList, end=eList), seqnames="chr1", score=scoreList)
-		#if data.frame: cannot call density.		
-		temp<-density(obj,strand="*",step=10,sum=TRUE,filter=filter,scale=TRUE)
-		chrom<-temp$chr
-		start<-temp$x
-		end<-temp$x+9
-		score<-temp$density
-		strand="*"
-	}
-	else
-	{
-		stop("Unknown type")
-	}
-		
-	if(length(score)==0) 
-	{
-		gr=NULL
-	}else
-	{
-		ranges<-IRanges(as.integer(start),as.integer(end))
-		if(type=="bed" | type=="fixed")
-		{
-			names(ranges)<-paste("pics",1:(length(score)),sep="")
-			gr<-RangedData(ranges, score, space = chrom)
-		}
-		else
-		{		
-			gr<-RangedData(ranges, score, space = chrom,  strand=strand)
-		}
-	} 	
-	return(gr)
-}
+#		else if(val>1)
+#		{
+#			position<-coord
+##			browser()
+#			while(position<coord+len) #for each step #assuming they always match..
+#			{
+#				tmpRD<-RD[which(start(RD)==position),]
+#				topRD<-tmpRD[which(score(tmpRD)==max(score(tmpRD))),]
+##				NRD<-c(NRD, RangedData(IRanges(start=position, end=position+step-1), score=score(topRD), strand=strand(topRD)))#, space=space))#space(topRD)))
+#				NRD<-c(NRD, topRD)
+#				position<-position+step
+#			}			
+#		}
+#		else
+#		{
+#		}
+#		coord<-coord+len
+#	}
+##	print(cnt)
+#	return(NRD)
+#}
