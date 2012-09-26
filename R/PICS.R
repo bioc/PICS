@@ -1,28 +1,26 @@
-PICS<-function(segReadsList,dataType="TF", paraEM=NULL, paraPrior=NULL)
+PICS<-function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL)
 {
   ### Constant used in the calculations
   cst<-gamma(3.5)/gamma(3)/sqrt(pi)
   minReads<-list(perPeak=3,perRegion=4)
 
-  if(dataType!="TF")
-  {
-    stop("Object 'dataType' must be 'TF'")
-  }
-  else
-  {
+  #if(dataType!="TF")
+  #{
+    #stop("Object 'dataType' must be 'TF'")
+  #}
+  #else
+  #{
     if(length(paraEM)!=7)
     {
-#      message("Using the default paraEM")
-#      paraEM<-list(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,mapCorrect=TRUE)
-	  paraEM<-setParaEM(dataType=dataType)
+#         message("Using the default paraEM")
+	  paraEM<-setParaEM(dataType=dataType) #using PICS default paraEM
     }
     if(length(paraPrior)!=6)
     {
 #      message("Using the default paraPrior")
-#      paraPrior<-list(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=0)
-	  paraPrior<-setParaPrior(dataType=dataType)
+	  paraPrior<-setParaPrior(dataType=dataType) #using PICS default paraPrior
     }
-  }
+  #}
 
 
   if("parallel" %in% names(getLoadedDLLs()) )

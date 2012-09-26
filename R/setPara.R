@@ -1,19 +1,19 @@
 ## Functions to return a list of parameters to be used by PICS functions
-
+#The default paraneters are set for PICS
 setParaEM<-function(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,mapCorrect=TRUE,dataType=NULL)
 {
   if(!is.null(dataType))
   {
-    if(tolower(dataType)=="mnase" | tolower(dataType)=="h")
+    if(tolower(dataType)=="mnase" | tolower(dataType)=="sonicated")
 	{
-		message("Using the default paraEM for MNase data")
+		message("Using the default paraEM for MNase/sonicated data")
 		minK=0;maxK=0;tol=1e-4;B=100;mSelect="AIC3";mergePeaks=TRUE;mapCorrect=TRUE;
 	}
-	else if(tolower(dataType)=="chip-seq" | tolower(dataType)=="tf")
-	{
-		message("Using the default paraEM for ChIP-Seq data")
-		minK=1;maxK=15;tol=1e-4;B=100;mSelect="BIC";mergePeaks=TRUE;mapCorrect=TRUE;
-	}
+	#else if(tolower(dataType)=="chip-seq")
+	#{
+	#	message("Using the default paraEM for ChIP-Seq data")
+	#	minK=1;maxK=15;tol=1e-4;B=100;mSelect="BIC";mergePeaks=TRUE;mapCorrect=TRUE;
+	#}
 	else
 	{
 		stop("Invalid dataType")
@@ -55,15 +55,15 @@ setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataTy
 {
   if(!is.null(dataType))
   {
-	  if(tolower(dataType)=="mnase" | tolower(dataType)=="h")
+	  if(tolower(dataType)=="mnase")
 	  {
-		  message("Using the default paraPrior for MNase data")
-		  xi=150;rho=0.8;alpha=20;beta=20000;lambda=-0.000064;dMu=200;
+		  message("Using the default paraPrior for MNase data, for ChIP-Seq data use the argument dataType='chip-seq'")
+		  xi=150;rho=3;alpha=20;beta=20000;lambda=-0.000064;dMu=200;
 	  }
-	  else if(tolower(dataType)=="chip-seq" | tolower(dataType)=="tf")
+	  else if(tolower(dataType)=="sonicated" | tolower(dataType)=="chip-seq")
 	  {
-		  message("Using the default paraPrior for ChIP-Seq data")
-		  xi=200;rho=1;alpha=20;beta=40000;lambda=0;dMu=200;
+		  message("Using the default paraPrior for sonicated data")
+		  xi=200;rho=1;alpha=20;beta=40000;lambda=-0.000064;dMu=200;
 	  }
 	  else
 	  {
