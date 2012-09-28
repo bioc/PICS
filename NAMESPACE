@@ -15,7 +15,7 @@ importFrom(BiocGenerics, density)
 
 importFrom(IRanges, IRanges, RangedData, coverage)
 importClassesFrom(IRanges, IRanges, RangedData)
-importMethodsFrom(IRanges, space, score, sort, order, duplicated, start, end, lapply, levels, as.factor, as.matrix)
+importMethodsFrom(IRanges, space, score, slice, sort, order, duplicated, start, end, lapply, levels, as.factor, as.matrix)
 
 importClassesFrom(GenomicRanges, GRanges)
 importMethodsFrom(GenomicRanges, strand)
