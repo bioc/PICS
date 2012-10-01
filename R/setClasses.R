@@ -151,7 +151,7 @@ newPicsList<-function(List, paraEM, paraPrior, minReads, N, Nc)
  setClass("segReadsListPE",
         contains="segReadsList",
         representation(NFm="integer", NRm="integer", NcFm="integer", NcRm="integer"),
- 	prototype(list(List=list(0), paraSW=list(islandDepth=integer(0),min_cut=integer(0),max_cut=integer(0)), NFm=integer(0), NRm=integer(0), NcFm=integer(0), NcRm=integer(0))))
+ 	prototype(list(List=list(0), paraSW=list(islandDepth=integer(0),min_cut=integer(0),max_cut=integer(0), xi=0), NFm=integer(0), NRm=integer(0), NcFm=integer(0), NcRm=integer(0))))
 #        representation(yF="numeric", yR="numeric", yFm="numeric", yRm="numeric", cF="numeric",cR="numeric", cFm="numeric", cRm="numeric", map="matrix",chr="character"),
 #	prototype(yF=numeric(0), yR=numeric(0), yFm=numeric(0), yRm=numeric(0), cF=numeric(0), cR=numeric(0), cFm=numeric(0), cRm=numeric(0), map=matrix(0,0,2),chr=character(0)))
 # setClass("segReadsListPE",

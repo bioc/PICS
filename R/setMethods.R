@@ -133,7 +133,7 @@ setMethod("show", "picsList",
           })
 
 
-# setGeneric("score", function(x, ...) standardGeneric("score"))
+#setGeneric("score", function(x, ...) standardGeneric("score"))
 setMethod("score", "pics",
           function(x)
           {
