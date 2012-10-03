@@ -1,5 +1,5 @@
 #
-# NAMESPACE
+# NAMESPACE PICS
 #
 useDynLib(PICS)
 
@@ -17,9 +17,9 @@ importFrom(IRanges, IRanges, RangedData, coverage)
 importClassesFrom(IRanges, IRanges, RangedData)
 importMethodsFrom(IRanges, space, score, slice, sort, order, duplicated, start, end, lapply, levels, as.factor, as.matrix, resize)
 
-#importClassesFrom(GenomicRanges, GRanges)
-#importMethodsFrom(GenomicRanges, strand, seqnames)
-#importFrom(GenomicRanges, GRanges)
+importClassesFrom(GenomicRanges, GRanges)
+importMethodsFrom(GenomicRanges, strand, seqnames)
+importFrom(GenomicRanges, GRanges)
 
 #importFrom(BSgenome, GenomeData)
 #importClassesFrom(BSgenome, GenomeData)
@@ -27,8 +27,6 @@ importMethodsFrom(IRanges, space, score, slice, sort, order, duplicated, start, 
 
 exportClasses(segReads, segReadsList, segReadsPE, segReadsListPE, pics, picsError, picsList)
 exportMethods(coerce, show, summary, plot, wigDensity, chromosome, score, se, seF, seR,
-	sigmaSqF, sigmaSqR, mu, delta, w, code, length, K,"[","[[",
-	map, minRange, maxRange, scoreForward, scoreReverse)
-export("segReadsList", "segReadsListPE", "segReadsPE", "segReadsGeneric", "segReads", "segmentPICS", "summarySeg", "makeRangedDataOutput", "PICS", "picsFDR", "newPicsError", "setParaEM", "setParaPrior",
-	"candidate.region","segChrRead")
+	sigmaSqF, sigmaSqR, mu, delta, w, code, length, K,"[","[[", map, minRange, maxRange, scoreForward, scoreReverse)
+export("segReadsList", "segReadsListPE", "segReadsPE", "segReadsGeneric", "segReads", "segmentPICS", "summarySeg", "makeRangedDataOutput", "PICS", "picsFDR", "newPicsError", "setParaEM", "setParaPrior", "candidate.region","segChrRead")
 
