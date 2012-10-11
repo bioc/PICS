@@ -26,14 +26,14 @@ PICS<-function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL)
   if("parallel" %in% names(getLoadedDLLs()) )
   {
 	  #Number of cores
-	  nCores<-detectCores()
+	  nCores<-parallel:::detectCores()
 	  message("Using the parallel version of PICS with ", nCores, " cpus or cores")
 	  #Split into nCores segReadsList
-	  cl <- makeCluster(getOption("cl.cores", nCores))
+	  cl <- parallel:::makeCluster(getOption("cl.cores", nCores))
 	  segSplit<-split(segReadsList,cut(1:length(segReadsList),nCores))
 	  #Use parallel version of lapply
-	  res<-unlist(parLapply(cl,segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads),recursive=FALSE)
-	  stopCluster(cl)
+	  res<-unlist(parallel:::parLapply(cl,segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads),recursive=FALSE)
+	  parallel:::stopCluster(cl)
   }
   else
   {

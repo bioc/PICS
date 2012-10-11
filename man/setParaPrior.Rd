@@ -10,17 +10,18 @@
 }
 
 \usage{
-	setParaPrior(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataType=NULL)
+	setParaPrior(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataType=NULL, PExi=0)
 }
 
 \arguments{
-	\item{xi}{ An \code{integer}, default=200. The average DNA fragment size.}
-	\item{rho}{ An \code{integer}, default=1. A variance parameter for the average DNA fragment size distribution.}
-	\item{alpha}{ An \code{integer}, default=20. First hyperparameter of the inverse Gamma distribution for sigma^2 in the PICS model}
-	\item{beta}{ An \code{integer}, default=40000. Second hyperparameter of the inverse Gamma distribution for sigma^2 in the PICS model}
-	\item{lambda}{ An \code{integer}, default=0. The precision of the prior for mu used for histone data.}
-	\item{dMu}{ An \code{integer}, default=0. Our best guess for the distance between two neighboring nucleosomes.}
+	\item{xi}{ An \code{integer}. The average DNA fragment size.}
+	\item{rho}{ An \code{integer}. A variance parameter for the average DNA fragment size distribution.}
+	\item{alpha}{ An \code{integer}. First hyperparameter of the inverse Gamma distribution for sigma^2 in the PICS model}
+	\item{beta}{ An \code{integer}. Second hyperparameter of the inverse Gamma distribution for sigma^2 in the PICS model}
+	\item{lambda}{ An \code{integer}. The precision of the prior for mu used for histone data.}
+	\item{dMu}{ An \code{integer}. Our best guess for the distance between two neighboring nucleosomes.}
 	\item{dataType}{ A character string. If a valid dataType is specified, use our suggested parameters.}
+	\item{PExi}{ A \code{numeric}. With paired end data, `xi' can be calculated directly from the reads. If PExi is set, it will overwrite the xi determined by the dataType.} 
 }
 
 \value{
@@ -37,9 +38,9 @@ Renan Sauteraud
 
 \examples{
 	# set prior for PICS data
-	paraPrior<-setParaPrior(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200)
-	# set prior for chip-seq data using our selected default parameters
-	paraPrior<-setParaPrior(dataType="chip-seq")
+	paraPrior<-setParaPrior()
+	# set prior for sonicated data using our selected default parameters
+	paraPrior<-setParaPrior(dataType="sonicated")
 	
 }
 

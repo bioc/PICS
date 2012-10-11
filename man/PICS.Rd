@@ -69,7 +69,7 @@ segReadsList, dataType.
 }
 
 \usage{
-PICS(segReadsList,dataType="TF", paraEM=NULL, paraPrior=NULL)
+PICS(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL)
 }
 
 \arguments{

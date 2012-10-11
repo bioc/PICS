@@ -684,7 +684,6 @@ dvidir='${docdir}'
 pdfdir='${docdir}'
 psdir='${docdir}'
 libdir='${exec_prefix}/lib'
-echo $libdir
 localedir='${datarootdir}/locale'
 mandir='${datarootdir}/man'
 

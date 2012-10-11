@@ -51,13 +51,13 @@ setParaEM<-function(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,
 }
 
 #default for PICS
-setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataType=NULL, PE=NULL)
+setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataType=NULL, PExi=0)
 {
   if(!is.null(dataType))
   {
 	  if(tolower(dataType)=="mnase")
 	  {
-		  message("Using the default paraPrior for MNase data, for ChIP-Seq data use the argument dataType='chip-seq'")
+		  message("Using the default paraPrior for MNase data, for sonicated data use the argument dataType='sonicated'")
 		  xi2=150;rho=3;alpha=20;beta=20000;lambda=-0.000064;dMu=200;
 	  }
 	  else if(tolower(dataType)=="sonicated" | tolower(dataType)=="chip-seq")
@@ -69,10 +69,6 @@ setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataTy
 	  {
 		  stop("Invalid dataType")
 	  }
-          if(isTRUE(PE))#PE data
-            xi<-xi
-          else
-            xi<-xi2
   }
   if(!is.finite(xi))
   {
@@ -97,6 +93,10 @@ setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataTy
   if(!is.finite(dMu) & dMu<=0)
   {
     stop("'dMu' must be a positive number")
+  }
+  if(PExi>0)
+  {
+    xi<-PExi
   }
   return(list(xi=xi,rho=rho,alpha=alpha,beta=beta,lambda=lambda,dMu=dMu))
 }

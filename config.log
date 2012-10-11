@@ -41,18 +41,18 @@ PATH: /usr/games
 ## Core tests. ##
 ## ----------- ##
 
-configure:1732: checking for pkg-config
-configure:1750: found /usr/bin/pkg-config
-configure:1762: result: /usr/bin/pkg-config
-configure:1791: checking pkg-config is at least version 0.9.0
-configure:1794: result: yes
-configure:1805: checking for GSL
-configure:1812: $PKG_CONFIG --exists --print-errors "gsl >= 1.6"
-configure:1815: $? = 0
-configure:1828: $PKG_CONFIG --exists --print-errors "gsl >= 1.6"
-configure:1831: $? = 0
-configure:1866: result: yes
-configure:3233: creating ./config.status
+configure:1731: checking for pkg-config
+configure:1749: found /usr/bin/pkg-config
+configure:1761: result: /usr/bin/pkg-config
+configure:1790: checking pkg-config is at least version 0.9.0
+configure:1793: result: yes
+configure:1804: checking for GSL
+configure:1811: $PKG_CONFIG --exists --print-errors "gsl >= 1.6"
+configure:1814: $? = 0
+configure:1827: $PKG_CONFIG --exists --print-errors "gsl >= 1.6"
+configure:1830: $? = 0
+configure:1865: result: yes
+configure:3232: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##

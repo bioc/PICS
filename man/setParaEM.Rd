@@ -14,14 +14,14 @@
 }
 
 \arguments{
-	\item{minK}{ An \code{integer}, default=1. The minimum number of binding events per region. If the value is 0, the minimum number is automatically calculated.}
-	\item{maxK}{ An \code{integer}, default=15. The maximum number of binding events per region. If the value is 0, the maximum number is automatically calculated.}
-	\item{tol}{ A \code{numeric}, default=1e-4. The tolerance for the EM algorithm.}
-	\item{B}{ An \code{integer}, default=100. The maximum number of iterations to be used.}
-	\item{mSelect}{ A character string specifying the information criteria to be used when selecting the number of binding events. Default="BIC"}
-	\item{mergePeaks}{ A \code{logical} stating whether overlapping binding events should be picked. Default=TRUE}
-	\item{mapCorrect}{ A \code{logical} stating whether mappability profiles should be incorporated in the estimation, i.e: missing reads estimated. Default=TRUE}
-	\item{dataType}{ A \code{character}, The type of data you are  processing: default="TF" for transcription factor.}
+	\item{minK}{ An \code{integer}. The minimum number of binding events per region. If the value is 0, the minimum number is automatically calculated.}
+	\item{maxK}{ An \code{integer}. The maximum number of binding events per region. If the value is 0, the maximum number is automatically calculated.}
+	\item{tol}{ A \code{numeric}. The tolerance for the EM algorithm.}
+	\item{B}{ An \code{integer}. The maximum number of iterations to be used.}
+	\item{mSelect}{ A character string specifying the information criteria to be used when selecting the number of binding events.}
+	\item{mergePeaks}{ A \code{logical} stating whether overlapping binding events should be picked.}
+	\item{mapCorrect}{ A \code{logical} stating whether mappability profiles should be incorporated in the estimation, i.e: missing reads estimated.}
+	\item{dataType}{ A \code{character}. If a dataType is set, the algorithm will use the default parameters for this type of data (all the previous arguments will be ignored).}
 }
 
 \value{
