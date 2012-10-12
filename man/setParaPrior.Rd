@@ -20,7 +20,7 @@
 	\item{beta}{ An \code{integer}. Second hyperparameter of the inverse Gamma distribution for sigma^2 in the PICS model}
 	\item{lambda}{ An \code{integer}. The precision of the prior for mu used for histone data.}
 	\item{dMu}{ An \code{integer}. Our best guess for the distance between two neighboring nucleosomes.}
-	\item{dataType}{ A character string. If a valid dataType is specified, use our suggested parameters.}
+	\item{dataType}{ A character string. If a valid dataType is specified, use our suggested parameters. "MNase" or "sonicated"}
 	\item{PExi}{ A \code{numeric}. With paired end data, `xi' can be calculated directly from the reads. If PExi is set, it will overwrite the xi determined by the dataType.} 
 }
 

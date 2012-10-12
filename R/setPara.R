@@ -6,10 +6,10 @@ setParaEM<-function(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,
   {
     if(tolower(dataType)=="mnase" | tolower(dataType)=="sonicated")
 	{
-		message("Using the default paraEM for MNase/sonicated data")
+		#message("Using the default paraEM for MNase/sonicated data")
 		minK=0;maxK=0;tol=1e-4;B=100;mSelect="AIC3";mergePeaks=TRUE;mapCorrect=TRUE;
 	}
-	#else if(tolower(dataType)=="chip-seq")
+	#else if(tolower(dataType)=="sonicated")
 	#{
 	#	message("Using the default paraEM for ChIP-Seq data")
 	#	minK=1;maxK=15;tol=1e-4;B=100;mSelect="BIC";mergePeaks=TRUE;mapCorrect=TRUE;
@@ -60,7 +60,7 @@ setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataTy
 		  message("Using the default paraPrior for MNase data, for sonicated data use the argument dataType='sonicated'")
 		  xi2=150;rho=3;alpha=20;beta=20000;lambda=-0.000064;dMu=200;
 	  }
-	  else if(tolower(dataType)=="sonicated" | tolower(dataType)=="chip-seq")
+	  else if(tolower(dataType)=="chip-seq" | tolower(dataType)=="sonicated")
 	  {
 		  message("Using the default paraPrior for sonicated data")
 		  xi2=200;rho=1;alpha=20;beta=40000;lambda=-0.000064;dMu=200;
