@@ -58,12 +58,12 @@ setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataTy
 	  if(tolower(dataType)=="mnase")
 	  {
 		  message("Using the default paraPrior for MNase data, for sonicated data use the argument dataType='sonicated'")
-		  xi2=150;rho=3;alpha=20;beta=20000;lambda=-0.000064;dMu=200;
+		  xi=150;rho=3;alpha=20;beta=20000;lambda=-0.000064;dMu=200; #Xuekui's seal of approval
 	  }
-	  else if(tolower(dataType)=="chip-seq" | tolower(dataType)=="sonicated")
+	  else if(tolower(dataType)=="sonicated")
 	  {
 		  message("Using the default paraPrior for sonicated data")
-		  xi2=200;rho=1;alpha=20;beta=40000;lambda=-0.000064;dMu=200;
+		  xi=150,rho=1.2,alpha=10,beta=20000,lambda=-0.000064,dMu=200 #From Xuekui's email
 	  }
 	  else
 	  {
