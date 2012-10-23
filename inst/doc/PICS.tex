@@ -16,7 +16,7 @@
 
 \title{PICS: Probabilistic Inference for ChIP-Seq}
 \author{Xuekui Zhang\footnote{ubcxzhang@gmail.com} and Raphael
-  Gottardo\footnote{rgottard@fhcrc.org} and Arnaud Droit\footnote{arnaud.droit@crchuq.ulaval.ca}}
+  Gottardo\footnote{rgottard@fhcrc.org}, Arnaud Droit\footnote{arnaud.droit@crchuq.ulaval.ca} and Renan Sauteraud\footnote{rsautera@fhcrc.org}}
 
 \usepackage{Sweave}
 \begin{document}
@@ -83,7 +83,7 @@ As with any package, you first need to load it with the following command
 \section{Data Input and Formating}
 The first step of the PICS pipeline consists of converting the aligned reads (from both IP and control samples) into a format that allows efficient segmentation of the genome into a set of candidate regions that have enough Forward and Reverse reads. The data formatting could be a bed type dataframes as well as `AlignedReads' objects as returned by the function `readAligned' which can read various file formats including Eland, MAQ, Bowtie, etc. Please refer to the `ShortRead' vignette for more details on how to read data into R, other than from a BED file. In the example listed below, we use bed type files, which consists of tab delimited files with the following columns: space, start, end, strand, where each line represent a single read. 
 
-In addition to the IP Control datasets, we use another argument consisting of a mappability profile for the genome interrogated. For each chromosome, a mappability profile for a specific read length consists of a vector of zeros and ones that gives an estimated read mappability `score' for each base pair in the chromosome. A score of one at a position means that we should be able to align a read of that length uniquely at that position, while a score of zero indicates that no read of that length should be uniquely alienable at that position. As noted, reads that cannot be mapped to unique genomic locations are typically discarded. For convenience, and because transitions between mappable and non-mappable regions are typically much shorter than these regions, we compactly summarize each chromosome's mappability profile as a disjoint union of non-mappable intervals that specify only zero-valued profile. We store this information as a bed file where each line correspond a non-mappable intervals. PICS makes use of such mappability profiles to estimate the reads that are missing because they could not be aligned. Mappability profiles for a range of reads lengths and species are available from:
+In addition to the IP and Control datasets, we use another argument consisting of a mappability profile for the genome interrogated. For each chromosome, a mappability profile for a specific read length consists of a vector of zeros and ones that gives an estimated read mappability `score' for each base pair in the chromosome. A score of one at a position means that we should be able to align a read of that length uniquely at that position, while a score of zero indicates that no read of that length should be uniquely alienable at that position. As noted, reads that cannot be mapped to unique genomic locations are typically discarded. For convenience, and because transitions between mappable and non-mappable regions are typically much shorter than these regions, we compactly summarize each chromosome's mappability profile as a disjoint union of non-mappable intervals that specify only zero-valued profile. We store this information as a bed file where each line correspond a non-mappable intervals. PICS makes use of such mappability profiles to estimate the reads that are missing because they could not be aligned. Mappability profiles for a range of reads lengths and species are available from:
 
 http:/wiki.rglab.org/index.php?title=Public:Mappability_Profile
 
@@ -91,7 +91,7 @@ To make your own mappability profiles, use the script available at:
 
 https://github.com/SRenan/proMap/
 
-Once the data have been read, we can create the `GenomeData' object, which is a list data structure, where each element of the list corresponds to a different chromosome. Each element of the list contains the IP and control reads as well as the mappability profiles for the corresponding chromosome. When reading the data, we can also sort and remove duplicated reads, which is recommended for a PICS analysis (sort is actually required).
+Once the data have been read, we can create the `GRanges' object, which stores the sequences of genome locations and associatedd annotations. Each element of the list contains the IP and control reads as well as the mappability profiles for the corresponding chromosome. When reading the data, we can also sort and remove duplicated reads, which is recommended for a PICS analysis (sort is actually required).
 
 
 In this documentation, the path for the data is:  .../PICS/inst/extdata folder.
@@ -121,7 +121,7 @@ In this documentation, the path for the data is:  .../PICS/inst/extdata folder.
 \subsection{Genome segmentation}
 We segment the genome into candidate regions by pre-processing bidirectional aligned reads data from a single ChIP-Seq experiment to detect candidate regions with a minimum number of forward and reverse reads. These candidate regions will then be processed by PICS. The `minReads' parameter will heavily influence the number of candidate regions returned. In principle, it is better to use a small value for `minReads' in order not to miss any true binding sites. However, a value too small will likely return many false positive regions, which can result a longer computing time for the \texttt{PICS} function.  If a control sample is available you may also chose a value of `minReads' that would give you a ratio of the number of candidate regions in the control over the number of candidate regions in the IP of about 25\%. A ratio larger than 25\% would most likely result in a large FDR when using \texttt{picsFDR}, and therefore it is not necessary to use too low of a threshold. See below for an illustration.  \newline
 
-In order to improve the computational efficiency of the PICS package, we recommend the utilisation of the \texttt{parallel} package, which allows for easy parallel computations. In what follows, we assume that \texttt{parallel} is installed on your machine. If not, you could omit the first line, which will lead a serial execution. By default the command is not run, so you're safe. Note that the \texttt{segmentReads} and \texttt{PICS} functions, will automatically detect whether you have initialized a cluster and if yes it will use it. 
+In order to improve the computational efficiency of the PICS package, we recommend the utilisation of the \texttt{parallel} package, which allows for easy parallel computations. In what follows, we assume that \texttt{parallel} is installed on your machine. If not, you could omit the first line, which will lead a serial execution. By default the command is not run, so you're safe. Note that the \texttt{segmentPICS} and \texttt{PICS} functions, will automatically detect whether you have initialized a cluster and if yes it will use it. 
 
 \begin{Schunk}
 \begin{Sinput}
@@ -137,7 +137,7 @@ In order to improve the computational efficiency of the PICS package, we recomme
 
 
 \subsection{Parameter estimation}
-After having segmented the genome into candidate regions, we use the \texttt{PICS} function to detect binding regions in a probabilistic way, and returns binding site estimates, confidence intervals, etc. In the code below, we assume that you are processing transcription factor data, as specified with the `dataType' option set to `TF' for transcription factor. We also plan to support histone modification data in a future release of PICS, which will be turned on by specifying `dataType=`H'. In our case, assuming that we have already segmented the genome using \texttt{segmentReads}, we can proceed with the following command, 
+After having segmented the genome into candidate regions, we use the \texttt{PICS} function to detect binding regions in a probabilistic way, and returns binding site estimates, confidence intervals, etc. In the code below, we assume that you are processing transcription factor data, as specified with the `dataType' option set to `TF' for transcription factor. We also plan to support histone modification data in a future release of PICS, which will be turned on by specifying `dataType=`H'. In our case, assuming that we have already segmented the genome using \texttt{segmentPICS}, we can proceed with the following command, 
 
 \begin{Schunk}
 \begin{Sinput}

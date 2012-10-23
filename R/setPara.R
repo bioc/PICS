@@ -63,7 +63,7 @@ setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataTy
 	  else if(tolower(dataType)=="sonicated")
 	  {
 		  message("Using the default paraPrior for sonicated data")
-		  xi=150,rho=1.2,alpha=10,beta=20000,lambda=-0.000064,dMu=200 #From Xuekui's email
+		  xi=150;rho=1.2;alpha=10;beta=20000;lambda=-0.000064;dMu=200; #From Xuekui's email
 	  }
 	  else
 	  {
