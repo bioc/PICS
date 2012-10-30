@@ -60,6 +60,7 @@ SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter,
   PROTECT(names=getAttrib(d, R_NamesSymbol));
   PROTECT(ans=NEW_LIST(nChr));
 
+  Rprintf("nChr=%d\n", nChr);
   for(i=0;i<nChr;i++)
   {
     chr=STRING_ELT(names, i);
@@ -84,9 +85,9 @@ SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter,
       ed=EndMap;
     }
 	
-    // Rprintf("process chr %s\n", mkChar(chr));
+    //Rprintf("process chr %s\n", mkChar(chr));
     SET_VECTOR_ELT(ans,i, segReads(chr, VECTOR_ELT(VECTOR_ELT(d,i),0), VECTOR_ELT(VECTOR_ELT(d,i),1), contp, contm, st, ed, jitter, VECTOR_ELT(paraSW,1), VECTOR_ELT(paraSW,2), VECTOR_ELT(paraSW,0),maxStep, minLength, pPackage));
-	  //Rprintf("Finished chr %d \n",i);
+     Rprintf("Finished chr %d \n",i);
   }
   UNPROTECT(2);
   return(ans);
@@ -94,6 +95,9 @@ SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter,
 
 SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP StartMap, SEXP EndMap, SEXP jitter, SEXP width, SEXP cutoff, SEXP step, SEXP maxStep, SEXP minLength, SEXP pPackage)
 {
+  //R//
+  /*char * r_max = vmaxget(); //R//gets the state of the memory*/
+
   int *center;
   int *scoreF;
   int *scoreR;
@@ -125,9 +129,13 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
   M=imax2(dF[nF-1],dR[nR-1]);
 
   lengthCenter=(int)((M-m)/(INTEGER_VALUE(step)));
-  center=(int*)R_alloc(lengthCenter, sizeof(int));
-  scoreF=(int*)R_alloc(lengthCenter, sizeof(int));
-  scoreR=(int*)R_alloc(lengthCenter, sizeof(int));
+  //R//These 3 allocations could be Calloc
+  center=(int*)Calloc(lengthCenter, int);
+  scoreF=(int*)Calloc(lengthCenter, int);
+  scoreR=(int*)Calloc(lengthCenter, int);
+  /*center=(int*)R_alloc(lengthCenter, sizeof(int));*/
+  /*scoreF=(int*)R_alloc(lengthCenter, sizeof(int));*/
+  /*scoreR=(int*)R_alloc(lengthCenter, sizeof(int));*/
 
   /** Allocate memory for the start/end of each preprocessed region **/
   /** Because I do not know the size yet, I use the maximum possible size **/
@@ -135,8 +143,11 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
   {
     Rprintf("width is negative (%d) and will cause memory allocation issues", INTEGER_VALUE(width));
   } 
-  scoreRegionF=(int*)R_alloc((int)((M-m)/(2*INTEGER_VALUE(width))), sizeof(int));
-  scoreRegionR=(int*)R_alloc((int)((M-m)/(2*INTEGER_VALUE(width))), sizeof(int));
+  //R//These 2 allocations could be Calloc
+  scoreRegionF=(int*)Calloc((M-m)/(2*INTEGER_VALUE(width)), int);
+  scoreRegionR=(int*)Calloc((M-m)/(2*INTEGER_VALUE(width)), int);
+  /*scoreRegionF=(int*)R_alloc((int)((M-m)/(2*INTEGER_VALUE(width))), sizeof(int));*/
+  /*scoreRegionR=(int*)R_alloc((int)((M-m)/(2*INTEGER_VALUE(width))), sizeof(int));*/
   PROTECT(StartRegion=allocVector(INTSXP, lengthCenter));
   PROTECT(EndRegion=allocVector(INTSXP, lengthCenter));
 	
@@ -171,39 +182,6 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
 	   callRegions(center, &lengthCenter, &dMerge, scoreF, scoreR, scoreRegionF, scoreRegionR, INTEGER(cutoff), INTEGER(StartRegion), INTEGER(EndRegion), &nRegions);
   }
 	/*
-	Rprintf("center: \t");
-	for(i=0;i<lengthCenter;i++)
-	{
-		Rprintf("%i, \t", center[i]);
-	}
-	Rprintf("\n");
-	
-	Rprintf("scoreF: \t");
-	for(i=0;i<lengthCenter;i++)
-	{
-		Rprintf("%i, \t", scoreF[i]);
-	}
-	Rprintf("\n");
-	
-	Rprintf("scoreR: \t");
-	for(i=0;i<lengthCenter;i++)
-	{
-		Rprintf("%i, \t", scoreR[i]);
-	}
-	Rprintf("\n");
-	
-	
-	Rprintf("%i regions detected \n", nRegions);
-	Rprintf("StartRegion: ");
-	for (i=0; i<nRegions; i++) {
-		Rprintf("%i \t",INTEGER(StartRegion)[i]);
-	}
-	Rprintf("\n");
-	Rprintf("EndRegion: ");
-	for (i=0; i<nRegions; i++) {
-		Rprintf("%i \t",INTEGER(EndRegion)[i]);
-	}
-	Rprintf("\n");
 	*/
 	
   if(nRegions>0)
@@ -223,6 +201,12 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
   }
 	
   UNPROTECT(3);
+  /*vmaxset(r_max); //R//Returns to the saved memory state (or smth like that..)*/
+  Free(center);
+  Free(scoreF);
+  Free(scoreR);
+  Free(scoreRegionF);
+  Free(scoreRegionR);
   return(ans);
 }
 

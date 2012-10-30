@@ -69,35 +69,37 @@ segReadsGeneric<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegi
 	if (maxLregion>0) maxStep=(maxLregion-2*paraSW$width)/paraSW$step else maxStep=0
 	
 	## Prepare C input:
-	lData<-.formatCInput(data)
+	data<-.formatCInput(data)
 	if(!is.null(dataC))
 	{
-		lDataC<-.formatCInput(dataC)
+		dataC<-.formatCInput(dataC)
 		lCont<-length(dataC)
 	}
 	#If no control, build an empty object of the same size
 	else
 	{
-		lDataC<-vector('list',length(lData))
-		names(lDataC)<-names(lData)
-		for(cc in names(lData))
+		dataC<-vector('list',length(data))
+		names(dataC)<-names(data)
+		for(cc in names(data))
 		{
-			lDataC[[cc]]<-vector('list',2)
-			names(lData[[cc]])<-c("+","-")
+			dataC[[cc]]<-vector('list',2)
+			names(data[[cc]])<-c("+","-")
 		}
 		lCont<-0
 	}
 	
 	## Perform the segmentation
-	newSegReadsList<-.Call("segReadsAll", lData, lDataC, start, end, as.integer(jitter), paraSW , as.integer(maxStep), as.integer(minLregion), pPackage=package, PACKAGE="PICS")
+	newSegReadsList<-.Call("segReadsAll", data, dataC, start, end, as.integer(jitter), paraSW , as.integer(maxStep), as.integer(minLregion), pPackage=package, PACKAGE="PICS")
+	print("Saving the args of the constructor")
 	
 	
-	temp<-unlist(newSegReadsList,recursive=FALSE,use.names=FALSE)
-	if(is.null(temp))
+	newSegReadsList<-unlist(newSegReadsList,recursive=FALSE,use.names=FALSE)
+	if(is.null(newSegReadsList))
 	{
 		stop("No Candidate regions found, you should decrease 'minReads'")
 	}
-	newSet<-segReadsList(temp,paraSW,as.integer(sum(unlist(lIP))),as.integer(sum(unlist(lCont))))
+	save(newSegReadsList, paraSW, lIP, lCont, file="save.rda")
+	newSet<-segReadsList(newSegReadsList,paraSW,as.integer(sum(unlist(lIP))),as.integer(sum(unlist(lCont))))
 	
 	ttt=summarySeg(newSet)
 	indrm=((ttt$L<minLregion)|(ttt$NF<minReadsInRegion)|(ttt$NR<minReadsInRegion))
@@ -132,10 +134,11 @@ summarySeg <- function(seg)
 	names(lData)<-chrs
 	for(cc in chrs)
 	{
+		GRccObject<-GRObject[seqnames(GRObject)==cc]
 		lData[[cc]]<-vector('list',2)
 		names(lData[[cc]])<-c("+","-")
-		lData[[cc]][["+"]]<-start(GRObject[strand(GRObject)=="+"])
-		lData[[cc]][["-"]]<-end(GRObject[strand(GRObject)=="-"])
+		lData[[cc]][["+"]]<-start(GRccObject[strand(GRccObject)=="+"])
+		lData[[cc]][["-"]]<-end(GRccObject[strand(GRccObject)=="-"])
 	}
 	return(lData)
 }
