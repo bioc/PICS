@@ -51,7 +51,7 @@ setParaEM<-function(minK=1,maxK=15,tol=1e-4,B=100,mSelect="BIC",mergePeaks=TRUE,
 }
 
 #default for PICS
-setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataType=NULL, PExi=0)
+setParaPrior<-function(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=0, dataType=NULL, PExi=0)
 {
   if(!is.null(dataType))
   {

@@ -60,7 +60,7 @@ SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter,
   PROTECT(names=getAttrib(d, R_NamesSymbol));
   PROTECT(ans=NEW_LIST(nChr));
 
-  Rprintf("nChr=%d\n", nChr);
+  /*Rprintf("nChr=%d\n", nChr);*/
   for(i=0;i<nChr;i++)
   {
     chr=STRING_ELT(names, i);
@@ -87,7 +87,7 @@ SEXP segReadsAll(SEXP data, SEXP dataC, SEXP StartMap, SEXP EndMap, SEXP jitter,
 	
     //Rprintf("process chr %s\n", mkChar(chr));
     SET_VECTOR_ELT(ans,i, segReads(chr, VECTOR_ELT(VECTOR_ELT(d,i),0), VECTOR_ELT(VECTOR_ELT(d,i),1), contp, contm, st, ed, jitter, VECTOR_ELT(paraSW,1), VECTOR_ELT(paraSW,2), VECTOR_ELT(paraSW,0),maxStep, minLength, pPackage));
-     Rprintf("Finished chr %d \n",i);
+    /*Rprintf("Finished chr %d \n",i);*/
   }
   UNPROTECT(2);
   return(ans);

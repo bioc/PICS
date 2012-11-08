@@ -72,8 +72,8 @@ segReadsGeneric<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegi
 	data<-.formatCInput(data)
 	if(!is.null(dataC))
 	{
+		lCont<-length(dataC) #before data transformation
 		dataC<-.formatCInput(dataC)
-		lCont<-length(dataC)
 	}
 	#If no control, build an empty object of the same size
 	else
@@ -90,7 +90,6 @@ segReadsGeneric<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegi
 	
 	## Perform the segmentation
 	newSegReadsList<-.Call("segReadsAll", data, dataC, start, end, as.integer(jitter), paraSW , as.integer(maxStep), as.integer(minLregion), pPackage=package, PACKAGE="PICS")
-	print("Saving the args of the constructor")
 	
 	
 	newSegReadsList<-unlist(newSegReadsList,recursive=FALSE,use.names=FALSE)
@@ -98,8 +97,8 @@ segReadsGeneric<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegi
 	{
 		stop("No Candidate regions found, you should decrease 'minReads'")
 	}
-	save(newSegReadsList, paraSW, lIP, lCont, file="save.rda")
-	newSet<-segReadsList(newSegReadsList,paraSW,as.integer(sum(unlist(lIP))),as.integer(sum(unlist(lCont))))
+	#newSet<-segReadsList(newSegReadsList,paraSW,as.integer(sum(unlist(lIP))),as.integer(sum(unlist(lCont))))
+	newSet<-segReadsList(newSegReadsList,paraSW,lIP,lCont)
 	
 	ttt=summarySeg(newSet)
 	indrm=((ttt$L<minLregion)|(ttt$NF<minReadsInRegion)|(ttt$NR<minReadsInRegion))

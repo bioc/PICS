@@ -10,7 +10,7 @@
 }
 
 \usage{
-	setParaPrior(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=200, dataType=NULL, PExi=0)
+	setParaPrior(xi=200,rho=1,alpha=20,beta=40000,lambda=0,dMu=0, dataType=NULL, PExi=0)
 }
 
 \arguments{
