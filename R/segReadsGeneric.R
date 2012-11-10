@@ -98,7 +98,7 @@ segReadsGeneric<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegi
 		stop("No Candidate regions found, you should decrease 'minReads'")
 	}
 	#newSet<-segReadsList(newSegReadsList,paraSW,as.integer(sum(unlist(lIP))),as.integer(sum(unlist(lCont))))
-	newSet<-segReadsList(newSegReadsList,paraSW,lIP,lCont)
+	newSet<-segReadsList(newSegReadsList,paraSW,as.integer(lIP),as.integer(lCont))
 	
 	ttt=summarySeg(newSet)
 	indrm=((ttt$L<minLregion)|(ttt$NF<minReadsInRegion)|(ttt$NR<minReadsInRegion))
