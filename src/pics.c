@@ -375,7 +375,7 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
   SET_STRING_ELT(names, 4, mkChar("sigmaSqR"));
   SET_STRING_ELT(names, 5, mkChar("seMu"));
   SET_STRING_ELT(names, 6, mkChar("seMuF"));
-  SET_STRING_ELT(names, 7, mkChar("seMuF"));
+  SET_STRING_ELT(names, 7, mkChar("seMuR"));
   setAttrib(estimates, R_NamesSymbol, names);  
   
   SET_SLOT(myPics,mkChar("estimates"),estimates);
@@ -594,7 +594,6 @@ SEXP iterEM(SEXP iMax, SEXP nu, SEXP yR, SEXP yF, SEXP para, SEXP xi, SEXP alpha
 	
 	for(i=1;i<=Max;i++)
 	{
-		// printf("i=%d\n",i);
 		/** Initialize the difference between new and current values */
 		sumDiff=0;
 		
@@ -1300,7 +1299,7 @@ SEXP BIC(SEXP nuC, SEXP R, SEXP F, SEXP para, SEXP dMuC, SEXP lambdaC, SEXP a, S
 			penalty = -lambda * tmp;
 			break;
 		default:
-			puts("Only 1,2,3 are allowed.");
+			//puts("Only 1,2,3 are allowed.");
 			break;
 	}
   // Rprintf("type= %d , penalty= %lf \n", type, penalty);

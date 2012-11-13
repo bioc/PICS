@@ -78,7 +78,7 @@ makeRangedDataOutput<-function(obj, type="fixed", filter=list(delta=c(0,Inf),se=
   }
   else if(type=="wig")
   {
-    temp<-density(obj,strand="*",step=10,sum=TRUE,filter=filter,scale=TRUE)
+    temp<-wigDensity(obj,strand="*",step=10,sum=TRUE,filter=filter,scale=TRUE)
     chrom<-temp$chr
     start<-temp$x
     end<-temp$x+9
@@ -119,11 +119,72 @@ makeRangedDataOutput<-function(obj, type="fixed", filter=list(delta=c(0,Inf),se=
 	  {
 		names(ranges)<-paste("pics",1:(length(score)),sep="")
 		gr<-RangedData(ranges, score, space = chrom)
+#		gr<-GRanges(seqnames=chrom,ranges=ranges,strand="*",score)
 	  }
-	  else
+
+	  else #wig
 	  {
-		gr<-RangedData(ranges, score, space = chrom,  strand=strand)
+		  
+		  gr<-RangedData(ranges, score, space = chrom,  strand=strand)
+		  print("Removing overlapping binding events")
+		  overlap<-as.matrix(findOverlaps(ranges(gr)))
+		  overlap<-split(overlap[,1], overlap[,2])
+		  scL<-score(gr)
+		  maxScores<-lapply(overlap, function(x){
+					  max(scL[x])
+				  })
+		  maxScscores<-as.numeric(unlist(maxScores))
+		  idx<-which(maxScores==scL)
+		  gr<-gr[idx,]
+		  
+#		  gr<-killOverlaps(gr)
+		  #Create the new GRanges objec to return
+#		  gr<-GRanges(seqnames=chrom, ranges=ranges, score, strand=strand)
 	  }
   } 	
   return(gr)
 }
+#
+#
+#killOverlaps<-function(RD, step=10)
+#{
+#	NRD<-RangedData()
+#	space<-levels(space(RD))
+#	cov1<-coverage(RD)[[space]] #work only with one space (I should get the chr from mRDO and call killO once per chr)
+#	cnt<-0
+#	coord<-1
+#	rVal<-runValue(cov1)
+#	rLen<-runLength(cov1)
+#	for(idx in 1:length(rVal))
+#	{
+#		len<-rLen[idx]
+#		val<-rVal[idx]
+##		print(coord)
+##		print(len)
+##		print(val)
+#		if(val==1)
+#		{
+#			cnt<-cnt+1
+#			NRD<-c(NRD,RD[which(start(RD)>=coord & end(RD)<=coord+len),]) #All the steps in this range
+#		}
+#		else if(val>1)
+#		{
+#			position<-coord
+##			browser()
+#			while(position<coord+len) #for each step #assuming they always match..
+#			{
+#				tmpRD<-RD[which(start(RD)==position),]
+#				topRD<-tmpRD[which(score(tmpRD)==max(score(tmpRD))),]
+##				NRD<-c(NRD, RangedData(IRanges(start=position, end=position+step-1), score=score(topRD), strand=strand(topRD)))#, space=space))#space(topRD)))
+#				NRD<-c(NRD, topRD)
+#				position<-position+step
+#			}			
+#		}
+#		else
+#		{
+#		}
+#		coord<-coord+len
+#	}
+##	print(cnt)
+#	return(NRD)
+#}

@@ -1,41 +1,42 @@
 \name{picsFDR}
 \alias{picsFDR}
 
-
-\title{Compute the global FDR}
-\description{
-  Calculate an estimate of the FDR for PICS. This calculation requires control data (e.g. from an input DNA sample). 
+\title{
+	Estimate the FDR.
 }
+
+\description{
+	Estimate the false detection rate for an object of class \code{pics} or \code{picsList}.
+}
+
 \usage{
-picsFDR(picsIP,picsCont,filter=list(delta=c(0,Inf),se=c(0,Inf),sigmaSqF=c(0,Inf),sigmaSqR=c(0,Inf)))
+	picsFDR(picsIP,picsCont,filter=list(delta=c(0,Inf),se=c(0,Inf),sigmaSqF=c(0,Inf),sigmaSqR=c(0,Inf)))
 }
 
 \arguments{
-  \item{picsIP}{An object of class 'picsList' as returned by 'PICS' when run on IP/Control data.}
-  \item{picsCont}{An object of class 'picsList' as returned by 'PICS' when run on Control/IP data.}
-  \item{filter}{A list of filters to be used before computing the FDR. By default all regions are included. See details for more info on how to specify the filters.}
-  
+	\item{picsIP}{An object of class \code{pics} or \code{picsList} containing the informations for the IP reads}.
+	\item{picsCont}{An object of class \code{pics} or \code{picsList} containing the informations for the control reads}.
+	\item{filter}{filter}{A list of ranges for filtering regions based on \code{PICS} parameters. By default filter is set to 'NULL' and all regions are used.}
+		\describe{
+		\item{delta}{Length of the binding sites.}
+		\item{se}{Standard error.}
+		\item{sigmaSqF}{Forward peak variance}
+		\item{sigmaSqR}{Reverse peak variance}
+		}
 }
 
 \value{
-A dataframe with three columns corresponding to the estimated FDR, the score, and the number of regions. 
+	A 3 columns \code{data.frame} with the following columns:
+	FDR, score, N.
 }
-\references{
-X. Zhang, G. Robertson, M. Krzywinski, K. Ning, A. Droit, S. Jones, and R. Gottardo, ``PICS: Probabilistic Inference for ChIP-seq'' arXiv, 0903.3206, 2009. To appear in Biometrics.
+
+\author{
+	Xuekui Zhang
 }
-\author{ Xuekui Zhang, Arnaud Droit <\email{arnaud.droit@crchuq.ualaval.ca}> and Raphael Gottardo <\email{rgottard@fhcrc.org}>}
+
 \seealso{
-\code{\link{pics}}
-}
-\examples{
-\dontrun{
-  # Segment the reads in order to identify candidate regions
-   segC<-segmentReads(RD, minReads=3,invert=TRUE)
-  # Use the serial version of PICS
-  picsC<-PICS(segC,dataType='TF')
-	plot(pics,picsC,xlim=c(0,50),ylim=c(0,.2),filter=list(delta=c(50,300),se=c(0,50),sigmaSqF=c(0,22500),sigmaSqR=c(0,22500)),type="l")  
-}
+	\code{\linkS4class{picsList}}
+	\code{\linkS4class{pics}}
 }
 
-\keyword{models}
-
+\keyword{functions}

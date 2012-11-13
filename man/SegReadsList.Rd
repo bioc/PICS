@@ -19,7 +19,7 @@ Pre-process bidirectional aligned reads data from a single ChIP-Seq experiment t
 \section{Methods}{
   \describe{
  \item{[}{\code{signature(x = ``pics'')}: subset gadem object.}
-\item{[}{\code{signature(x = ``pics'')}: subset gadem object.}
+ \item{[[}{\code{signature(x = ``pics'')}: subset gadem object.}
 	}
 }
 

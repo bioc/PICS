@@ -1,52 +1,44 @@
-PICS<-function(segReadsList,dataType="TF")
+PICS<-function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL)
 {
   ### Constant used in the calculations
   cst<-gamma(3.5)/gamma(3)/sqrt(pi)
   minReads<-list(perPeak=3,perRegion=4)
 
-  if(dataType!="TF")
+  #if(dataType!="TF")
+  #{
+    #stop("Object 'dataType' must be 'TF'")
+  #}
+  #else
+  #{
+    if(length(paraEM)!=7)
+    {
+#         message("Using the default paraEM")
+	  paraEM<-setParaEM(dataType=dataType) #using PICS default paraEM
+    }
+    if(length(paraPrior)!=6)
+    {
+#      message("Using the default paraPrior")
+	  paraPrior<-setParaPrior(dataType=dataType) #using PICS default paraPrior
+    }
+  #}
+
+
+  if("parallel" %in% names(getLoadedDLLs()) )
   {
-    stop("Object 'dataType' must be either 'TF'")
+	  #Number of cores
+	  nCores<-parallel:::detectCores()
+	  message("Using the parallel version of PICS with ", nCores, " cpus or cores")
+	  #Split into nCores segReadsList
+	  cl <- parallel:::makeCluster(getOption("cl.cores", nCores))
+	  segSplit<-split(segReadsList,cut(1:length(segReadsList),nCores))
+	  #Use parallel version of lapply
+	  res<-unlist(parallel:::parLapply(cl,segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads),recursive=FALSE)
+	  parallel:::stopCluster(cl)
   }
   else
   {
-    paraPrior<-paraPriorTF
-    paraEM<-paraEMTF
-  }
-  
-  if((length(grep("multicore",loadedNamespaces()))==0) & (length(grep("snowfall",loadedNamespaces()))==0 || suppressMessages(!sfParallel())))
-  {
-    message("Using the serial version of PICS")    
-    # C version
-    res<-.Call("fitPICS", segReadsList, paraEM, paraPrior, minReads, PACKAGE="PICS")
-  }
-  else if(length(grep("multicore",loadedNamespaces()))==1)
-  {
-    cores<-getOption("cores")
-    if(is.null(cores))
-    {
-      nClust<-multicore:::volatile$detectedCores
-    }
-    else
-    {
-      nClust<-cores
-    }
-    message("Using the multicore version of PICS with ",nClust," cores")
-    # Split into nClust segReadsList
-    segSplit<-split(segReadsList,cut(1:length(segReadsList),nClust))
-    names(segSplit)<-NULL
-    res<-unlist(sfLapply(segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads,mc.preschedule=FALSE),recursive=FALSE)
-  }
-  else if(length(grep("snowfall",loadedNamespaces()))==1 && sfParallel())
-  {
-    # Number of clusters
-    nClust<-sfCpus()
-    message("Using the parallel (snowfall) version of PICS with ", nClust, " cpus or cores")
-    # Split into nClust segReadsList
-    segSplit<-split(segReadsList,cut(1:length(segReadsList),nClust))
-    names(segSplit)<-NULL
-    # Use a parallel version
-    res<-unlist(sfLapply(segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads),recursive=FALSE)
+	  message("Using the serial version of PICS")
+	  res<-.Call("fitPICS", segReadsList, paraEM, paraPrior, minReads, PACKAGE="PICS")
   }
 
   myPicsList<-newPicsList(res,paraEM,paraPrior,minReads,segReadsList@N,segReadsList@Nc)
@@ -60,9 +52,9 @@ PICS<-function(segReadsList,dataType="TF")
 
 
 ## This function could be used to simulate random reads in the case there are no background reads
-.background<-function(dataF, dataR, mapPro=NULL,gapPro=NULL,pRetain=0.01)
+backgroundSim<-function(dataF, dataR, mapPro=NULL,gapPro=NULL,pRetain=0.01)
 {
-  obj<-.C("background",
+  obj<-.C("backgroundSim",
   dataF=as.double(dataF),
   dataR=as.double(dataR),
   nF=as.integer(length(dataF)),

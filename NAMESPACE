@@ -1,3 +1,6 @@
+#
+# NAMESPACE PICS
+#
 useDynLib(PICS)
 
 import(methods)
@@ -7,26 +10,23 @@ importFrom(grDevices, grey)
 importFrom(stats, dt)
 importFrom(stats4, plot)
 importFrom(stats4, summary)
-import(BiocGenerics)
+#import(BiocGenerics)
 importFrom(BiocGenerics, density)
 
-importFrom(IRanges, IRanges, RangedData)
+importFrom(IRanges, IRanges, RangedData, coverage)
 importClassesFrom(IRanges, IRanges, RangedData)
-importMethodsFrom(IRanges, space, score, sort, unique, order, duplicated, start, end, lapply)
+importMethodsFrom(IRanges, space, score, slice, sort, order, duplicated, start, end, lapply, levels, as.factor, as.matrix, resize)
 
-importMethodsFrom(GenomicRanges, strand)
+importClassesFrom(GenomicRanges, GRanges)
+importMethodsFrom(GenomicRanges, strand, seqnames)
+importFrom(GenomicRanges, GRanges)
 
-importFrom(BSgenome, GenomeData)
-importClassesFrom(BSgenome, GenomeData)
+#importFrom(BSgenome, GenomeData)
+#importClassesFrom(BSgenome, GenomeData)
 
-### export anything w/out a dot in front. 
-exportPattern(".+")
 
-exportClasses(segReads, segReadsList, pics, picsError, picsList)
-exportMethods(show, summary, plot, density, chromosome, score, se, seF, seR,
-              sigmaSqF, sigmaSqR, mu, delta, w, code, length, K,"[","[[")
-
-# I export the default parameters for the PICS code, so that the user does not have to worry about them
-# export(paraPriorH,paraPriorTF,paraEMH,paraEMTF)
-export(paraPriorTF,paraEMTF)
+exportClasses(segReads, segReadsList, segReadsPE, segReadsListPE, pics, picsError, picsList)
+exportMethods(coerce, show, summary, plot, wigDensity, chromosome, score, se, seF, seR,
+	sigmaSqF, sigmaSqR, mu, delta, w, code, length, K,"[","[[", map, minRange, maxRange, scoreForward, scoreReverse)
+export("segReadsList", "segReadsListPE", "segReadsPE", "segReadsGeneric", "segReads", "segmentPICS", "summarySeg", "makeRangedDataOutput", "PICS", "picsFDR", "newPicsError", "setParaEM", "setParaPrior", "candidate.region","segChrRead")
 
