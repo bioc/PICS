@@ -1,7 +1,7 @@
 Package: PICS
 Type: Package
 Title: Probabilistic inference of ChIP-seq
-Version: 1.15.0
+Version: 1.99.0
 Author: Xuekui Zhang <xzhang@stat.ubc.ca>, Raphael Gottardo <rgottard@fhcrc.org>
 Maintainer: Renan Sauteraud <rsautera@fhcrc.org>
 Depends: R (>= 2.14.0), BiocGenerics (>= 0.1.3)
