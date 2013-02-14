@@ -130,12 +130,12 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
 
   lengthCenter=(int)((M-m)/(INTEGER_VALUE(step)));
   //R//These 3 allocations could be Calloc
-  center=(int*)Calloc(lengthCenter, int);
-  scoreF=(int*)Calloc(lengthCenter, int);
-  scoreR=(int*)Calloc(lengthCenter, int);
-  /*center=(int*)R_alloc(lengthCenter, sizeof(int));*/
-  /*scoreF=(int*)R_alloc(lengthCenter, sizeof(int));*/
-  /*scoreR=(int*)R_alloc(lengthCenter, sizeof(int));*/
+  /*center=(int*)Calloc(lengthCenter, int);*/
+  /*scoreF=(int*)Calloc(lengthCenter, int);*/
+  /*scoreR=(int*)Calloc(lengthCenter, int);*/
+  center=(int*)R_alloc(lengthCenter, sizeof(int));
+  scoreF=(int*)R_alloc(lengthCenter, sizeof(int));
+  scoreR=(int*)R_alloc(lengthCenter, sizeof(int));
 
   /** Allocate memory for the start/end of each preprocessed region **/
   /** Because I do not know the size yet, I use the maximum possible size **/
@@ -202,11 +202,11 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
 	
   UNPROTECT(3);
   /*vmaxset(r_max); //R//Returns to the saved memory state (or smth like that..)*/
-  Free(center);
-  Free(scoreF);
-  Free(scoreR);
-  Free(scoreRegionF);
-  Free(scoreRegionR);
+  /*Free(center);*/
+  /*Free(scoreF);*/
+  /*Free(scoreR);*/
+  /*Free(scoreRegionF);*/
+  /*Free(scoreRegionR);*/
   return(ans);
 }
 
