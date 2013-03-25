@@ -8,7 +8,7 @@ candidate.region <- function(PE.RD, islandDepth, min_cut, max_cut){
     	max_region <- max(end(PE.RD))
 	
 ## get the coverage for each base
-	cvg <- coverage(PE.RD, width=(max_region-min_region+1))
+	cvg <- coverage(PE.RD)#, width=(max_region-min_region+1)) ##R# why width?
 ## keep only the covered regions
 	read.region <- slice(cvg, lower=1)
 ## get the highest covered regions
