@@ -8,7 +8,7 @@ candidate.region <- function(PE.RD, islandDepth, min_cut, max_cut){
     	max_region <- max(end(PE.RD))
 	
 ## get the coverage for each base
-	cvg <- coverage(PE.RD)#, width=(max_region-min_region+1)) ##R# why width?
+	cvg <- coverage(PE.RD)#, shift=-min_region+1, width=(max_region-min_region+1)) ##R# why width?
 ## keep only the covered regions
 	read.region <- slice(cvg, lower=1)
 ## get the highest covered regions
@@ -87,7 +87,7 @@ s_cut <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, max_region)
 	overlaps <- as.matrix(findOverlaps(PE.RD.Cand, over_cand_IR))
 	PE_reads <- PE.RD.Cand[overlaps[,1],]
 	
-	cvg_temp <- coverage(PE_reads, width=(max_region-min_region+1))
+	cvg_temp <- coverage(PE_reads)##, width=(max_region-min_region+1))
 
 	s_temp <- slice(cvg_temp, lower=islandDepth)	
 	st <- start(s_temp)
