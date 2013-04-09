@@ -69,7 +69,7 @@ segReadsList, dataType.
 }
 
 \usage{
-PICS(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL)
+PICS(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL, nCores=1)
 }
 
 \arguments{
@@ -94,6 +94,7 @@ PICS(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL)
 		\item{}{\code{lambda}: an \code{integer}, default=0. The precision of the prior for mu used for histone data.}
 		\item{}{\code{dMu}: an \code{integer}, default=0. Our best guess for the distance between two neighboring nucleosomes.}
 	}
+\item{nCores}{An \code{integer}. The number of cores that should be used in parallel by the function.}
 }
 
 \section{Methods}{

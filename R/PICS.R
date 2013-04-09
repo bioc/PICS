@@ -1,4 +1,4 @@
-PICS<-function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL)
+PICS<-function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL, nCores=1)
 {
   ### Constant used in the calculations
   cst<-gamma(3.5)/gamma(3)/sqrt(pi)
@@ -23,10 +23,16 @@ PICS<-function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL)
   #}
 
 
-  if("parallel" %in% names(getLoadedDLLs()) )
+  #if("parallel" %in% names(getLoadedDLLs()) )
+  if(nCores>1 & "parallel" %in% names(getLoadedDLLs()) )
   {
 	  #Number of cores
-	  nCores<-parallel:::detectCores()
+    
+	  availCores<-parallel:::detectCores()
+          {   
+          warning("The number of cores required is higher than the available cores on this machine (",availCores,").\n", immediate.=TRUE)
+          nCores<-availCores
+        }   
 	  message("Using the parallel version of PICS with ", nCores, " cpus or cores")
 	  #Split into nCores segReadsList
 	  cl <- parallel:::makeCluster(getOption("cl.cores", nCores))
