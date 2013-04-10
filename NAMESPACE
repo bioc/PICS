@@ -28,5 +28,5 @@ importFrom(GenomicRanges, GRanges)
 exportClasses(segReads, segReadsList, segReadsPE, segReadsListPE, pics, picsError, picsList)
 exportMethods(coerce, show, summary, plot, wigDensity, chromosome, score, se, seF, seR,
 	sigmaSqF, sigmaSqR, mu, delta, w, code, length, K,"[","[[", map, minRange, maxRange, scoreForward, scoreReverse)
-export("segReadsList", "segReadsListPE", "segReadsPE", "segReadsGeneric", "segReads", "segmentPICS", "summarySeg", "makeRangedDataOutput", "PICS", "picsFDR", "newPicsError", "setParaEM", "setParaPrior", "candidate.region","segChrRead")
+export("segReadsList", "segReadsListPE", "segReadsPE", "segReadsGeneric", "segReads", "segmentPICS", "summarySeg", "makeRangedDataOutput", "PICS", "picsFDR", "newPicsError", "setParaEM", "setParaPrior", "candidate.region","segChrRead", "bam2gr")
 
