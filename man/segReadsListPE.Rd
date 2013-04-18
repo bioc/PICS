@@ -2,6 +2,7 @@
 \alias{segReadsListPE}
 \alias{segReadsListPE-class}
 \alias{[,segReadsListPE-method}
+\alias{[,segReadsListPE,ANY,ANY-method}
 \alias{[[,segReadsListPE,ANY,ANY-method}
 
 \title{List of segReadsPE objects}
