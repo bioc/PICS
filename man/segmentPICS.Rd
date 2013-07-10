@@ -19,7 +19,7 @@
   \item{minReads}{The minimum number of F/R reads to be present in the sliding window.}
   \item{minReadsInRegion}{The minimum number of F/R reads to be present in the region.}
   \item{jitter}{A logical value stating whether some noise should be added to the read locations. This is recommended if the read positions have lots of duplicates.}
-  \item{dataType}{Type of experiment.}
+  \item{dataType}{Type of experiment. "TF" or "H".}
   \item{maxLregion}{The maximum length.}
   \item{minLregion}{The minimum length.}
 }

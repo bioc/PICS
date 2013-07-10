@@ -29,10 +29,10 @@ PICS<-function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL, nCores=1
 	  #Number of cores
     
 	  availCores<-parallel:::detectCores()
-          {   
+        if(nCores > availCores){
           warning("The number of cores required is higher than the available cores on this machine (",availCores,").\n", immediate.=TRUE)
           nCores<-availCores
-        }   
+        }
 	  message("Using the parallel version of PICS with ", nCores, " cpus or cores")
 	  #Split into nCores segReadsList
 	  cl <- parallel:::makeCluster(getOption("cl.cores", nCores))

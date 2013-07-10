@@ -1635,9 +1635,10 @@ int testClass(SEXP list, int i)
 int testObj(SEXP pPackage)
 {
   int res=1;
-  if(strcmp(CHAR(STRING_ELT(pPackage,0)),"PICS")==0)
-  { res=1; }
-  else
-  { res=0; }
+  if(strcmp(CHAR(STRING_ELT(pPackage,0)),"PICS")==0){
+    res=1;
+  } else{
+    res=0;
+  }
   return(res);
 }
