@@ -1,7 +1,6 @@
 #perform the segmentation depending on the package
 segReadsGeneric<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegion=3, jitter=FALSE, maxLregion=0,minLregion=100,
-			step=20, width=250, package="PICS")
-{
+			step=20, width=250, package="PICS"){
 	#maxLregion save max allowable region length, if it is not positive, that means no upper bound the regions length
 	
 	## Check that we have the right data type
