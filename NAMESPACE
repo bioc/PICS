@@ -13,9 +13,8 @@ importFrom(stats4, summary)
 #import(BiocGenerics)
 importFrom(BiocGenerics, density)
 
-importFrom(IRanges, IRanges, RangedData, coverage)
-importClassesFrom(IRanges, IRanges, RangedData)
-importMethodsFrom(IRanges, space, score, slice, sort, order, duplicated, start, end, lapply, levels, as.factor, as.matrix, resize, elementMetadata, "elementMetadata<-")
+import(IRanges)
+import(S4Vectors)
 
 importFrom(Rsamtools, ScanBamParam, scanBamFlag)
 
