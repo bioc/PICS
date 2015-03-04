@@ -22,7 +22,7 @@ importClassesFrom(GenomicRanges, GRanges)
 importMethodsFrom(GenomicRanges, strand, seqnames)
 importFrom(GenomicRanges, GRanges)
 
-importFrom(GenomicAlignments, readGAlignmentsFromBam)
+importFrom(GenomicAlignments, readGAlignments)
 
 #importFrom(BSgenome, GenomeData)
 #importClassesFrom(BSgenome, GenomeData)
