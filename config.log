@@ -30,18 +30,17 @@ Kernel configured for up to 8 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3 4 5 6 7
 Primary memory available: 32.00 gigabytes
-Default processor set: 474 tasks, 2223 threads, 8 processors
-Load average: 1.79, Mach factor: 6.20
+Default processor set: 476 tasks, 2371 threads, 8 processors
+Load average: 2.31, Mach factor: 5.67
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
-PATH: /Users/renansauteraud/programs/gsl/bin
-PATH: /usr/local/bin
 PATH: /usr/bin
 PATH: /bin
 PATH: /usr/sbin
 PATH: /sbin
+PATH: /usr/local/bin
 PATH: /Library/TeX/texbin
 PATH: /opt/X11/bin
 
@@ -103,10 +102,10 @@ configure:2744: clang  -c -Wall -g -O2  conftest.c >&5
 configure:2750: $? = 0
 configure:2773: result: none needed
 configure:2828: checking for gsl-config
-configure:2846: found /Users/renansauteraud/programs/gsl/bin/gsl-config
-configure:2859: result: /Users/renansauteraud/programs/gsl/bin/gsl-config
+configure:2846: found /usr/local/bin/gsl-config
+configure:2859: result: /usr/local/bin/gsl-config
 configure:2868: checking for GSL - version >= 1.6
-configure:2978: clang -o conftest -Wall -g -O2 -I/Users/renansauteraud/programs/gsl/include   conftest.c  -L/Users/renansauteraud/programs/gsl/lib -lgsl -lgslcblas >&5
+configure:2978: clang -o conftest -Wall -g -O2 -I/usr/local/include   conftest.c  -L/usr/local/lib -lgsl -lgslcblas >&5
 configure:2981: $? = 0
 configure:2987: ./conftest
 configure:2990: $? = 0
@@ -158,7 +157,7 @@ ac_cv_env_host_alias_value=
 ac_cv_env_target_alias_set=
 ac_cv_env_target_alias_value=
 ac_cv_objext=o
-ac_cv_path_GSL_CONFIG=/Users/renansauteraud/programs/gsl/bin/gsl-config
+ac_cv_path_GSL_CONFIG=/usr/local/bin/gsl-config
 ac_cv_prog_ac_ct_CC=clang
 ac_cv_prog_cc_c89=
 ac_cv_prog_cc_g=yes
@@ -174,9 +173,9 @@ DEFS='-DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAG
 ECHO_C='ECHO_N=''
 ECHO_T=''
 EXEEXT=''
-GSL_CFLAGS='-I/Users/renansauteraud/programs/gsl/include'
-GSL_CONFIG='/Users/renansauteraud/programs/gsl/bin/gsl-config'
-GSL_LIBS='-L/Users/renansauteraud/programs/gsl/lib -lgsl -lgslcblas'
+GSL_CFLAGS='-I/usr/local/include'
+GSL_CONFIG='/usr/local/bin/gsl-config'
+GSL_LIBS='-L/usr/local/lib -lgsl -lgslcblas'
 LDFLAGS=''
 LIBOBJS=''
 LIBS=' -lgsl -lgslcblas -lm'

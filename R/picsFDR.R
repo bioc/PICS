@@ -1,5 +1,5 @@
-picsFDR<-function(picsIP,picsCont,filter=list(delta=c(0,Inf),se=c(0,Inf),sigmaSqF=c(0,Inf),sigmaSqR=c(0,Inf)))
-{
+#' @export
+picsFDR<-function(picsIP,picsCont,filter=list(delta=c(0,Inf),se=c(0,Inf),sigmaSqF=c(0,Inf),sigmaSqR=c(0,Inf))) {
   score1<-score(picsIP)
   delta1<-delta(picsIP)
   se1<-se(picsIP)

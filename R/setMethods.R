@@ -12,6 +12,10 @@
 ##  GenomeData(lapply(x,function(x){lapply(x,unique)}))
 ##})
 
+setAs("picsList", "GRanges", function(from) {
+  makeGRangesOutput(from, type = "bed", filter=list(delta=c(50,300),se=c(0,50),sigmaSqF=c(0,22500),sigmaSqR=c(0,22500),score=c(1,Inf)),length=100)
+})
+  
 setAs("picsList", "RangedData",
 function(from) 
 {
@@ -46,29 +50,6 @@ setAs("data.frame", "GRanges",function(from)
 #I need a concatenate method to add pics objects
 
 
-#setAs("RangedData", "GenomeData",
-#function(from)
-#{
-#  .useRanges()
-#  readStart <- ifelse(strand(from) == "-",end(from),start(from))
-#  alignLocs <-
-#  split(data.frame(position = readStart, strand = strand(from)),space(from)[drop=TRUE])
-#  GenomeData(lapply(alignLocs,function(df) with(df, split(position, strand))[c("-", "+")]))
-#}
-#)
-#
-#setAs("data.frame", "GenomeData",            
-#function(from) 
-#{
-#  from<-as(from,"RangedData")
-#  readStart <- ifelse(strand(from) == "-",end(from),start(from))
-#  alignLocs <-
-#  split(data.frame(position = readStart, strand = strand(from)),
-#  space(from)[drop=TRUE])
-#  GenomeData(lapply(alignLocs,function(df) with(df, split(position, strand))[c("-", "+")]))
-#}
-#)
-
 setAs("picsList", "data.frame",
 function(from)
 {
@@ -84,6 +65,7 @@ function(from)
 
 
 ## show and summary methods
+#' @export
 setMethod("show", "segReads",
           function(object)
       {
@@ -134,6 +116,8 @@ setMethod("show", "picsList",
 
 
 #setGeneric("score", function(x, ...) standardGeneric("score"))
+#' @importFrom IRanges score
+#' @export
 setMethod("score", "pics",
           function(x)
           {
@@ -161,6 +145,7 @@ setMethod("score", "data.frame",
 		})
 
 
+#' @export
 setGeneric("minRange", function(x, ...) standardGeneric("minRange"))
 setMethod("minRange", "pics",
           function(x)
@@ -181,6 +166,7 @@ setMethod("minRange", "picsList",
             return(ans)
           })
 
+#' @export
 setGeneric("maxRange", function(x, ...) standardGeneric("maxRange"))
 setMethod("maxRange", "pics",
           function(x)
@@ -202,6 +188,7 @@ setMethod("maxRange", "picsList",
           })
 
 
+#' @export
 setGeneric("scoreReverse", function(x, ...) standardGeneric("scoreReverse"))
 setMethod("scoreReverse", "pics",
           function(x)
@@ -228,6 +215,7 @@ setMethod("scoreReverse", "data.frame",
 		  return(x$scoreR)
 })
           
+#' @export
 setGeneric("scoreForward", function(x, ...) standardGeneric("scoreForward"))
 setMethod("scoreForward", "pics",
           function(x)
@@ -255,6 +243,7 @@ setMethod("scoreForward", "data.frame",
 			return(x$scoreF)
 })
 
+#' @export
 setGeneric("chromosome", function(x, ...) standardGeneric("chromosome"))
 setMethod("chromosome", "pics",
           function(x)
@@ -283,6 +272,7 @@ setMethod("chromosome", "data.frame",
 
 
 
+#' @export
 setGeneric("map", function(x, ...) standardGeneric("map"))
 setMethod("map", "segReads",
           function(x)
@@ -308,6 +298,7 @@ setMethod("map", "segReadsList",
 )
 
 
+#' @export
 setGeneric("se", function(x, ...) standardGeneric("se"))
 setMethod("se", "pics",
           function(x)
@@ -335,6 +326,7 @@ setMethod("se", "data.frame",
 			return(x$se)
 		})
 
+#' @export
 setGeneric("seF", function(x, ...) standardGeneric("seF"))
 setMethod("seF", "pics",
           function(x)
@@ -362,6 +354,7 @@ setMethod("seF", "data.frame",
 			return(x$seF)
 		})
 
+#' @export
 setGeneric("seR", function(x, ...) standardGeneric("seR"))
 setMethod("seR", "pics",
           function(x)
@@ -391,6 +384,7 @@ setMethod("seR", "data.frame",
 		})
 
 
+#' @export
 setGeneric("sigmaSqF", function(x, ...) standardGeneric("sigmaSqF"))
 setMethod("sigmaSqF", "pics",
           function(x)
@@ -420,6 +414,7 @@ setMethod("sigmaSqF", "data.frame",
 			return(x$sigmaSqF)
 		})
 
+#' @export
 setGeneric("sigmaSqR", function(x, ...) standardGeneric("sigmaSqR"))
 setMethod("sigmaSqR", "pics",
           function(x)
@@ -449,6 +444,7 @@ setMethod("sigmaSqR", "data.frame",
 			return(x$sigmaSqR)
 		})
 
+#' @export
 setGeneric("delta", function(x, ...) standardGeneric("delta"))
 setMethod("delta", "pics",
           function(x)
@@ -478,6 +474,7 @@ setMethod("delta", "data.frame",
 			return(x$delta)
 		})
 
+#' @export
 setGeneric("mu", function(x, ...) standardGeneric("mu"))
 setMethod("mu", "pics",
           function(x)
@@ -507,6 +504,7 @@ setMethod("mu", "data.frame",
 			return(x$mu)
 		})
 
+#' @export
 setGeneric("w", function(x, ...) standardGeneric("w"))
 setMethod("w", "pics",
           function(x)
@@ -528,6 +526,7 @@ setMethod("w", "picsList",
           }
 )
 
+#' @export
 setGeneric("K", function(x, ...) standardGeneric("K"))
 setMethod("K", "pics",
           function(x)
@@ -549,6 +548,7 @@ setMethod("K", "picsList",
           }
 )
 
+#' @export
 setGeneric("code", function(x, ...) standardGeneric("code"))
 setMethod("code", "pics",
           function(x)
@@ -582,6 +582,7 @@ setMethod("length", "segReadsList",
             return(length(x@List))
 })
 
+#' @export
 setGeneric("wigDensity", function(x, ...) standardGeneric("wigDensity"))
 setMethod("wigDensity", "pics",
           function(x,strand="+",step=10,sum=FALSE,filter=NULL,scale=TRUE)
@@ -640,6 +641,7 @@ setMethod("wigDensity", "picsList",
           }
 )
 
+#' @export
 setMethod("wigDensity", "picsError",
           function(x,strand=NULL,step=NULL,sum=NULL,filter=NULL)
           {
@@ -703,6 +705,7 @@ setMethod("summary", "segReads",
       })
 
 
+#' @export
 setMethod("[","segReadsList",
 		function(x,i, j,..., drop=FALSE)
 		{
@@ -720,6 +723,7 @@ setMethod("[","segReadsList",
       }
 		})
 
+#' @export
 setMethod("[[","segReadsList",
     function(x, i, j, ..., exact = TRUE)
     {
@@ -819,6 +823,7 @@ setMethod("[[","picsList",
 })
 
 
+#' @export
 setMethod("summary", "picsList",
           function(object)
           {
@@ -852,6 +857,7 @@ setMethod("summary", "pics",
 })
 
 
+#' @export
 setMethod("plot", signature("pics", "segReads"),
 function(x, y, addKernel=FALSE, addNucleosome=FALSE, addSe=TRUE, main=NULL, ...)
 {
@@ -1050,27 +1056,23 @@ setMethod("plot", signature("picsList", "segReadsList"),
 })
 
 setMethod("plot", signature("picsList", "picsList"),
-          function(x, y, filter=NULL, h=.1, ...)
-{
+          function(x, y, filter=NULL, h=.1, ...){
   FDR<-picsFDR(x,y,filter=filter)
   arg<-list(...)
   par(mar=c(4, 4, 4.5, 4) + 0.1)
-  # points(FDR[,2],FDR[,3]/max(FDR[,3]),xaxt="n",yaxt="n",lty=3,col=3,pch=2)
-  if(length(arg$xlim)!=2)
-  {
+  if(length(arg$xlim)!=2){
     xlim<-range(FDR[,2])
   }
-  else
-  {
+  else{
     xlim<-c(max(arg$xlim[1],min(FDR[,2])),min(arg$xlim[2],max(FDR[,2])))
   }
-  plot(FDR[,2],FDR[,1],xlab="score",ylab="FDR",panel.first=grid(nx=50),...)
+  plot(FDR[,2], FDR[,1], xlab="score", ylab="FDR",panel.first=grid(nx=50), ...)
   xx<-FDR[FDR[,2]>xlim[1] & FDR[,2]<xlim[2],2]
   yy<-FDR[FDR[,2]>xlim[1] & FDR[,2]<xlim[2],3]
   xx<-xx[seq(1,length(xx),length.out=10)]
   yy<-yy[seq(1,length(yy),length.out=10)]
   axis(3,at=xx,labels=yy)
-  mtext("# regions", side = 3, line = 3, ...)
+  mtext("# regions", side = 3, line = 3)
   FDRex<-FDR[FDR[,1]>0,]
   notDup<-rev(!duplicated(rev(FDRex[,1])))
   lines(FDRex[notDup,2],FDRex[notDup,1],col=2,lty=2,lwd=1.5)

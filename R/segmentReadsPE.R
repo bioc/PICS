@@ -46,8 +46,7 @@ candidate.region <- function(PE.RD, islandDepth, min_cut, max_cut){
 ###  Cut the wide ranged candidate region into max_cut ranged candidate regions 
 ## This function is for each candidate region having wide range 
 ####################################################################################
-cand_recursive <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, max_region, min_cut, max_cut) 
-{
+cand_recursive <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, max_region, min_cut, max_cut) {
 	
 	temp_over_IR <- over_cand_IR
 	width_temp <- max(width(temp_over_IR))
@@ -80,8 +79,7 @@ cand_recursive <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, ma
 # 	return(as.data.frame(cand_IR))
 }
 
-s_cut <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, max_region)
-{
+s_cut <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, max_region){
 	# PE_reads <- PE.RD.Cand[(PE.RD.Cand %in% over_cand_IR) ==TRUE,]  # %in% stop working after PING is loaded
 #	overlaps <- findOverlaps(PE.RD.Cand, over_cand_IR)@matchMatrix
 	overlaps <- as.matrix(findOverlaps(PE.RD.Cand, over_cand_IR))
@@ -102,8 +100,8 @@ s_cut <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, max_region)
 #############################################################
 ###  Identify reads included in each candidate regions 
 #############################################################
-segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD , PEC.RD=NULL, PECMF.RD=NULL, PECMR.RD=NULL, map.Start, map.End, chr)
-{
+#' @export
+segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD , PEC.RD=NULL, PECMF.RD=NULL, PECMR.RD=NULL, map.Start, map.End, chr){
 	seg <- vector("list", length(candidate_RD))
 	map.IR <- IRanges(start=map.Start, end=map.End)
  	index_map_all <-  as.matrix(findOverlaps(candidate_RD, map.IR))

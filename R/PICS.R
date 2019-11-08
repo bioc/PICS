@@ -1,48 +1,34 @@
-PICS<-function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL, nCores=1)
-{
+#' @useDynLib PICS, .registration = TRUE
+
+
+
+#' @export
+PICS <- function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL, nCores=1){
   ### Constant used in the calculations
-  cst<-gamma(3.5)/gamma(3)/sqrt(pi)
+  cst <- gamma(3.5)/gamma(3)/sqrt(pi)
   minReads<-list(perPeak=3,perRegion=4)
-
-  #if(dataType!="TF")
-  #{
-    #stop("Object 'dataType' must be 'TF'")
-  #}
-  #else
-  #{
-    if(length(paraEM)!=7)
-    {
-#         message("Using the default paraEM")
-	  paraEM<-setParaEM(dataType=dataType) #using PICS default paraEM
-    }
-    if(length(paraPrior)!=6)
-    {
-#      message("Using the default paraPrior")
+  if(length(paraEM)!=7){
+    paraEM<-setParaEM(dataType=dataType) #using PICS default paraEM
+  }
+  if(length(paraPrior)!=6){
 	  paraPrior<-setParaPrior(dataType=dataType) #using PICS default paraPrior
-    }
-  #}
+  }
 
-
-  #if("parallel" %in% names(getLoadedDLLs()) )
-  if(nCores>1 & "parallel" %in% names(getLoadedDLLs()) )
-  {
+  if(nCores>1 & "parallel" %in% names(getLoadedDLLs())){
 	  #Number of cores
-    
-	  availCores<-parallel:::detectCores()
-        if(nCores > availCores){
-          warning("The number of cores required is higher than the available cores on this machine (",availCores,").\n", immediate.=TRUE)
-          nCores<-availCores
-        }
+	  availCores<-detectCores()
+    if(nCores > availCores){
+      warning("The number of cores required is higher than the available cores on this machine (",availCores,").\n", immediate.=TRUE)
+      nCores<-availCores
+    }
 	  message("Using the parallel version of PICS with ", nCores, " cpus or cores")
 	  #Split into nCores segReadsList
-	  cl <- parallel:::makeCluster(getOption("cl.cores", nCores))
+	  cl <- makeCluster(getOption("cl.cores", nCores))
 	  segSplit<-split(segReadsList,cut(1:length(segReadsList),nCores))
 	  #Use parallel version of lapply
-	  res<-unlist(parallel:::parLapply(cl,segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads),recursive=FALSE)
-	  parallel:::stopCluster(cl)
-  }
-  else
-  {
+	  res<-unlist(parLapply(cl,segSplit,.fitModelAllkSplit,paraEM,paraPrior,minReads),recursive=FALSE)
+	  stopCluster(cl)
+  } else{
 	  message("Using the serial version of PICS")
 	  res<-.Call("fitPICS", segReadsList, paraEM, paraPrior, minReads, PACKAGE="PICS")
   }
@@ -51,8 +37,7 @@ PICS<-function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL, nCores=1
   return(myPicsList)
 }
 
-.fitModelAllkSplit<-function(segReadsList,paraEM,paraPrior,minReads)
-{
+.fitModelAllkSplit<-function(segReadsList,paraEM,paraPrior,minReads){
   res<-.Call("fitPICS", segReadsList, paraEM, paraPrior, minReads, PACKAGE="PICS")
 }
 
