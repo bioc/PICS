@@ -165,8 +165,8 @@ To facilitate data processing and data output, we make use of the \texttt{IRange
 ## Writing enriched regions to BED files
 
 ```{r}
-myFilter = list(delta=c(50,300),se=c(0,50),sigmaSqF=c(0,22500),sigmaSqR=c(0,22500))
-rdBed <- makeGRangesOutput(pics,type="bed",filter=c(myFilter,list(score=c(1,Inf))))
+myFilter = list(delta = c(50, 300), se = c(0, 50), sigmaSqF = c(0, 22500), sigmaSqR = c(0, 22500))
+rdBed <- makeGRangesOutput(pics, type="bed", filter = c(myFilter, list(score = c(1, Inf))))
 ```
 
 The following command will create the appropriate bed files, and because it requires the \texttt{rtracklayer} package, we do not run it here but simply displayed for your purpose.

@@ -46,15 +46,18 @@ Pre-process bidirectional aligned reads data from a single ChIP-Seq experiment
 # Read data
 path<-system.file("extdata",package="PICS")
 ## Note that the col name for the chromosome needs to be space and not chr
-dataIP<-read.table(file.path(path,"Treatment_tags_chr21_sort.bed"),header=TRUE,colClasses=c("factor","integer","integer","factor"))
-dataIP<-as(dataIP,"GRanges")
+dataIP <- read.table(file.path(path, "Treatment_tags_chr21_sort.bed"), header=TRUE,
+                     colClasses = c("factor","integer","integer","factor"))
+dataIP <- as(dataIP, "GRanges")
 
-dataCont<-read.table(file.path(path,"Input_tags_chr21_sort.bed"),header=TRUE,colClasses=c("factor","integer","integer","factor"))
-dataCont<-as(dataCont,"GRanges")
+dataCont <- read.table(file.path(path, "Input_tags_chr21_sort.bed"), header=TRUE,
+                       colClasses = c("factor","integer","integer","factor"))
+dataCont <- as(dataCont, "GRanges")
 
-map<-read.table(file.path(path,"mapProfileShort"),header=TRUE,colClasses=c("factor","integer","integer","NULL"))
-map<-as(map,"GRanges")
-seg<-segmentPICS(dataIP, dataC=dataCont, map=map, minReads=1)
+map <- read.table(file.path(path, "mapProfileShort"), header=TRUE,
+                  colClasses = c("factor","integer","integer","NULL"))
+map <- as(map, "GRanges")
+seg <- segmentPICS(dataIP, dataC = dataCont, map = map, minReads = 1)
 
 }
 \references{

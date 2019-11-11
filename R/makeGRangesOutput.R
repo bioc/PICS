@@ -1,7 +1,20 @@
+#' Export a PICS object to GRanges
+#' 
+#' 
+#' @param obj A \code{PICS} object. The output of the \code{PICS} function.
+#' @param type A \code{character}. One of "fixed", "bed", "ci" or "wig".
+#' @param length A \code{numeric}. The length of the region around the center 
+#'  (mu). Only used when type = "fixed. 
+#' @param filter A \code{list}. Additional filtering options.
+#' 
 #' @importClassesFrom GenomicRanges GRanges
 #' @importClassesFrom IRanges IRanges
 #' @importFrom GenomicRanges GRanges strand seqnames
 #' @importFrom IRanges IRanges coverage
+#' 
+#' @return A \code{GRanges} object.
+#' 
+#' @seealso PICS
 #' 
 #' @export
 makeGRangesOutput <- function(obj, type = "fixed", length = 100,
