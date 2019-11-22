@@ -1,7 +1,5 @@
 #' @useDynLib PICS, .registration = TRUE
 
-
-
 #' @export
 PICS <- function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL, nCores=1){
   ### Constant used in the calculations
@@ -43,8 +41,7 @@ PICS <- function(segReadsList,dataType=NULL, paraEM=NULL, paraPrior=NULL, nCores
 
 
 ## This function could be used to simulate random reads in the case there are no background reads
-backgroundSim<-function(dataF, dataR, mapPro=NULL,gapPro=NULL,pRetain=0.01)
-{
+backgroundSim<-function(dataF, dataR, mapPro=NULL,gapPro=NULL,pRetain=0.01){
   obj<-.C("backgroundSim",
   dataF=as.double(dataF),
   dataR=as.double(dataR),
@@ -63,8 +60,7 @@ backgroundSim<-function(dataF, dataR, mapPro=NULL,gapPro=NULL,pRetain=0.01)
 }
 
 #it filter the data.frame converted from pics object
-.filterPICS <- function(ss,filter=list(delta=c(50,250),sigmaSq=22500, se=50, mu=c(0,Inf), chr=NULL))
-{
+.filterPICS <- function(ss,filter=list(delta=c(50,250),sigmaSq=22500, se=50, mu=c(0,Inf), chr=NULL)){
 	ind1	<- (ss$delta>=filter$delta[1])&(ss$delta<=filter$delta[2])
 	ind2	<- (ss$sigmaSqF<filter$sigmaSq)&(ss$sigmaSqR<filter$sigmaSq)
 	ind3	<- (ss$mu>=filter$mu[1])&(ss$mu<filter$mu[2])
@@ -77,8 +73,7 @@ backgroundSim<-function(dataF, dataR, mapPro=NULL,gapPro=NULL,pRetain=0.01)
 }
 
 #filter nucleosomes predicted outside of segment range.
-.filterPICS2 <- function(ss)
-{
+.filterPICS2 <- function(ss){
 	ind1	<- (ss$mu<=ss$maxRange)&(ss$mu>=ss$minRange)
 	ans		<- ss[ind1,]
 	return(ans)
