@@ -4,8 +4,16 @@
 \alias{setParaPrior}
 \title{List of parameters that can be used as an argument of PICS.}
 \usage{
-setParaPrior(xi = 200, rho = 1, alpha = 20, beta = 40000,
-  lambda = 0, dMu = 0, dataType = NULL, PExi = 0)
+setParaPrior(
+  xi = 200,
+  rho = 1,
+  alpha = 20,
+  beta = 40000,
+  lambda = 0,
+  dMu = 0,
+  dataType = NULL,
+  PExi = 0
+)
 }
 \arguments{
 \item{xi}{An \code{integer}. The average DNA fragment size.}

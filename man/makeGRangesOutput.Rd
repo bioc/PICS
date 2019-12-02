@@ -4,9 +4,13 @@
 \alias{makeGRangesOutput}
 \title{Export a PICS object to GRanges}
 \usage{
-makeGRangesOutput(obj, type = "fixed", length = 100,
-  filter = list(delta = c(0, Inf), se = c(0, Inf), sigmaSqF = c(0, Inf),
-  sigmaSqR = c(0, Inf), score = c(0, Inf)))
+makeGRangesOutput(
+  obj,
+  type = "fixed",
+  length = 100,
+  filter = list(delta = c(0, Inf), se = c(0, Inf), sigmaSqF = c(0, Inf), sigmaSqR = c(0,
+    Inf), score = c(0, Inf))
+)
 }
 \arguments{
 \item{obj}{A \code{PICS} object. The output of the \code{PICS} function.}

@@ -4,8 +4,12 @@
 \alias{picsFDR}
 \title{Estimate the FDR}
 \usage{
-picsFDR(picsIP, picsCont, filter = list(delta = c(0, Inf), se = c(0,
-  Inf), sigmaSqF = c(0, Inf), sigmaSqR = c(0, Inf)))
+picsFDR(
+  picsIP,
+  picsCont,
+  filter = list(delta = c(0, Inf), se = c(0, Inf), sigmaSqF = c(0, Inf), sigmaSqR = c(0,
+    Inf))
+)
 }
 \arguments{
 \item{picsIP}{An object of class \code{pics} or \code{picsList} containing

@@ -4,9 +4,17 @@
 \alias{segmentPICS}
 \title{Segment the genome into candidate regions}
 \usage{
-segmentPICS(data, dataC = NULL, map = NULL, minReads = 2,
-  minReadsInRegion = 3, jitter = FALSE, dataType = "TF",
-  maxLregion = 0, minLregion = 100)
+segmentPICS(
+  data,
+  dataC = NULL,
+  map = NULL,
+  minReads = 2,
+  minReadsInRegion = 3,
+  jitter = FALSE,
+  dataType = "TF",
+  maxLregion = 0,
+  minLregion = 100
+)
 }
 \arguments{
 \item{data}{A \code{GRanges} object containing the IP reads. See details for 

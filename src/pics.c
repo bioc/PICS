@@ -578,7 +578,7 @@ SEXP iterEM(SEXP iMax, SEXP nu, SEXP yR, SEXP yF, SEXP para, SEXP xi, SEXP alpha
 	int p = length(VECTOR_ELT(para, 1));
 	int i=0, j=0, index[p], Max=INTEGER(iMax)[0];
 	//Rprintf("p= %i mixtures, imax=%i \n", p, Max);
-	double oldMu[p], w[p], mu[p], delta[p], sF[p], sR[p], sumDiff=0;
+	double oldMu[p], w[p], delta[p], sF[p], sR[p], sumDiff=0;
 	SEXP ans;
 	
 	/** Turn off the error handler **/
@@ -648,7 +648,7 @@ SEXP iterEM(SEXP iMax, SEXP nu, SEXP yR, SEXP yF, SEXP para, SEXP xi, SEXP alpha
 
 void ECM1(int nu, SEXP R, SEXP F, SEXP para, double xi, double alpha, double betap, double rho, SEXP a, SEXP b, double tol, double cst, double lambda, double dMu)
 {
-	int i=0,j=0, k=0, K=length(VECTOR_ELT(para, 0)), NF=length(F), NR=length(R);
+	int i=0,j=0, K=length(VECTOR_ELT(para, 0)), NF=length(F), NR=length(R);
 	double *w=REAL(VECTOR_ELT(para, 0)), *mu=REAL(VECTOR_ELT(para, 1)), *delta=REAL(VECTOR_ELT(para, 2)), *sigmaSqF=REAL(VECTOR_ELT(para, 3)), *sigmaSqR=REAL(VECTOR_ELT(para, 4));
 	double *yR=REAL(R), *yF=REAL(F), yNormF, yNormR; 
 	gsl_vector *sumF=gsl_vector_calloc(NF), *sumR=gsl_vector_calloc(NR);
@@ -800,7 +800,7 @@ void ECM1(int nu, SEXP R, SEXP F, SEXP para, double xi, double alpha, double bet
 		
 		/** Copy the new values **/
 		/** Check that we could invert the matrix, otherwise we do not update the values **/
-		if(status1==0 & status2==0)
+		if((status1==0) & (status2==0))
 		{
 			for(j=0;j<K;j++)
 			{
@@ -960,7 +960,7 @@ void ECM1(int nu, SEXP R, SEXP F, SEXP para, double xi, double alpha, double bet
 		
 		/** Copy the new values **/
 		/** Check that we could invert the matrix, otherwise we do not update the values **/
-		if(status1==0 & status2==0)
+		if((status1==0) & (status2==0))
 		{
 			for(j=0;j<K;j++)
 			{
@@ -997,7 +997,7 @@ void ECM1(int nu, SEXP R, SEXP F, SEXP para, double xi, double alpha, double bet
 
 void ECM2(int nu, SEXP R, SEXP F, SEXP para, double xi, double alpha, double betap, double rho, SEXP a, SEXP b, double tol, double cst, double lambda, double dMu)
 {
-	int i=0,j=0, k=0, K=length(VECTOR_ELT(para, 0)), NF=length(F), NR=length(R);
+	int i=0,j=0, K=length(VECTOR_ELT(para, 0)), NF=length(F), NR=length(R);
 	double *w=REAL(VECTOR_ELT(para, 0)), *mu=REAL(VECTOR_ELT(para, 1)), *delta=REAL(VECTOR_ELT(para, 2)), *sigmaSqF=REAL(VECTOR_ELT(para, 3)), *sigmaSqR=REAL(VECTOR_ELT(para, 4));
 	double *yR=REAL(R), *yF=REAL(F), yNormF, yNormR; 
 	gsl_vector *sumF=gsl_vector_calloc(NF), *sumR=gsl_vector_calloc(NR);
@@ -1006,7 +1006,7 @@ void ECM2(int nu, SEXP R, SEXP F, SEXP para, double xi, double alpha, double bet
 	gsl_matrix *ruyF=gsl_matrix_calloc(K,NF), *ruyR=gsl_matrix_calloc(K,NR);
 	gsl_vector *OneF=gsl_vector_calloc(NF), *OneR=gsl_vector_calloc(NR);
 	gsl_vector *chiF=gsl_vector_calloc(K), *chiR=gsl_vector_calloc(K); 
-	double chiSum, etaF, etaR, etaDiff, dd, aaF, aaR, ggF, ggR, cc, ee;
+	double chiSum, etaF, etaR, dd, cc;
 	
 	/** Initialize the vector of Ones **/
 	gsl_vector_set_all(OneF, 1.0);
@@ -1269,7 +1269,7 @@ double intplogp (int start, int end, double *w, double *mu, double *sigmaSq, int
 }
 
 SEXP BIC(SEXP nuC, SEXP R, SEXP F, SEXP para, SEXP dMuC, SEXP lambdaC, SEXP a, SEXP b, SEXP mselect){
-	int  nu=INTEGER(nuC)[0], K=length(VECTOR_ELT(para, 0)), NF=length(F), NR=length(R), i=0, j=0, k=0, N, type=INTEGER(mselect)[0];
+	int  nu=INTEGER(nuC)[0], K=length(VECTOR_ELT(para, 0)), NF=length(F), NR=length(R), i=0, j=0, N, type=INTEGER(mselect)[0];
 	double *w=REAL(VECTOR_ELT(para, 0)), *mu=REAL(VECTOR_ELT(para, 1)), *delta=REAL(VECTOR_ELT(para, 2)), *sigmaSqF=REAL(VECTOR_ELT(para, 3)), *sigmaSqR=REAL(VECTOR_ELT(para, 4));
 	double *yR=REAL(R), *yF=REAL(F), dMu=REAL(dMuC)[0], lambda=REAL(lambdaC)[0]; 
 	double bic, tmp, muF[K], muR[K], penalty, distance;

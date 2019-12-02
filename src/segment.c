@@ -111,7 +111,7 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
   SEXP ans;
   /** Parameter used in the merging function **/
   int dMerge=2*INTEGER_VALUE(width);
-  int i=0,nR=length(dataR),nF=length(dataF),count=0,lengthCenter=0;
+  int i=0,nR=length(dataR),nF=length(dataF),lengthCenter=0;
   double m,M;
 
   int kStep= INTEGER_VALUE(width)/INTEGER_VALUE(step);
@@ -120,7 +120,7 @@ SEXP segReads(SEXP chr, SEXP dataF, SEXP dataR, SEXP contF, SEXP contR, SEXP Sta
   /** Sort the data **/
   R_isort(dF, nF);
   R_isort(dR, nR);
-  if(length(contF)>0 & length(contR)>0)
+  if((length(contF)>0) & (length(contR)>0))
   {
     R_isort(INTEGER(contF), length(contF));
     R_isort(INTEGER(contR), length(contR));
@@ -305,7 +305,7 @@ void wThreCountsPING(int *step, int* dataF, int* dataR, int *nReadsF, int *nRead
 
 void callRegions(int *center, int *nProbes, int *width, int *scoreF, int *scoreR, int *scoreRegionF, int *scoreRegionR, int *cutoff, int *StartRegion, int *EndRegion, int *nRegions)
 {
-  int i=0,p=0;
+  int p=0;
   int w=0,ww=0,max=0,maxF=0,maxR=0;
   *nRegions=0;
 
@@ -1361,7 +1361,7 @@ SEXP getK(SEXP list)
 
 SEXP getSegL(SEXP list)
 {
-	int i=0, j=0, n=length(list), nF, nR, nProtect=0;
+	int i=0, n=length(list), nF, nR, nProtect=0;
 	SEXP ans, tempF, tempR, tempM, NNF, NNR,  LL, mm, MM, chr;
 	double min, max;
 
@@ -1540,13 +1540,14 @@ SEXP getDensity(SEXP pics, SEXP strand, SEXP step, SEXP filter, SEXP sum, SEXP s
       for(k=0;k<K;k++)
       {
       //Check if this is a valid binding event
-        if((delta[k]>deltaFilter[0] & delta[k]<deltaFilter[1]) & 
-          (sF[k]>sFFilter[0] & sF[k]<sFFilter[1]) & 
-          (sR[k]>sRFilter[0] & sR[k]<sRFilter[1]) & 
-          (se[k]>seFilter[0] & se[k]<seFilter[1]) &
-          (se[k]>seFilterF[0] & se[k]<seFilterF[1]) &
-          (se[k]>seFilterR[0] & se[k]<seFilterR[1]) &          
-          (score[k]>scoreFilter[0] & score[k]<scoreFilter[1]))
+        if(
+          ((delta[k]>deltaFilter[0]) & (delta[k]<deltaFilter[1])) & 
+          ((sF[k]>sFFilter[0]) & (sF[k]<sFFilter[1])) & 
+          ((sR[k]>sRFilter[0]) & (sR[k]<sRFilter[1])) & 
+          ((se[k]>seFilter[0]) & (se[k]<seFilter[1])) &
+          ((se[k]>seFilterF[0]) & (se[k]<seFilterF[1])) &
+          ((se[k]>seFilterR[0]) & (se[k]<seFilterR[1])) &          
+          ((score[k]>scoreFilter[0]) & (score[k]<scoreFilter[1])))
         {
         //Keep track of the sum of the weights to renormalize the density
           sumW+=w[k];

@@ -4,9 +4,16 @@
 \alias{setParaEM}
 \title{List of parameters for the EM algorithm that can be used as an argument of PICS.}
 \usage{
-setParaEM(minK = 1, maxK = 15, tol = 1e-04, B = 100,
-  mSelect = "BIC", mergePeaks = TRUE, mapCorrect = TRUE,
-  dataType = NULL)
+setParaEM(
+  minK = 1,
+  maxK = 15,
+  tol = 1e-04,
+  B = 100,
+  mSelect = "BIC",
+  mergePeaks = TRUE,
+  mapCorrect = TRUE,
+  dataType = NULL
+)
 }
 \arguments{
 \item{minK}{An \code{integer}. The minimum number of binding events per 
