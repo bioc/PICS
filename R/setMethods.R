@@ -115,8 +115,8 @@ setMethod("show", "picsList",
           })
 
 
-#setGeneric("score", function(x, ...) standardGeneric("score"))
-#' @importFrom IRanges score
+#' @export
+setGeneric("score", function(x, ...) standardGeneric("score"))
 #' @export
 setMethod("score", "pics",
           function(x)
