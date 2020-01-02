@@ -1,6 +1,5 @@
 #' Export a PICS object to GRanges
 #' 
-#' 
 #' @param obj A \code{PICS} object. The output of the \code{PICS} function.
 #' @param type A \code{character}. One of "fixed", "bed", "ci" or "wig".
 #' @param length A \code{numeric}. The length of the region around the center 
@@ -9,7 +8,7 @@
 #' 
 #' @importClassesFrom GenomicRanges GRanges
 #' @importClassesFrom IRanges IRanges
-#' @importFrom GenomicRanges GRanges strand seqnames
+#' @importFrom GenomicRanges GRanges strand seqnames findOverlaps
 #' @importFrom IRanges IRanges coverage
 #' 
 #' @return A \code{GRanges} object.

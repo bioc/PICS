@@ -26,6 +26,9 @@ NULL by default, i.e. no control.}
 \item{map}{A \code{GRanges} object containing the mappability profiles. Set 
 to NULL by default, i.e. no profiles.}
 
+\item{minReads}{A \code{numeric}. The minimum number of F/R reads to be 
+present in the sliding window.}
+
 \item{minReadsInRegion}{A \code{numeric}. The minimum number of F/R reads to
 be present in the region.}
 
@@ -37,9 +40,6 @@ added to the read locations. This is recommended if the read positions have lots
 \item{maxLregion}{A \code{numeric}. The maximum length.}
 
 \item{minLregion}{A \code{numeric}. The minimum length.}
-
-\item{minreads}{A \code{numeric}. The minimum number of F/R reads to be 
-present in the sliding window.}
 }
 \value{
 An object of class \code{segReadsList} containing the results for all

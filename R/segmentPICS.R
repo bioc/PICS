@@ -12,7 +12,7 @@
 #' NULL by default, i.e. no control.
 #' @param map A \code{GRanges} object containing the mappability profiles. Set 
 #' to NULL by default, i.e. no profiles.
-#' @param minreads A \code{numeric}. The minimum number of F/R reads to be 
+#' @param minReads A \code{numeric}. The minimum number of F/R reads to be 
 #' present in the sliding window.
 #' @param minReadsInRegion A \code{numeric}. The minimum number of F/R reads to
 #'  be present in the region.
@@ -50,7 +50,8 @@
 #'
 #' @importFrom GenomicAlignments readGAlignments
 #' @export
-segmentPICS<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegion=3, jitter=FALSE, dataType="TF",maxLregion=0,minLregion=100){
+segmentPICS<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegion=3,
+                      jitter=FALSE, dataType="TF",maxLregion=0,minLregion=100){
   #Paras depends on the datatype
   step=20
   if(dataType=="TF") width=250
@@ -83,14 +84,12 @@ segmentPICS<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegion=3
 #' 
 #' @seealso segmentPICS
 #' 
-#' @importFrom Rsamtools ScanBamParam
+#' @importFrom Rsamtools ScanBamParam scanBamFlag
 #' @importFrom GenomicAlignments readGAlignments
 #' @importFrom GenomicRanges elementMetadata
 #' @export
 bam2gr<-function(bamFile, chr=NULL, PE=FALSE, verbose=FALSE){
-  #paras <- ScanBamParam(what=c("qname", "rname", "strand", "pos", "mapq", "qwidth"), flag=scanBamFlag(isUnmappedQuery=FALSE,isDuplicate=FALSE))
   paras <- ScanBamParam(what=c("qname", "rname", "strand","mapq"), flag=scanBamFlag(isUnmappedQuery=FALSE,isDuplicate=FALSE))
-  #bga<-readBamGappedAlignments(bamFile, use.names=TRUE, param=paras)
   bga<-readGAlignments(bamFile, use.names=FALSE, param=paras)
   if(verbose){
     cat(length(bga)," Reads in '",bamFile,"'","\n", sep="")

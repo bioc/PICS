@@ -34,8 +34,8 @@ candidate.region <- function(PE.RD, islandDepth, min_cut, max_cut) {
         overlaps <- as.matrix(findOverlaps(PE.RD, over_cand_IR))
         idx <- split(overlaps[, 1], overlaps[, 2])
         for (j in 1:length(over_cand_IR)) {
-            # PE.RD.Cand <- PE.RD[(PE.RD %in% over_cand_IR[j,]) ==TRUE,] # %in% stop working after PING is loaded PE.RD.Cand <- PE.RD[(end(PE.RD) >= start(over_cand_IR)[j])
-            # & (start(PE.RD) <= end(over_cand_IR)[j]), ]
+            # PE.RD.Cand <- PE.RD[(PE.RD %in% over_cand_IR[j,]) ==TRUE,] # %in% stop working after PING is loaded PE.RD.Cand <-
+            # PE.RD[(end(PE.RD) >= start(over_cand_IR)[j]) & (start(PE.RD) <= end(over_cand_IR)[j]), ]
             PE.RD.Cand <- PE.RD[idx[[j]], ]
             temp_cand_recu <- .cand_recursive(PE.RD.Cand, over_cand_IR[j, ], islandDepth, min_region, max_region, min_cut, max_cut)
             # cand_recu <- rbind(cand_recu, temp_cand_recu)
@@ -48,7 +48,9 @@ candidate.region <- function(PE.RD, islandDepth, min_cut, max_cut) {
 }
 
 
-#################################################################################### Cut the wide ranged candidate region into max_cut ranged candidate regions This function is for each candidate region having wide range
+#################################################################################### Cut the wide ranged candidate region into max_cut ranged candidate regions This function is for each candidate region having
+#################################################################################### wide range
+#' @importFrom IRanges width disjoin
 .cand_recursive <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, max_region, min_cut, max_cut) {
     temp_over_IR <- over_cand_IR
     width_temp <- max(width(temp_over_IR))
@@ -80,9 +82,10 @@ candidate.region <- function(PE.RD, islandDepth, min_cut, max_cut) {
     # browser() return(as.data.frame(cand_IR))
 }
 
+#' @importFrom IRanges viewMins
 s_cut <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, max_region) {
-    # PE_reads <- PE.RD.Cand[(PE.RD.Cand %in% over_cand_IR) ==TRUE,] # %in% stop working after PING is loaded overlaps <- findOverlaps(PE.RD.Cand,
-    # over_cand_IR)@matchMatrix
+    # PE_reads <- PE.RD.Cand[(PE.RD.Cand %in% over_cand_IR) ==TRUE,] # %in% stop working after PING is loaded overlaps <-
+    # findOverlaps(PE.RD.Cand, over_cand_IR)@matchMatrix
     overlaps <- as.matrix(findOverlaps(PE.RD.Cand, over_cand_IR))
     PE_reads <- PE.RD.Cand[overlaps[, 1], ]
     
@@ -100,7 +103,8 @@ s_cut <- function(PE.RD.Cand, over_cand_IR, islandDepth, min_region, max_region)
 
 # Identify reads included in each candidate regions
 #' @export
-segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD, PEC.RD = NULL, PECMF.RD = NULL, PECMR.RD = NULL, map.Start, map.End, chr) {
+segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD, PEC.RD = NULL, PECMF.RD = NULL, PECMR.RD = NULL, map.Start, map.End, 
+    chr) {
     seg <- vector("list", length(candidate_RD))
     map.IR <- IRanges(start = map.Start, end = map.End)
     index_map_all <- as.matrix(findOverlaps(candidate_RD, map.IR))
@@ -117,8 +121,8 @@ segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD, PEC.RD = NULL, PEC
         index_PE <- as.matrix(findOverlaps(target, PE.RD))[, 2]
         index_PEMF <- as.matrix(findOverlaps(target, PEMF.RD))[, 2]
         index_PEMR <- as.matrix(findOverlaps(target, PEMR.RD))[, 2]
-        # index_PE <- findOverlaps(target, PE.RD)@matchMatrix[,2] index_PEMF <- findOverlaps(target, PEMF.RD)@matchMatrix[,2] index_PEMR <- findOverlaps(target,
-        # PEMR.RD)@matchMatrix[,2]
+        # index_PE <- findOverlaps(target, PE.RD)@matchMatrix[,2] index_PEMF <- findOverlaps(target, PEMF.RD)@matchMatrix[,2] index_PEMR
+        # <- findOverlaps(target, PEMR.RD)@matchMatrix[,2]
         
         yF <- start(PE.RD)[index_PE]
         yR <- end(PE.RD)[index_PE]
@@ -143,8 +147,8 @@ segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD, PEC.RD = NULL, PEC
             index_PEC <- as.matrix(findOverlaps(target, PEC.RD))[, 2]
             index_PECMF <- as.matrix(findOverlaps(target, PECMF.RD))[, 2]
             index_PECMR <- as.matrix(findOverlaps(target, PECMR.RD))[, 2]
-            # index_PEC <- findOverlaps(target, PEC.RD )@matchMatrix[,2] index_PECMF <- findOverlaps(target, PECM.RD)@matchMatrix[,2] index_PECMR <- findOverlaps(target,
-            # PECM.RD)@matchMatrix[,2]
+            # index_PEC <- findOverlaps(target, PEC.RD )@matchMatrix[,2] index_PECMF <- findOverlaps(target, PECM.RD)@matchMatrix[,2]
+            # index_PECMR <- findOverlaps(target, PECM.RD)@matchMatrix[,2]
             
             cF <- start(PEC.RD)[index_PEC]
             cR <- end(PEC.RD)[index_PEC]
@@ -163,10 +167,12 @@ segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD, PEC.RD = NULL, PEC
         
         ## resize the mappability region ##
         if (flag[i] == TRUE) {
-            index_map_within <- as.matrix(findOverlaps(target, map.IR[index_map_map[index_map_cand == i], ], type = "within"))[, 2]
+            index_map_within <- as.matrix(findOverlaps(target, map.IR[index_map_map[index_map_cand == i], ], type = "within"))[, 
+                2]
             # index_map_within <- findOverlaps(target, map.IR[index_map_map[index_map_cand==i],], type='within')@matchMatrix[,2]
             if (length(index_map_within) > 0) {
-                map <- cbind(start(map.IR[index_map_map[index_map_cand == i], ]), end(map.IR[index_map_map[index_map_cand == i], ]))
+                map <- cbind(start(map.IR[index_map_map[index_map_cand == i], ]), end(map.IR[index_map_map[index_map_cand == i], 
+                  ]))
             } else {
                 index_map <- index_map_map[index_map_cand == i]
                 if (length(index_map_within) > 0) {
@@ -191,8 +197,8 @@ segChrRead <- function(candidate_RD, PE.RD, PEMF.RD, PEMR.RD, PEC.RD = NULL, PEC
         } else {
             map <- matrix(0, 0, 2)
         }
-        seg[[i]] <- segReadsPE(as.numeric(yF), as.numeric(yR), yFm = numeric(0), yRm = numeric(0), cF = numeric(0), cR = numeric(0), cFm = numeric(0), cRm = numeric(0), 
-            map = map, chr)
+        seg[[i]] <- segReadsPE(as.numeric(yF), as.numeric(yR), yFm = numeric(0), yRm = numeric(0), cF = numeric(0), cR = numeric(0), 
+            cFm = numeric(0), cRm = numeric(0), map = map, chr)
     }
     return(seg)
 }

@@ -285,7 +285,7 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
     sumF=0;
     for(i=0;i<length(yF);i++)
     {
-      if(abs(REAL(yF)[i]-mu[k]+delta[k]/2.)/sqrt(sF[k])<calpha)
+      if(fabs(REAL(yF)[i]-mu[k]+delta[k]/2.)/sqrt(sF[k])<calpha)
       {
         sumF++;
       }
@@ -293,7 +293,7 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
     sumR=0;
     for(i=0;i<length(yR);i++)
     {
-      if(abs(REAL(yR)[i]-mu[k]-delta[k]/2.)/sqrt(sR[k])<calpha)
+      if(fabs(REAL(yR)[i]-mu[k]-delta[k]/2.)/sqrt(sR[k])<calpha)
       {
         sumR++;
       }
@@ -306,7 +306,7 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
       sumcF=0;
       for(i=0;i<length(cF);i++)
       {
-        if(abs(REAL(cF)[i]-mu[k]+delta[k]/2.)/sqrt(sF[k])<calpha)
+        if(fabs(REAL(cF)[i]-mu[k]+delta[k]/2.)/sqrt(sF[k])<calpha)
         {
           sumcF++;
         }
@@ -314,7 +314,7 @@ SEXP fitModelAllk(SEXP segReads, SEXP paraEM, SEXP paraPrior, SEXP minReads, SEX
       sumcR=0;
       for(i=0;i<length(cR);i++)
       {
-        if(abs(REAL(cR)[i]-mu[k]-delta[k]/2.)/sqrt(sR[k])<calpha)
+        if(fabs(REAL(cR)[i]-mu[k]-delta[k]/2.)/sqrt(sR[k])<calpha)
         {
           sumcR++;
         }

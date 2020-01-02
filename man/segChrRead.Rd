@@ -1,6 +1,5 @@
 \name{segChrRead}
 \alias{segChrRead}
-\alias{candidate.region}
 
 \title{Segmentation of paired-end sequencing data}
 
