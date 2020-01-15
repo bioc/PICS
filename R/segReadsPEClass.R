@@ -14,6 +14,21 @@ setClass("segReadsListPE", contains = "segReadsList", representation(NFm = "inte
     prototype(list(List = list(0), paraSW = list(islandDepth = integer(0), min_cut = integer(0), max_cut = integer(0), xi = 0), 
         NFm = integer(0), NRm = integer(0), NcFm = integer(0), NcRm = integer(0))))
 
+
+#' @param yF A \code{numeric} vector. Forward reads.
+#' @param yR A \code{numeric} vector. Reverse reads.
+#' @param cF A \code{numeric} vector. Forward reads for the controls.
+#' @param cR A \code{numeric} vector. Reverse reads for the controls.
+#' @param yFm A \code{numeric} vector. Forward reads on paired end.
+#' @param yRm A \code{numeric} vector. Reverse reads on paired end.
+#' @param cFm A \code{numeric} vector. Forward reads on paired end for the controls.
+#' @param cRm A \code{numeric} vector. Reverse reads on paired end for the controls.
+#' @param map A \code{matrix}. The mappability profile.
+#' @param chr A \code{character}. Chromosome name.
+#' 
+#' @note segReadsPE objects are not meant to be built via the
+#' constructors. The constructors are used in \code{segmentPICS}.
+#' 
 #' @describeIn segReadsPE-class \code{segReadsPE} constructor.
 #' @export
 segReadsPE <- function(yF, yR, yFm, yRm, cF, cR, cFm, cRm, map, chr) {
@@ -35,6 +50,11 @@ segReadsPE <- function(yF, yR, yFm, yRm, cF, cR, cFm, cRm, map, chr) {
     new("segReadsPE", yF = yF, yR = yR, yFm = yFm, yRm = yRm, cF = cF, cR = cR, cFm = cFm, cRm = cRm, map = map, chr = chr)
 }
 
+#' @param List A \code{list} of \code{segReadsPE} objects.
+#' @param paraSW A \code{list} of parameters for the genomic regions.
+#' @param N,NFm,NRm Read counts in the data.
+#' @param Nc,NcFm,NcRm Read counts in the control.
+#' 
 #' @describeIn segReadsListPE-class \code{segReadsListPE} constructor.
 #' @export
 segReadsListPE <- function(List, paraSW, N, NFm, NRm, Nc, NcFm, NcRm) {

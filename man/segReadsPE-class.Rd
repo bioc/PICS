@@ -8,6 +8,27 @@
 \usage{
 segReadsPE(yF, yR, yFm, yRm, cF, cR, cFm, cRm, map, chr)
 }
+\arguments{
+\item{yF}{A \code{numeric} vector. Forward reads.}
+
+\item{yR}{A \code{numeric} vector. Reverse reads.}
+
+\item{yFm}{A \code{numeric} vector. Forward reads on paired end.}
+
+\item{yRm}{A \code{numeric} vector. Reverse reads on paired end.}
+
+\item{cF}{A \code{numeric} vector. Forward reads for the controls.}
+
+\item{cR}{A \code{numeric} vector. Reverse reads for the controls.}
+
+\item{cFm}{A \code{numeric} vector. Forward reads on paired end for the controls.}
+
+\item{cRm}{A \code{numeric} vector. Reverse reads on paired end for the controls.}
+
+\item{map}{A \code{matrix}. The mappability profile.}
+
+\item{chr}{A \code{character}. Chromosome name.}
+}
 \description{
 A segReadsPE object represents a single candoidate region, including all its
 informative reads and mappability profile.
@@ -17,3 +38,7 @@ informative reads and mappability profile.
 \item \code{segReadsPE}: \code{segReadsPE} constructor.
 }}
 
+\note{
+segReadsPE objects are not meant to be built via the
+constructors. The constructors are used in \code{segmentPICS}.
+}

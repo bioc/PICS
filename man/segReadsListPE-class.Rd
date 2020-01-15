@@ -15,6 +15,14 @@ segReadsListPE(List, paraSW, N, NFm, NRm, Nc, NcFm, NcRm)
 \S4method{[[}{segReadsListPE,ANY,ANY}(x, i, j, ..., exact = TRUE)
 }
 \arguments{
+\item{List}{A \code{list} of \code{segReadsPE} objects.}
+
+\item{paraSW}{A \code{list} of parameters for the genomic regions.}
+
+\item{N, NFm, NRm}{Read counts in the data.}
+
+\item{Nc, NcFm, NcRm}{Read counts in the control.}
+
 \item{x, i, j, ..., drop, exact}{Arguments passed to subset methods}
 }
 \description{

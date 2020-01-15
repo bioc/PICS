@@ -5,8 +5,9 @@
 - ~~makeGRangesOutput~~
 - ~~candidate.region~~
 - ~~PICS~~
-- pics-class
-- picsError-class
+- ~~pics-class~~
+- ~~picsError-class~~
+- ~~picsList-class~~
 - ~~picsFDR~~
 - plot-FDR
 - segChrRead
@@ -17,7 +18,7 @@
 - ~~segReadsPE~~
 - ~~setParaEM~~
 - ~~setParaPrior~~
-- show
+- ~~show~~
 - summary
 - ~~summarySeg~~
 

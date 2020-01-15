@@ -1,8 +1,29 @@
-# perform the segmentation depending on the package
+#' Perform genome segmentation depending
+#' 
+#' @param data A \code{GRanges} object containing the IP reads. See details for
+#'  more information on how to set up the data.
+#' @param dataC A \code{GRanges} object containing the control reads. Set to NULL
+#'  by default, i.e. no control.
+#' @param map A \code{GRanges} object containing the mappability profiles. Set
+#'  to NULL by default, i.e. no profiles.
+#' @param minReads A \code{numeric}. The minimum number of F/R reads to be 
+#' present in the sliding window.
+#' @param minReadsInRegion A \code{numeric}. The minimum number of F/R reads
+#'  to be present in the region.
+#' @param jitter A \code{logical} value stating whether some noise should be 
+#' added to the read locations. This is recommended if the read positions have
+#'  lots of duplicates.
+#' @param maxLregion A \code{numeric}. The maximum length.
+#' @param minLregion A \code{numeric}. The minimum length.
+#' @param step A \code{numeric}. The increment of the sliding window.
+#' @param width A \code{numeric}. The width of the region.
+#' @param package A \code{character}. "PICS" or "PING"
+#' 
 #' @importFrom GenomicRanges seqnames strand
 #' @export
-segReadsGeneric <- function(data, dataC = NULL, map = NULL, minReads = 2, minReadsInRegion = 3, jitter = FALSE, maxLregion = 0, minLregion = 100, step = 20, width = 250, 
-    package = "PICS") {
+segReadsGeneric <- function(data, dataC = NULL, map = NULL, minReads = 2, minReadsInRegion = 3,
+                            jitter = FALSE, maxLregion = 0, minLregion = 100, step = 20,
+                            width = 250, package = "PICS") {
     ## Check that we have the right data type
     if (!is(data, "GRanges")) {
         stop("The input data should be 'GRanges' object. Provided: ", class(data))

@@ -86,7 +86,7 @@ segmentPICS<-function(data, dataC=NULL, map=NULL, minReads=2, minReadsInRegion=3
 #' 
 #' @importFrom Rsamtools ScanBamParam scanBamFlag
 #' @importFrom GenomicAlignments readGAlignments
-#' @importFrom GenomicRanges elementMetadata
+#' @importFrom GenomicRanges elementMetadata elementMetadata<- start<- end<-
 #' @export
 bam2gr<-function(bamFile, chr=NULL, PE=FALSE, verbose=FALSE){
   paras <- ScanBamParam(what=c("qname", "rname", "strand","mapq"), flag=scanBamFlag(isUnmappedQuery=FALSE,isDuplicate=FALSE))

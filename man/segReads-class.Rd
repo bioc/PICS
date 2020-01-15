@@ -3,19 +3,44 @@
 \docType{class}
 \name{segReads-class}
 \alias{segReads-class}
+\alias{segReadsList-class}
 \alias{segReads}
+\alias{segReadsList}
 \alias{show,segReads-method}
+\alias{show,segReadsList-method}
+\alias{map}
 \alias{map,segReads-method}
+\alias{map,segReadsList-method}
+\alias{length,segReadsList-method}
+\alias{summary,segReadsList-method}
 \alias{summary,segReads-method}
-\title{Classe and methods for candidate regions}
+\alias{[,segReadsList,ANY,ANY,ANY-method}
+\alias{[[,segReadsList,ANY,ANY-method}
+\title{Classes and functions to segment the genome in candidate regions}
 \usage{
 segReads(yF, yR, cF, cR, map, chr)
 
+segReadsList(List, paraSW, N, Nc)
+
 \S4method{show}{segReads}(object)
 
-\S4method{map}{segReads}(object)
+\S4method{show}{segReadsList}(object)
+
+map(x, ...)
+
+\S4method{map}{segReads}(x)
+
+\S4method{map}{segReadsList}(x)
+
+\S4method{length}{segReadsList}(x)
+
+\S4method{summary}{segReadsList}(object)
 
 \S4method{summary}{segReads}(object)
+
+\S4method{[}{segReadsList,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{[[}{segReadsList,ANY,ANY}(x, i, j, ..., exact = TRUE)
 }
 \arguments{
 \item{yF}{A \code{numeric} vector. Forward reads.}
@@ -30,24 +55,51 @@ segReads(yF, yR, cF, cR, map, chr)
 
 \item{chr}{A \code{character}. Chromosome name.}
 
-\item{object}{A \code{segReads} object.}
+\item{List}{A \code{list} of \code{segReads} objects.}
+
+\item{paraSW}{A \code{list} of parameters for the genomic regions.}
+
+\item{N}{A \code{numeric}. The number of reads in the data.}
+
+\item{Nc}{A \code{numeric}. The number of reads in the control.}
+
+\item{object, x}{A \code{segReads} object.}
+
+\item{i, j, ..., exact, drop}{Additional arguments passed to subset methods.}
 }
 \description{
-A segReads object represents a single candoidate region, including all its
-informative reads and mappability profile.
+Pre-process bidirectional aligned reads data from a single ChIP-Seq 
+experiment to detect candidate regions with a minimum number of forward and 
+reverse reads. These candidate regions will then be processed by \code{PICS}.
 }
 \section{Functions}{
 \itemize{
-\item \code{segReads}: \code{segReads} constructor
+\item \code{segReads}: \code{segReads} Constructor
+
+\item \code{segReadsList}: \code{segReadsList} Constructor
 
 \item \code{show,segReads-method}: show method
 
+\item \code{show,segReadsList-method}: show method
+
+\item \code{map}: map generic
+
 \item \code{map,segReads-method}: map method
 
-\item \code{summary,segReads-method}: summary method
+\item \code{map,segReadsList-method}: map method
+
+\item \code{length,segReadsList-method}: Return length of segReadsList
+
+\item \code{summary,segReadsList-method}: Summary method
+
+\item \code{summary,segReads-method}: Summary method
+
+\item \code{[,segReadsList,ANY,ANY,ANY-method}: Subset methods
+
+\item \code{[[,segReadsList,ANY,ANY-method}: Subset methods
 }}
 
 \note{
-segReads objects are not meant to be built via the
+segReads and segReadsList objects are not meant to be built via the
 constructors. The constructors are used in \code{segmentPICS}.
 }
